@@ -6,6 +6,7 @@ import { SystemInfo } from "@/components/views/system-info"
 import { ScreenControl } from "@/components/views/ScreenControl"
 import { PerformanceMonitor } from "@/components/views/PerformanceMonitor"
 import { ShellTerminal } from "@/components/views/ShellTerminal"
+import { FrpRemoval } from "@/components/views/FrpRemoval"
 import { DeviceInfo } from "@/tauri-commands"
 import { Monitor } from "lucide-react"
 
@@ -59,6 +60,8 @@ export function MainContent({
     switch (activeView) {
       case 'system-info':
         return <SystemInfo selectedDevice={selectedDevice} />
+      case 'frp':
+        return <FrpRemoval selectedDevice={selectedDevice} />
       case 'files':
         return <FileExplorer selectedDevice={selectedDevice} />
       case 'logcat':

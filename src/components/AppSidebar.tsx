@@ -24,7 +24,8 @@ import {
   Package,
   Camera,
   Activity,
-  Settings
+  Settings,
+  ShieldAlert
 } from "lucide-react"
 
 interface SidebarProps {
@@ -38,6 +39,7 @@ interface SidebarProps {
 const navigationItems = [
   { id: 'devices', label: 'Devices', icon: Smartphone },
   { id: 'system-info', label: 'System Info', icon: Info },
+  { id: 'frp', label: 'FRP Removal', icon: ShieldAlert },
   { id: 'files', label: 'Files', icon: FileText },
   { id: 'logcat', label: 'Logcat', icon: Terminal },
   { id: 'apps', label: 'Apps', icon: Package },

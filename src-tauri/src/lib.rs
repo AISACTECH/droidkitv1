@@ -21,6 +21,7 @@ use std::net::IpAddr;
 
 mod adb_commands;
 mod emulator;
+mod frp;
 mod system_info;
 mod utils;
 
@@ -302,7 +303,23 @@ pub fn run() {
             get_device_display_info_cmd,
             get_device_battery_info_cmd,
             get_device_build_info_cmd,
-            get_device_network_info_cmd
+            get_device_network_info_cmd,
+            // FRP Removal commands
+            frp::commands::frp_detect,
+            frp::commands::frp_run_method,
+            frp::commands::frp_auto_bypass,
+            frp::commands::frp_get_device_database,
+            frp::commands::frp_lookup_model,
+            frp::commands::frp_search_models,
+            frp::commands::frp_list_supported_models,
+            frp::commands::frp_get_all_methods,
+            // Universal FRP Algorithm commands
+            frp::commands::frp_detect_chipset,
+            frp::commands::frp_build_device_profile,
+            frp::commands::frp_get_recommended_algorithm,
+            frp::commands::frp_get_chipset_algorithms,
+            frp::commands::frp_get_reset_modes,
+            frp::commands::frp_get_algorithm_phases
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
