@@ -13,6 +13,9 @@ import {
   frpSearchModels,
   frpGetDeviceDatabase,
   frpRunMethod,
+  frpGetTecnoDatabase,
+  frpSearchTecnoModels,
+  frpGetTecnoBySeries,
   type FrpDetectionResult,
   type SamsungModel,
   type BypassResult,
@@ -23,13 +26,14 @@ import {
   type FrpResetModeInfo,
   type AlgorithmPhase,
   type PhaseAction,
+  type TecnoModel,
 } from "@/lib/frp-commands"
 import { type DeviceInfo } from "@/tauri-commands"
 import {
   ShieldAlert, ShieldCheck, Search, Play, Zap, RefreshCw,
   ChevronDown, ChevronRight, AlertTriangle, CheckCircle2,
   XCircle, Smartphone, Terminal, Info, Cpu, HardDrive,
-  MonitorSmartphone, RotateCcw, Progress,
+  MonitorSmartphone, RotateCcw,
 } from "lucide-react"
 
 interface FrpRemovalProps {
@@ -41,6 +45,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
   const [frpState, setFrpState] = useState<FrpDetectionResult | null>(null)
   const [deviceProfile, setDeviceProfile] = useState<DeviceProfile | null>(null)
   const [deviceDb, setDeviceDb] = useState<SamsungModel[]>([])
+  const [tecnoDb, setTecnoDb] = useState<TecnoModel[]>([])
   const [matchedModel, setMatchedModel] = useState<SamsungModel | null>(null)
   const [algorithms, setAlgorithms] = useState<FrpAlgorithmInfo[]>([])
   const [resetModes, setResetModes] = useState<FrpResetModeInfo[]>([])
@@ -50,7 +55,10 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
   const [isRunning, setIsRunning] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<SamsungModel[]>([])
+  const [tecnoSearchResults, setTecnoSearchResults] = useState<TecnoModel[]>([])
   const [activeTab, setActiveTab] = useState<"universal" | "methods" | "database">("universal")
+  const [dbBrand, setDbBrand] = useState<"samsung" | "tecno">("samsung")
+  const [tecnoSeries, setTecnoSeries] = useState<string>("all")
 
   // Chipset display helpers
   const chipsetColors: Record<string, string> = {
@@ -85,6 +93,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
 
   const loadDatabase = async () => {
     try { setDeviceDb(await frpGetDeviceDatabase()) } catch {}
+    try { setTecnoDb(await frpGetTecnoDatabase()) } catch {}
   }
 
   const loadResetModes = async () => {
@@ -473,30 +482,105 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
         {/* ==================== DATABASE TAB ==================== */}
         {activeTab === "database" && (
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <Input placeholder="Search models..." value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && handleSearch()} className="text-xs" />
-              <Button size="sm" onClick={handleSearch}><Search className="h-3 w-3 mr-1" />Search</Button>
+            {/* Brand selector */}
+            <div className="flex gap-1 bg-muted/50 p-1 rounded-lg w-fit">
+              <Button variant={dbBrand === "samsung" ? "default" : "ghost"} size="sm"
+                onClick={() => setDbBrand("samsung")} className="text-xs">
+                📱 Samsung ({deviceDb.length})
+              </Button>
+              <Button variant={dbBrand === "tecno" ? "default" : "ghost"} size="sm"
+                onClick={() => setDbBrand("tecno")} className="text-xs">
+                📱 Tecno ({tecnoDb.length})
+              </Button>
             </div>
-            <span className="text-xs text-muted-foreground">{(searchResults.length > 0 ? searchResults : deviceDb).length} Samsung models</span>
-            <div className="flex flex-col gap-2">
-              {(searchResults.length > 0 ? searchResults : deviceDb).slice(0, 20).map(model => (
-                <Card key={model.model_code}>
-                  <CardContent className="p-2">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-sm font-medium">{model.marketing_name}</span>
-                        <span className="text-xs text-muted-foreground ml-2">{model.model_code}</span>
+
+            {dbBrand === "samsung" && (
+              <>
+                <div className="flex items-center gap-2">
+                  <Input placeholder="Search Samsung models..." value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && handleSearch()} className="text-xs" />
+                  <Button size="sm" onClick={handleSearch}><Search className="h-3 w-3 mr-1" />Search</Button>
+                </div>
+                <span className="text-xs text-muted-foreground">{(searchResults.length > 0 ? searchResults : deviceDb).length} Samsung models</span>
+                <div className="flex flex-col gap-2">
+                  {(searchResults.length > 0 ? searchResults : deviceDb).slice(0, 30).map(model => (
+                    <Card key={model.model_code}>
+                      <CardContent className="p-2">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <span className="text-sm font-medium">{model.marketing_name}</span>
+                            <span className="text-xs text-muted-foreground ml-2">{model.model_code}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Badge variant="outline" className="text-xs bg-green-500/10 text-green-400">{model.supported_methods.length} methods</Badge>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {dbBrand === "tecno" && (
+              <>
+                {/* Series filter */}
+                <div className="flex gap-1 flex-wrap">
+                  {["all", "Pop", "Spark", "Camon", "Pova", "Phantom"].map(s => (
+                    <Button key={s} variant={tecnoSeries === s ? "default" : "ghost"} size="sm"
+                      onClick={() => setTecnoSeries(s)} className="text-xs">
+                      {s === "all" ? "All" : s}
+                    </Button>
+                  ))}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Input placeholder="Search Tecno models..." value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === "Enter" && searchQuery.trim()) {
+                        frpSearchTecnoModels(searchQuery).then(setTecnoSearchResults).catch(() => {})
+                      }
+                    }} className="text-xs" />
+                  <Button size="sm" onClick={() => {
+                    if (searchQuery.trim()) frpSearchTecnoModels(searchQuery).then(setTecnoSearchResults).catch(() => {})
+                    else setTecnoSearchResults([])
+                  }}><Search className="h-3 w-3 mr-1" />Search</Button>
+                </div>
+                {(() => {
+                  const filtered = tecnoSeries === "all"
+                    ? (tecnoSearchResults.length > 0 ? tecnoSearchResults : tecnoDb)
+                    : tecnoDb.filter(m => m.series === tecnoSeries)
+                  return (
+                    <>
+                      <span className="text-xs text-muted-foreground">{filtered.length} Tecno models{tecnoSeries !== "all" ? ` in ${tecnoSeries} series` : ""}</span>
+                      <div className="flex flex-col gap-2">
+                        {filtered.slice(0, 30).map(model => (
+                          <Card key={model.marketing_name}>
+                            <CardContent className="p-2">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <span className="text-sm font-medium">{model.marketing_name}</span>
+                                  <Badge variant="outline" className="text-xs ml-2 bg-blue-500/10 text-blue-400">{model.series}</Badge>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <Badge variant="outline" className={model.chipset_family === "MediaTek" ? "text-xs bg-green-500/10 text-green-400" : "text-xs bg-purple-500/10 text-purple-400"}>
+                                    {model.chipset_family}
+                                  </Badge>
+                                  <Badge variant="outline" className="text-xs bg-orange-500/10 text-orange-400">{model.supported_methods.length} methods</Badge>
+                                  {model.has_mtk_auth && <Badge variant="outline" className="text-xs bg-red-500/10 text-red-400">Auth</Badge>}
+                                </div>
+                              </div>
+                              <div className="text-xs text-muted-foreground mt-1">{model.chipset}</div>
+                            </CardContent>
+                          </Card>
+                        ))}
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Badge variant="outline" className="text-xs bg-green-500/10 text-green-400">{model.supported_methods.length} methods</Badge>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    </>
+                  )
+                })()}
+              </>
+            )}
           </div>
         )}
       </ScrollArea>

@@ -319,7 +319,15 @@ pub fn run() {
             frp::commands::frp_get_recommended_algorithm,
             frp::commands::frp_get_chipset_algorithms,
             frp::commands::frp_get_reset_modes,
-            frp::commands::frp_get_algorithm_phases
+            frp::commands::frp_get_algorithm_phases,
+            // Tecno FRP commands
+            frp::commands::frp_get_tecno_database,
+            frp::commands::frp_lookup_tecno_model,
+            frp::commands::frp_search_tecno_models,
+            frp::commands::frp_list_tecno_models,
+            frp::commands::frp_get_tecno_by_series,
+            frp::commands::frp_get_tecno_by_chipset,
+            frp::commands::frp_get_tecno_methods
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

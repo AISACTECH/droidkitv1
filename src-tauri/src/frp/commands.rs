@@ -7,6 +7,9 @@ use crate::frp::bypass::{run_auto_bypass, run_bypass_method, BypassResult};
 use crate::frp::database::{
     find_model, get_samsung_database, list_all_models, search_models,
     FrpMethod, SamsungModel,
+    find_tecno_model, get_tecno_database, list_all_tecno_models, search_tecno_models,
+    get_tecno_by_series, get_tecno_by_chipset_family,
+    TecnoModel, TecnoFrpMethod,
 };
 use crate::frp::detector::{detect_frp_state, FrpDetectionResult, FrpState};
 
@@ -302,4 +305,84 @@ fn parse_method_id(id: &str) -> Option<FrpMethod> {
         "quick_shortcut_maker" => Some(FrpMethod::QuickShortcutMaker),
         _ => None,
     }
+}
+
+// ==================== Tecno FRP Commands ====================
+
+/// Get the full Tecno device compatibility database
+#[tauri::command]
+pub fn frp_get_tecno_database() -> Vec<TecnoModel> {
+    get_tecno_database()
+}
+
+/// Look up a specific Tecno model by marketing name
+#[tauri::command]
+pub fn frp_lookup_tecno_model(name: String) -> Option<TecnoModel> {
+    find_tecno_model(&name)
+}
+
+/// Search the Tecno device database
+#[tauri::command]
+pub fn frp_search_tecno_models(query: String) -> Vec<TecnoModel> {
+    search_tecno_models(&query)
+}
+
+/// List all supported Tecno models
+#[tauri::command]
+pub fn frp_list_tecno_models() -> Vec<TecnoModel> {
+    list_all_tecno_models()
+}
+
+/// Get Tecno models filtered by series (Pop, Spark, Camon, Pova, Phantom)
+#[tauri::command]
+pub fn frp_get_tecno_by_series(series: String) -> Vec<TecnoModel> {
+    get_tecno_by_series(&series)
+}
+
+/// Get Tecno models filtered by chipset family (MediaTek, Spreadtrum)
+#[tauri::command]
+pub fn frp_get_tecno_by_chipset(family: String) -> Vec<TecnoModel> {
+    get_tecno_by_chipset_family(&family)
+}
+
+/// Get all available Tecno FRP methods with their details
+#[tauri::command]
+pub fn frp_get_tecno_methods() -> Vec<TecnoFrpMethodInfo> {
+    let methods = vec![
+        TecnoFrpMethod::MtkBromErase,
+        TecnoFrpMethod::SpdBootloaderErase,
+        TecnoFrpMethod::SetupWizardDisable,
+        TecnoFrpMethod::DeviceProvisioning,
+        TecnoFrpMethod::ContentProviderBypass,
+        TecnoFrpMethod::SetupWizardUninstall,
+        TecnoFrpMethod::BrowserDownloadBypass,
+        TecnoFrpMethod::AccountManagerLaunch,
+        TecnoFrpMethod::EmergencyDialerBypass,
+        TecnoFrpMethod::TalkBackBypass,
+        TecnoFrpMethod::SimPinBypass,
+        TecnoFrpMethod::SettingsAccess,
+        TecnoFrpMethod::QuickShortcutMaker,
+        TecnoFrpMethod::HiosServiceMenu,
+        TecnoFrpMethod::MtkAuthBypass,
+    ];
+
+    methods.into_iter().map(|m| TecnoFrpMethodInfo {
+        id: m.id().to_string(),
+        label: m.label().to_string(),
+        description: m.description().to_string(),
+        risk_level: m.risk_level().label().to_string(),
+        is_hardware_method: m.is_hardware_method(),
+        is_adb_method: m.is_adb_method(),
+    }).collect()
+}
+
+/// Tecno FRP method info for the frontend
+#[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
+pub struct TecnoFrpMethodInfo {
+    pub id: String,
+    pub label: String,
+    pub description: String,
+    pub risk_level: String,
+    pub is_hardware_method: bool,
+    pub is_adb_method: bool,
 }
