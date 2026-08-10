@@ -342,7 +342,11 @@ pub fn run() {
             // Q3 FRP commands
             frp::commands::frp_get_q3_database,
             frp::commands::frp_search_q3_models,
-            frp::commands::frp_get_q3_by_brand
+            frp::commands::frp_get_q3_by_brand,
+            // Advanced Reset & Knox Removal (confirmed features)
+            frp::commands::frp_execute_reset_mode,
+            frp::commands::frp_remove_knox,
+            frp::commands::frp_verify_handshake
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

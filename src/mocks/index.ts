@@ -286,6 +286,59 @@ export function initMocks() {
             manual_action_instructions: null,
           };
 
+        // === Advanced Reset & Knox (Confirmed Features) ===
+        case 'frp_verify_handshake':
+          return {
+            handshake_ok: true,
+            adb_enabled: true,
+            developer_options_enabled: true,
+            usb_state: 'adb',
+            usb_config: 'mtp,adb',
+            message: '✅ Handshake confirmed: USB Debugging enabled, Developer Options allowed, RSA authorized. App can now run reset 100%/70% and Knox removal. Phone will be brand new at Hi there home page after reset 100%.'
+          };
+        case 'frp_execute_reset_mode': {
+          const modeId = payload?.resetModeId || 'factory_reset_frp100';
+          const percent = modeId.includes('100') ? 100 : 70;
+          const wipes = modeId.includes('factory_reset');
+          return {
+            reset_mode: MOCK_RESET_MODES.find(m => m.id === modeId) || MOCK_RESET_MODES[0],
+            success: true,
+            steps: [
+              { command: 'getprop ro.build.version.release', success: true, output: '14', error: null },
+              { command: 'pm disable-user --user 0 com.google.android.setupwizard', success: true, output: 'Success', error: null },
+              { command: 'settings put global device_provisioned 1', success: true, output: '', error: null },
+              { command: 'content insert --uri content://settings/secure --bind name:s:user_setup_complete --bind value:s:1', success: true, output: '', error: null },
+              ...(wipes ? [{ command: 'am broadcast -a android.intent.action.MASTER_CLEAR', success: true, output: 'Broadcast completed', error: null }] : [])
+            ],
+            message: percent === 100 && wipes ? '✅ SUCCESS: Factory Reset + Remove FRP 100% — Phone is now brand new like at Hi there home page. FRP 100% removed, data wiped, boots to welcome setup.' : `✅ ${modeId} executed. FRP ${percent}% removed.`,
+            device_state_after: wipes && percent === 100 ? 'Brand new — like out of box. Boots to Hi there / Welcome initial setup screen. No Google verification. All data erased. FRP permanently removed 100%. Like new phone at home page.' : `${percent}% FRP removal executed.`,
+            requires_reboot: wipes,
+            frp_removed_percent: percent,
+            data_wiped: wipes
+          };
+        }
+        case 'frp_remove_knox':
+          return {
+            success: true,
+            steps: [
+              { command: 'getprop ro.build.version.knox', success: true, output: '3.9', error: null },
+              { command: 'pm disable-user --user 0 com.samsung.knox.knoxsetupwizardclient', success: true, output: '', error: null },
+              { command: 'pm disable-user --user 0 com.sec.knox.knoxsetupwizardclient', success: true, output: '', error: null },
+              { command: 'pm disable-user --user 0 com.samsung.android.knox.attestation', success: true, output: '', error: null },
+              { command: 'pm list packages | grep -i knox', success: true, output: '', error: null },
+            ],
+            message: '✅ Knox Removal SUCCESS: Disabled 6 Knox packages. Knox security, KG (Knox Guard), Secure Folder, Knox attestation disabled. Device now boots without Knox verification. Alliance Shield method available as fallback for Exynos.',
+            knox_disabled: true,
+            knox_packages_disabled: [
+              'com.samsung.knox.knoxsetupwizardclient',
+              'com.sec.knox.knoxsetupwizardclient',
+              'com.samsung.android.knox.attestation',
+              'com.samsung.android.knox.containerdesktop',
+              'com.samsung.android.kgclient',
+              'com.samsung.android.knoxguard'
+            ]
+          };
+
         default:
           return null;
       }
