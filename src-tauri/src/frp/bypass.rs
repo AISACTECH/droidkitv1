@@ -644,7 +644,9 @@ pub fn run_auto_bypass(device: &mut Device) -> BypassResult {
         });
 
         if succeeded {
-            return last_result.unwrap();
+            if let Some(res) = last_result {
+                return res;
+            }
         }
     }
 
