@@ -230,10 +230,10 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
       <div className="flex gap-1 bg-muted/50 p-1 rounded-lg w-fit">
         {(["universal", "methods", "database"] as const).map(tab => (
           <Button key={tab} variant={activeTab === tab ? "default" : "ghost"} size="sm"
-            onClick={() => setActiveTab(tab)} className="text-xs">
-            {tab === "universal" && "🎯 Universal Bypass"}
-            {tab === "methods" && "⚡ All Methods"}
-            {tab === "database" && "📱 Device DB"}
+            onClick={() => setActiveTab(tab)} className="text-xs font-medium">
+            {tab === "universal" && "🎯 Universal Bypass (Safe vs High Risk)"}
+            {tab === "methods" && "⚡ All Methods & Reset Modes"}
+            {tab === "database" && "📱 Device Database (268 Models)"}
           </Button>
         ))}
       </div>
@@ -479,21 +479,38 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
 
             <Separator />
 
-            <h3 className="text-sm font-semibold">Chipset Algorithm Paths</h3>
+            <h3 className="text-sm font-semibold">Chipset Algorithm Paths (Safe vs. High Risk Reference)</h3>
             {(["Exynos", "Qualcomm", "MediaTek", "Spreadtrum"] as ChipsetFamily[]).map(chipset => (
               <Card key={chipset}>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm flex items-center gap-2">
-                    <Cpu className="h-4 w-4" />
-                    {chipset} Path
-                    <Badge variant="outline" className={chipsetColors[chipset]}>{chipset}</Badge>
-                  </CardTitle>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <Cpu className="h-4 w-4" />
+                      {chipset} Path
+                      <Badge variant="outline" className={chipsetColors[chipset]}>{chipset}</Badge>
+                    </CardTitle>
+                    <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-400">
+                      {chipset === "Exynos" ? "95% Success Rate" :
+                       chipset === "Qualcomm" ? "97% Success Rate" :
+                       chipset === "MediaTek" ? "90% Success Rate" : "80% Success Rate"}
+                    </Badge>
+                  </div>
                 </CardHeader>
-                <CardContent className="text-xs text-muted-foreground">
-                  {chipset === "Exynos" && "Download Mode → Flash Enable-ADB → ADB Remove FRP → Reflash Stock (95%)"}
-                  {chipset === "Qualcomm" && "EDL 9008 → Firehose Loader → Erase FRP Partition (97%)"}
-                  {chipset === "MediaTek" && "Brom/Preloader → Erase FRP Partition → Format Userdata (90%)"}
-                  {chipset === "Spreadtrum" && "SPD Bootloader → Erase FRP Partition (80%)"}
+                <CardContent className="text-xs text-muted-foreground space-y-1">
+                  <div>
+                    <span className="font-semibold text-green-400">Safe Path: </span>
+                    {chipset === "Exynos" && "Download Mode → Flash Enable-ADB → ADB Remove FRP → Reflash Stock"}
+                    {chipset === "Qualcomm" && "EDL 9008 → Firehose Loader → Erase FRP Partition without SLA"}
+                    {chipset === "MediaTek" && "Brom/Preloader → Erase FRP Partition → Keep Userdata option"}
+                    {chipset === "Spreadtrum" && "SPD Bootloader → Erase FRP Partition via Flash Protocol"}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-yellow-400">High-Risk / Fallback Path: </span>
+                    {chipset === "Exynos" && "Flash Samsung Combination Firmware (Requires full stock firmware re-flash)"}
+                    {chipset === "Qualcomm" && "EDL Engineering Cable + Modified Firehose Auth Override"}
+                    {chipset === "MediaTek" && "MTK Brom DA Erase + Full Userdata & NVRAM Format"}
+                    {chipset === "Spreadtrum" && "SPD Full Factory Image Wipe"}
+                  </div>
                 </CardContent>
               </Card>
             ))}

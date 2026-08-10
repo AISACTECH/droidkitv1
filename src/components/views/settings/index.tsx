@@ -34,13 +34,15 @@ import {
   Monitor, 
   Folder, 
   FileText,
-  RotateCcw
+  RotateCcw,
+  Shield
 } from "lucide-react"
 import { AppearanceSettings } from "./AppearanceSettings"
 import { AndroidSettings } from "./AndroidSettings"
 import { DeviceSettings } from "./DeviceSettings"
 import { FileSettings } from "./FileSettings"
 import { LogcatSettings } from "./LogcatSettings"
+import { AdvancedSettings } from "./AdvancedSettings"
 
 interface SettingsDialogProps {
   children: React.ReactNode
@@ -52,6 +54,7 @@ const settingsSections = [
   { id: 'devices', name: 'Device Monitoring', icon: Monitor },
   { id: 'files', name: 'File Operations', icon: Folder },
   { id: 'logcat', name: 'Logcat & Debugging', icon: FileText },
+  { id: 'advanced', name: 'Advanced & Developer', icon: Shield },
 ] as const
 
 type SettingsSection = typeof settingsSections[number]['id']
@@ -106,7 +109,7 @@ export function SettingsDialog({ children }: SettingsDialogProps) {
                 <SidebarGroupContent>
                   <SidebarMenu>
                     {settingsSections.map((section) => {
-                      const hasError = hasCategoryErrors(section.id)
+                      const hasError = section.id !== 'advanced' ? hasCategoryErrors(section.id as any) : false
                       return (
                         <SidebarMenuItem key={section.id}>
                           <SidebarMenuButton
@@ -167,6 +170,7 @@ export function SettingsDialog({ children }: SettingsDialogProps) {
               {activeSection === 'devices' && <DeviceSettings />}
               {activeSection === 'files' && <FileSettings />}
               {activeSection === 'logcat' && <LogcatSettings />}
+              {activeSection === 'advanced' && <AdvancedSettings />}
             </div>
           </main>
         </SidebarProvider>
