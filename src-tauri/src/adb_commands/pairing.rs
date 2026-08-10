@@ -28,7 +28,7 @@ pub(crate) fn generate_pairing_data() -> Result<PairingData, String> {
     let pairing_code: String = (0..6)
         .map(|_| {
             let idx = rand::random::<u8>() % 10;
-            char::from_digit(idx as u32, 10).unwrap()
+            char::from_digit(idx as u32, 10).unwrap_or('0')
         })
         .collect();
 

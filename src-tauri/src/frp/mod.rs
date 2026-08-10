@@ -1,5 +1,9 @@
 pub mod algorithm;
 pub mod database;
+pub mod infinix_database;
+pub mod itel_database;
+pub mod q3_database;
+pub mod q4_database;
 pub mod detector;
 pub mod bypass;
 pub mod commands;

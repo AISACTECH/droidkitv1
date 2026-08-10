@@ -218,3 +218,45 @@ export const frpGetTecnoByChipset = (family: string): Promise<TecnoModel[]> =>
 
 export const frpGetTecnoMethods = (): Promise<TecnoFrpMethod[]> =>
   invoke('frp_get_tecno_methods');
+
+// ==================== Q4 FRP Commands ====================
+
+export const frpGetQ4Database = (): Promise<TecnoModel[]> =>
+  invoke('frp_get_q4_database');
+
+export const frpSearchQ4Models = (query: string): Promise<TecnoModel[]> =>
+  invoke('frp_search_q4_models', { query });
+
+export const frpGetQ4ByBrand = (brand: string): Promise<TecnoModel[]> =>
+  invoke('frp_get_q4_by_brand', { brand });
+
+// ==================== Q2 Transsion (Infinix, Itel) Commands ====================
+
+export const frpGetInfinixDatabase = (): Promise<TecnoModel[]> =>
+  invoke('frp_get_infinix_database');
+
+export const frpSearchInfinixModels = (query: string): Promise<TecnoModel[]> =>
+  invoke('frp_search_infinix_models', { query });
+
+export const frpGetInfinixBySeries = (series: string): Promise<TecnoModel[]> =>
+  invoke('frp_get_infinix_by_series', { series });
+
+export const frpGetItelDatabase = (): Promise<TecnoModel[]> =>
+  invoke('frp_get_itel_database');
+
+export const frpSearchItelModels = (query: string): Promise<TecnoModel[]> =>
+  invoke('frp_search_itel_models', { query });
+
+export const frpGetItelBySeries = (series: string): Promise<TecnoModel[]> =>
+  invoke('frp_get_itel_by_series', { series });
+
+// ==================== Q3 FRP Commands ====================
+
+export const frpGetQ3Database = (): Promise<TecnoModel[]> =>
+  invoke('frp_get_q3_database');
+
+export const frpSearchQ3Models = (query: string): Promise<TecnoModel[]> =>
+  invoke('frp_search_q3_models', { query });
+
+export const frpGetQ3ByBrand = (brand: string): Promise<TecnoModel[]> =>
+  invoke('frp_get_q3_by_brand', { brand });

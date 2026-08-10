@@ -11,6 +11,10 @@ use crate::frp::database::{
     get_tecno_by_series, get_tecno_by_chipset_family,
     TecnoModel, TecnoFrpMethod,
 };
+use crate::frp::infinix_database::{get_infinix_database, search_infinix_models, get_infinix_by_series};
+use crate::frp::itel_database::{get_itel_database, search_itel_models, get_itel_by_series};
+use crate::frp::q3_database::{get_q3_database, search_q3_models, get_q3_by_brand};
+use crate::frp::q4_database::{get_q4_database, search_q4_models, get_q4_by_brand};
 use crate::frp::detector::{detect_frp_state, FrpDetectionResult, FrpState};
 
 /// Detect FRP state on a connected device
@@ -385,4 +389,84 @@ pub struct TecnoFrpMethodInfo {
     pub risk_level: String,
     pub is_hardware_method: bool,
     pub is_adb_method: bool,
+}
+
+// ==================== Q4 FRP Commands ====================
+
+/// Get the full Q4 device compatibility database (33 models)
+#[tauri::command]
+pub fn frp_get_q4_database() -> Vec<TecnoModel> {
+    get_q4_database()
+}
+
+/// Search the Q4 device database
+#[tauri::command]
+pub fn frp_search_q4_models(query: String) -> Vec<TecnoModel> {
+    search_q4_models(&query)
+}
+
+/// Get Q4 models filtered by brand/series ("all", "Nokia", "Moto", "Huawei", "Sony", "Pixel", "Credit")
+#[tauri::command]
+pub fn frp_get_q4_by_brand(brand: String) -> Vec<TecnoModel> {
+    get_q4_by_brand(&brand)
+}
+
+// ==================== Infinix FRP Commands (Q2 Transsion) ====================
+
+/// Get the full Infinix device compatibility database (35 models)
+#[tauri::command]
+pub fn frp_get_infinix_database() -> Vec<TecnoModel> {
+    get_infinix_database()
+}
+
+/// Search the Infinix device database
+#[tauri::command]
+pub fn frp_search_infinix_models(query: String) -> Vec<TecnoModel> {
+    search_infinix_models(&query)
+}
+
+/// Get Infinix models filtered by series ("all", "Hot", "Note", "Smart", "Zero", "GT")
+#[tauri::command]
+pub fn frp_get_infinix_by_series(series: String) -> Vec<TecnoModel> {
+    get_infinix_by_series(&series)
+}
+
+// ==================== Itel FRP Commands (Q2 Transsion) ====================
+
+/// Get the full Itel device compatibility database (35 models)
+#[tauri::command]
+pub fn frp_get_itel_database() -> Vec<TecnoModel> {
+    get_itel_database()
+}
+
+/// Search the Itel device database
+#[tauri::command]
+pub fn frp_search_itel_models(query: String) -> Vec<TecnoModel> {
+    search_itel_models(&query)
+}
+
+/// Get Itel models filtered by series ("all", "A", "P", "S", "Vision")
+#[tauri::command]
+pub fn frp_get_itel_by_series(series: String) -> Vec<TecnoModel> {
+    get_itel_by_series(&series)
+}
+
+// ==================== Q3 FRP Commands (Xiaomi, OPPO, Realme, Vivo, Honor) ====================
+
+/// Get the full Q3 device compatibility database (60 models)
+#[tauri::command]
+pub fn frp_get_q3_database() -> Vec<TecnoModel> {
+    get_q3_database()
+}
+
+/// Search the Q3 device database
+#[tauri::command]
+pub fn frp_search_q3_models(query: String) -> Vec<TecnoModel> {
+    search_q3_models(&query)
+}
+
+/// Get Q3 models filtered by brand/series ("all", "Xiaomi", "Redmi", "POCO", "OPPO", "Realme", "Vivo", "Honor")
+#[tauri::command]
+pub fn frp_get_q3_by_brand(brand: String) -> Vec<TecnoModel> {
+    get_q3_by_brand(&brand)
 }
