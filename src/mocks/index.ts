@@ -339,6 +339,53 @@ export function initMocks() {
             ]
           };
 
+        // Fastboot support
+        case 'fastboot_list_devices':
+          return [];
+        case 'fastboot_check_availability':
+          return {
+            fastboot_installed: false,
+            fastboot_version: 'mock - not installed in browser',
+            devices_found: 0,
+            devices: [],
+            guidance_for_damaged_port: 'For damaged port: WiFi ADB BEST, Fastboot needs USB data pins. Use WiFi.'
+          };
+        case 'fastboot_reboot_to_bootloader':
+        case 'fastboot_reboot_to_system':
+        case 'fastboot_oem_unlock':
+        case 'fastboot_getvar_all':
+        case 'fastboot_erase_frp':
+          return { success: true, output: 'Mock fastboot success', error: null, device_serial: null };
+
+        // Screen Mirror reflection window
+        case 'capture_screen_frame':
+        case 'capture_screen_via_file':
+          return {
+            base64_png: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=', // 1x1 png
+            width: 1080,
+            height: 1920,
+            timestamp: Date.now(),
+            format: 'png'
+          };
+        case 'send_tap_via_cursor':
+          return `Tap sent to (${payload?.x}, ${payload?.y}) via cursor — controls phone even with broken touch sensor`;
+        case 'send_swipe_via_cursor':
+          return `Swipe (${payload?.x1},${payload?.y1}) -> (${payload?.x2},${payload?.y2}) ${payload?.durationMs}ms sent`;
+        case 'send_text_via_adb':
+          return `Text input sent: ${payload?.text}`;
+        case 'send_keyevent_via_cursor':
+          return `Keyevent ${payload?.keycode} sent`;
+        case 'start_mirror_session':
+          return {
+            device_serial: payload?.deviceSerial || 'RF8M10XXXXX',
+            width: 1080,
+            height: 1920,
+            refresh_interval_ms: payload?.refreshIntervalMs || 800,
+            cursor_control_enabled: true,
+            reflection_enabled: true,
+            message: 'Reflection window started — phone screen mirrored to desktop. Control via cursor: click to tap, drag to swipe. Works even when phone touch sensor broken.'
+          };
+
         default:
           return null;
       }

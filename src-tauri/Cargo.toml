@@ -32,6 +32,7 @@ adb_client = { version = "3.1.0", features = ["usb", "mdns"] }
 tauri-plugin-store = "2"
 rand = "0.10"
 mdns-sd = "0.18"
+base64 = "0.22"
 
 [profile.release]
 panic = "abort" # Strip expensive panic clean-up logic
