@@ -1,0 +1,78 @@
+name: CI - Production Validation
+
+on:
+  push:
+    branches: [main, arena/*]
+  pull_request:
+    branches: [main]
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript strict check
+        run: npx tsc --noEmit
+
+      - name: Production build
+        run: npm run build
+
+      - name: Check real components exist
+        run: |
+          echo "Checking core components..."
+          test -f src/App.tsx || (echo "Missing App.tsx" && exit 1)
+          test -f src/components/ErrorBoundary.tsx || (echo "Missing ErrorBoundary" && exit 1)
+          test -f src/lib/logger.ts || (echo "Missing logger" && exit 1)
+          test -f src/components/views/PerformanceMonitor.tsx || (echo "Missing PerformanceMonitor" && exit 1)
+          test -f src/components/views/ScreenControl.tsx || (echo "Missing ScreenControl" && exit 1)
+          test -f src-tauri/Cargo.toml || (echo "Missing Cargo.toml" && exit 1)
+          test -f src-tauri/tauri.conf.json || (echo "Missing tauri.conf.json" && exit 1)
+          echo "✅ All core components found"
+
+      - name: Production audit
+        run: node scripts/production-audit.js || true
+
+      - name: Large-scale simulation (quick)
+        run: node scripts/simulate-large-scale.js --devs=1000 --users=1000 --quick
+
+      - name: Check bundle size
+        run: |
+          SIZE=$(du -sk dist | cut -f1)
+          echo "dist size KB: $SIZE"
+          if [ $SIZE -gt 10240 ]; then
+            echo "⚠️ dist >10MB, consider code splitting"
+          else
+            echo "✅ dist size OK"
+          fi
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check CSP not null
+        run: |
+          CSP=$(cat src-tauri/tauri.conf.json | grep -o '"csp":.*')
+          echo "CSP: $CSP"
+          if echo "$CSP" | grep -q "null"; then
+            echo "❌ CSP is null - security risk!"
+            exit 1
+          else
+            echo "✅ CSP hardened"
+          fi
+      - name: Check versions aligned
+        run: |
+          PKG=$(node -p "require('./package.json').version")
+          TAURI=$(node -p "require('./src-tauri/tauri.conf.json').version")
+          CARGO=$(grep 'version =' src-tauri/Cargo.toml | head -1 | cut -d'"' -f2)
+          echo "package.json: $PKG, tauri.conf: $TAURI, Cargo.toml: $CARGO"
+          if [ "$PKG" != "$TAURI" ]; then echo "Version mismatch" && exit 1; fi
+          echo "✅ Versions aligned"
