@@ -331,7 +331,18 @@ pub fn run() {
             // Q4 FRP commands
             frp::commands::frp_get_q4_database,
             frp::commands::frp_search_q4_models,
-            frp::commands::frp_get_q4_by_brand
+            frp::commands::frp_get_q4_by_brand,
+            // Q2 Transsion (Infinix, Itel) commands
+            frp::commands::frp_get_infinix_database,
+            frp::commands::frp_search_infinix_models,
+            frp::commands::frp_get_infinix_by_series,
+            frp::commands::frp_get_itel_database,
+            frp::commands::frp_search_itel_models,
+            frp::commands::frp_get_itel_by_series,
+            // Q3 FRP commands
+            frp::commands::frp_get_q3_database,
+            frp::commands::frp_search_q3_models,
+            frp::commands::frp_get_q3_by_brand
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

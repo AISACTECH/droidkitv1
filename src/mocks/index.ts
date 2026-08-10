@@ -1,6 +1,9 @@
 import { mockIPC } from '@tauri-apps/api/mocks';
 import { SAMSUNG_MODELS } from './samsung';
 import { TECNO_MODELS } from './tecno';
+import { INFINIX_MODELS } from './infinix';
+import { ITEL_MODELS } from './itel';
+import { Q3_MODELS } from './q3';
 import { Q4_MODELS } from './q4';
 import type { DeviceInfo } from '../tauri-commands';
 import type { FrpDetectionResult, DeviceProfile, FrpAlgorithmInfo, FrpResetModeInfo } from '../lib/frp-commands';
@@ -194,6 +197,60 @@ export function initMocks() {
           const brand = payload?.brand || '';
           if (brand.toLowerCase() === 'all') return Q4_MODELS;
           return Q4_MODELS.filter(m => m.series.toLowerCase() === String(brand).toLowerCase());
+        }
+
+        // Infinix FRP Database Commands (Q2 Transsion)
+        case 'frp_get_infinix_database':
+          return INFINIX_MODELS;
+        case 'frp_search_infinix_models': {
+          const q = String(payload?.query || '').toLowerCase();
+          return INFINIX_MODELS.filter(m =>
+            m.marketing_name.toLowerCase().includes(q) ||
+            m.series.toLowerCase().includes(q) ||
+            m.chipset.toLowerCase().includes(q) ||
+            m.chipset_family.toLowerCase().includes(q)
+          );
+        }
+        case 'frp_get_infinix_by_series': {
+          const series = payload?.series || '';
+          if (series.toLowerCase() === 'all') return INFINIX_MODELS;
+          return INFINIX_MODELS.filter(m => m.series.toLowerCase() === String(series).toLowerCase());
+        }
+
+        // Itel FRP Database Commands (Q2 Transsion)
+        case 'frp_get_itel_database':
+          return ITEL_MODELS;
+        case 'frp_search_itel_models': {
+          const q = String(payload?.query || '').toLowerCase();
+          return ITEL_MODELS.filter(m =>
+            m.marketing_name.toLowerCase().includes(q) ||
+            m.series.toLowerCase().includes(q) ||
+            m.chipset.toLowerCase().includes(q) ||
+            m.chipset_family.toLowerCase().includes(q)
+          );
+        }
+        case 'frp_get_itel_by_series': {
+          const series = payload?.series || '';
+          if (series.toLowerCase() === 'all') return ITEL_MODELS;
+          return ITEL_MODELS.filter(m => m.series.toLowerCase() === String(series).toLowerCase());
+        }
+
+        // Q3 FRP Database Commands (Xiaomi, OPPO, Realme, Vivo, Honor)
+        case 'frp_get_q3_database':
+          return Q3_MODELS;
+        case 'frp_search_q3_models': {
+          const q = String(payload?.query || '').toLowerCase();
+          return Q3_MODELS.filter(m =>
+            m.marketing_name.toLowerCase().includes(q) ||
+            m.series.toLowerCase().includes(q) ||
+            m.chipset.toLowerCase().includes(q) ||
+            m.chipset_family.toLowerCase().includes(q)
+          );
+        }
+        case 'frp_get_q3_by_brand': {
+          const brand = payload?.brand || '';
+          if (brand.toLowerCase() === 'all') return Q3_MODELS;
+          return Q3_MODELS.filter(m => m.series.toLowerCase() === String(brand).toLowerCase());
         }
 
         // FRP Detection & Universal Algorithms
