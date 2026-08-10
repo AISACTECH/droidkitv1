@@ -1,8 +1,11 @@
 # ==============================================================================
-# DroidKit - Windows Build Script
+# DroidKit - Automated Windows Build Script
 # ==============================================================================
-# Automatically verifies prerequisites and builds DroidKit for Windows (x64)
-# Output: src-tauri/target/release/bundle/nsis/DroidKit_0.1.0_x64-setup.exe
+# Builds DroidKit for Windows (x64 native installer and standalone executable).
+# Supports both Bun and Node.js/NPM environments automatically.
+# Output:
+#   Installer: src-tauri/target/release/bundle/nsis/DroidKit_0.1.0_x64-setup.exe
+#   Executable: src-tauri/target/release/droidkit.exe
 # ==============================================================================
 
 $ErrorActionPreference = "Stop"
@@ -26,14 +29,34 @@ Write-Host "================================================" -ForegroundColor Y
 Write-Host "         DroidKit v1 - Windows Build Tool       " -ForegroundColor Yellow
 Write-Host "================================================" -ForegroundColor Yellow
 
-# Step 1: Check Node.js
-Write-Step "Checking Node.js prerequisite"
-try {
-    $nodeVersion = node -v
-    Write-Success "Node.js found: $nodeVersion"
-} catch {
-    Write-Err "Node.js is not installed or not in PATH. Please install Node.js 18+ (https://nodejs.org/)"
+# Step 0: Ensure we are in repo root
+if (-not (Test-Path -Path "package.json" -PathType Leaf) -or -not (Test-Path -Path "src-tauri" -PathType Container)) {
+    Write-Err "This script must run in the repository root where package.json and src-tauri/ exist."
     exit 1
+}
+
+# Step 1: Detect package manager (Bun preferred, fallback to NPM)
+Write-Step "Checking JavaScript/TypeScript runtime (Bun / Node)"
+$pkgCmd = "npm"
+$runCmd = "npm run"
+if (Get-Command bun -ErrorAction SilentlyContinue) {
+    $bunVersion = bun --version
+    Write-Success "Bun found: v$bunVersion (Using Bun for ultra-fast builds)"
+    $pkgCmd = "bun"
+    $runCmd = "bun run"
+} elseif (Get-Command node -ErrorAction SilentlyContinue) {
+    $nodeVersion = node -v
+    Write-Success "Node.js found: $nodeVersion (Using NPM)"
+} else {
+    Write-Err "Neither Bun nor Node.js found in PATH. Installing Bun via official script..."
+    try {
+        iwr https://bun.sh/install -UseBasicParsing | iex
+        $pkgCmd = "bun"
+        $runCmd = "bun run"
+    } catch {
+        Write-Err "Failed to install Bun automatically. Please install Node.js 18+ (https://nodejs.org) or Bun (https://bun.sh)."
+        exit 1
+    }
 }
 
 # Step 2: Check Rust / Cargo
@@ -47,26 +70,35 @@ try {
     exit 1
 }
 
-# Step 3: Check MSVC Linker
-Write-Step "Checking Microsoft Visual C++ Build Tools (MSVC Linker)"
-$msvcCheck = Get-Command cl.exe -ErrorAction SilentlyContinue
-if (-not $msvcCheck) {
-    Write-Host "   [!] MSVC compiler cl.exe not found in current environment." -ForegroundColor DarkYellow
-    Write-Host "   [!] Ensure you have installed Visual Studio C++ Build Tools with Windows 10/11 SDK." -ForegroundColor DarkYellow
+# Step 3: Check MSVC Toolchain & Compiler
+Write-Step "Checking Microsoft Visual C++ Build Tools (MSVC Toolchain)"
+if (-not (Get-Command cl.exe -ErrorAction SilentlyContinue)) {
+    Write-Warning "cl.exe (MSVC C++ compiler) not found in current PATH."
+    Write-Warning "Ensure you have installed Visual Studio 2022 C++ Build Tools with 'Desktop development with C++' workload."
+    Write-Warning "Install via Winget: winget install --id Microsoft.VisualStudio.2022.BuildTools -e"
 } else {
-    Write-Success "MSVC compiler found"
+    Write-Success "MSVC compiler found (cl.exe)"
 }
 
-# Step 4: Install npm dependencies
-Write-Step "Installing NPM dependencies"
-npm install
+# Step 4: Ensure MSVC target is added to Rust
+Write-Step "Verifying stable-x86_64-pc-windows-msvc toolchain target"
+try {
+    rustup target add x86_64-pc-windows-msvc 2>$null
+    Write-Success "MSVC target verified"
+} catch {
+    Write-Warning "Could not verify rustup targets (may be managed externally)."
+}
+
+# Step 5: Install dependencies
+Write-Step "Installing dependencies with $pkgCmd"
+& $pkgCmd install
 if ($LASTEXITCODE -ne 0) {
-    Write-Err "npm install failed. Please check your network connection or package.json."
+    Write-Err "Dependency installation failed."
     exit 1
 }
-Write-Success "NPM dependencies installed"
+Write-Success "Dependencies installed"
 
-# Step 5: Check TypeScript compilation
+# Step 6: Check TypeScript compilation
 Write-Step "Running TypeScript type check (npx tsc --noEmit)"
 npx tsc --noEmit
 if ($LASTEXITCODE -ne 0) {
@@ -75,26 +107,36 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Success "TypeScript compilation passed with 0 errors"
 
-# Step 6: Build Vite frontend
-Write-Step "Building production Vite bundle"
-npm run build
+# Step 7: Build Vite frontend
+Write-Step "Building production Vite frontend bundle ($runCmd build)"
+& $pkgCmd run build
 if ($LASTEXITCODE -ne 0) {
     Write-Err "Vite production build failed."
     exit 1
 }
 Write-Success "Vite frontend built successfully"
 
-# Step 7: Build Tauri desktop application
-Write-Step "Building Tauri desktop application (this may take several minutes)"
-npm run tauri build
+# Step 8: Build Tauri desktop application
+Write-Step "Building Tauri desktop application (compiling native Windows binary)"
+try {
+    & $pkgCmd run tauri build
+} catch {
+    Write-Warning "$pkgCmd run tauri build encountered an issue, falling back to cargo tauri build..."
+    if (-not (Get-Command cargo-tauri -ErrorAction SilentlyContinue)) {
+        Write-Step "Installing tauri-cli via cargo"
+        cargo install tauri-cli
+    }
+    cargo tauri build
+}
 if ($LASTEXITCODE -ne 0) {
     Write-Err "Tauri build failed. Please verify MSVC build tools and WebView2 runtime are installed."
     exit 1
 }
 
+# Step 9: Report artifacts
 Write-Host "`n================================================" -ForegroundColor Green
 Write-Success "DroidKit Windows Build Complete!"
 Write-Host "================================================" -ForegroundColor Green
-Write-Host "Installer output directory: src-tauri/target/release/bundle/nsis/" -ForegroundColor White
-Write-Host "Standalone executable:      src-tauri/target/release/droidkit.exe" -ForegroundColor White
+Write-Host "Built Artifacts Location:" -ForegroundColor White
+Get-ChildItem -Path "src-tauri\target\release\bundle" -Recurse -Force -ErrorAction SilentlyContinue | Select-Object FullName, Length | Format-Table -AutoSize
 Write-Host "================================================`n" -ForegroundColor Green
