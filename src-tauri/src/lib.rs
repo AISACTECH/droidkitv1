@@ -327,7 +327,11 @@ pub fn run() {
             frp::commands::frp_list_tecno_models,
             frp::commands::frp_get_tecno_by_series,
             frp::commands::frp_get_tecno_by_chipset,
-            frp::commands::frp_get_tecno_methods
+            frp::commands::frp_get_tecno_methods,
+            // Q4 FRP commands
+            frp::commands::frp_get_q4_database,
+            frp::commands::frp_search_q4_models,
+            frp::commands::frp_get_q4_by_brand
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

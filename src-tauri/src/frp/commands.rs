@@ -11,6 +11,7 @@ use crate::frp::database::{
     get_tecno_by_series, get_tecno_by_chipset_family,
     TecnoModel, TecnoFrpMethod,
 };
+use crate::frp::q4_database::{get_q4_database, search_q4_models, get_q4_by_brand};
 use crate::frp::detector::{detect_frp_state, FrpDetectionResult, FrpState};
 
 /// Detect FRP state on a connected device
@@ -385,4 +386,24 @@ pub struct TecnoFrpMethodInfo {
     pub risk_level: String,
     pub is_hardware_method: bool,
     pub is_adb_method: bool,
+}
+
+// ==================== Q4 FRP Commands ====================
+
+/// Get the full Q4 device compatibility database (33 models)
+#[tauri::command]
+pub fn frp_get_q4_database() -> Vec<TecnoModel> {
+    get_q4_database()
+}
+
+/// Search the Q4 device database
+#[tauri::command]
+pub fn frp_search_q4_models(query: String) -> Vec<TecnoModel> {
+    search_q4_models(&query)
+}
+
+/// Get Q4 models filtered by brand/series ("all", "Nokia", "Moto", "Huawei", "Sony", "Pixel", "Credit")
+#[tauri::command]
+pub fn frp_get_q4_by_brand(brand: String) -> Vec<TecnoModel> {
+    get_q4_by_brand(&brand)
 }

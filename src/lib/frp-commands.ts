@@ -218,3 +218,14 @@ export const frpGetTecnoByChipset = (family: string): Promise<TecnoModel[]> =>
 
 export const frpGetTecnoMethods = (): Promise<TecnoFrpMethod[]> =>
   invoke('frp_get_tecno_methods');
+
+// ==================== Q4 FRP Commands ====================
+
+export const frpGetQ4Database = (): Promise<TecnoModel[]> =>
+  invoke('frp_get_q4_database');
+
+export const frpSearchQ4Models = (query: string): Promise<TecnoModel[]> =>
+  invoke('frp_search_q4_models', { query });
+
+export const frpGetQ4ByBrand = (brand: string): Promise<TecnoModel[]> =>
+  invoke('frp_get_q4_by_brand', { brand });

@@ -15,24 +15,23 @@ import {
   frpRunMethod,
   frpGetTecnoDatabase,
   frpSearchTecnoModels,
-  frpGetTecnoBySeries,
+  frpGetQ4Database,
+  frpSearchQ4Models,
   type FrpDetectionResult,
   type SamsungModel,
   type BypassResult,
-  type FrpMethod,
   type DeviceProfile,
   type ChipsetFamily,
   type FrpAlgorithmInfo,
   type FrpResetModeInfo,
-  type AlgorithmPhase,
   type PhaseAction,
   type TecnoModel,
 } from "@/lib/frp-commands"
 import { type DeviceInfo } from "@/tauri-commands"
 import {
-  ShieldAlert, ShieldCheck, Search, Play, Zap, RefreshCw,
-  ChevronDown, ChevronRight, AlertTriangle, CheckCircle2,
-  XCircle, Smartphone, Terminal, Info, Cpu, HardDrive,
+  ShieldAlert, Search, Play, Zap, RefreshCw,
+  AlertTriangle, CheckCircle2,
+  XCircle, Smartphone, Info, Cpu,
   MonitorSmartphone, RotateCcw,
 } from "lucide-react"
 
@@ -46,6 +45,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
   const [deviceProfile, setDeviceProfile] = useState<DeviceProfile | null>(null)
   const [deviceDb, setDeviceDb] = useState<SamsungModel[]>([])
   const [tecnoDb, setTecnoDb] = useState<TecnoModel[]>([])
+  const [q4Db, setQ4Db] = useState<TecnoModel[]>([])
   const [matchedModel, setMatchedModel] = useState<SamsungModel | null>(null)
   const [algorithms, setAlgorithms] = useState<FrpAlgorithmInfo[]>([])
   const [resetModes, setResetModes] = useState<FrpResetModeInfo[]>([])
@@ -56,9 +56,11 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<SamsungModel[]>([])
   const [tecnoSearchResults, setTecnoSearchResults] = useState<TecnoModel[]>([])
+  const [q4SearchResults, setQ4SearchResults] = useState<TecnoModel[]>([])
   const [activeTab, setActiveTab] = useState<"universal" | "methods" | "database">("universal")
-  const [dbBrand, setDbBrand] = useState<"samsung" | "tecno">("samsung")
+  const [dbBrand, setDbBrand] = useState<"samsung" | "tecno" | "q4">("samsung")
   const [tecnoSeries, setTecnoSeries] = useState<string>("all")
+  const [q4Brand, setQ4Brand] = useState<string>("all")
 
   // Chipset display helpers
   const chipsetColors: Record<string, string> = {
@@ -94,6 +96,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
   const loadDatabase = async () => {
     try { setDeviceDb(await frpGetDeviceDatabase()) } catch {}
     try { setTecnoDb(await frpGetTecnoDatabase()) } catch {}
+    try { setQ4Db(await frpGetQ4Database()) } catch {}
   }
 
   const loadResetModes = async () => {
@@ -246,7 +249,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm flex items-center gap-2">
                     <Cpu className="h-4 w-4 text-blue-400" />
-                    Device Profile: {deviceProfile.marketing_name || deviceProfile.model_code} ({deviceProfile.model_code})
+                    Device Profile: {deviceProfile.marketing_name || matchedModel?.marketing_name || deviceProfile.model_code} ({deviceProfile.model_code})
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-xs">
@@ -492,6 +495,10 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                 onClick={() => setDbBrand("tecno")} className="text-xs">
                 📱 Tecno ({tecnoDb.length})
               </Button>
+              <Button variant={dbBrand === "q4" ? "default" : "ghost"} size="sm"
+                onClick={() => setDbBrand("q4")} className="text-xs">
+                📱 Q4 ({q4Db.length})
+              </Button>
             </div>
 
             {dbBrand === "samsung" && (
@@ -572,6 +579,72 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                                 </div>
                               </div>
                               <div className="text-xs text-muted-foreground mt-1">{model.chipset}</div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </>
+                  )
+                })()}
+              </>
+            )}
+
+            {dbBrand === "q4" && (
+              <>
+                {/* Brand filter */}
+                <div className="flex gap-1 flex-wrap">
+                  {["all", "Nokia", "Moto", "Huawei", "Sony", "Pixel", "Credit"].map(b => (
+                    <Button key={b} variant={q4Brand === b ? "default" : "ghost"} size="sm"
+                      onClick={() => setQ4Brand(b)} className="text-xs">
+                      {b === "all" ? "All" : b}
+                    </Button>
+                  ))}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Input placeholder="Search Q4 models (Nokia, Moto, Huawei, Sony, Pixel, Credit)..." value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === "Enter" && searchQuery.trim()) {
+                        frpSearchQ4Models(searchQuery).then(setQ4SearchResults).catch(() => {})
+                      }
+                    }} className="text-xs" />
+                  <Button size="sm" onClick={() => {
+                    if (searchQuery.trim()) frpSearchQ4Models(searchQuery).then(setQ4SearchResults).catch(() => {})
+                    else setQ4SearchResults([])
+                  }}><Search className="h-3 w-3 mr-1" />Search</Button>
+                </div>
+                {(() => {
+                  const filtered = q4Brand === "all"
+                    ? (q4SearchResults.length > 0 ? q4SearchResults : q4Db)
+                    : q4Db.filter(m => m.series === q4Brand)
+                  return (
+                    <>
+                      <span className="text-xs text-muted-foreground">{filtered.length} Q4 models{q4Brand !== "all" ? ` in ${q4Brand} brand` : ""}</span>
+                      <div className="flex flex-col gap-2">
+                        {filtered.slice(0, 30).map(model => (
+                          <Card key={model.marketing_name}>
+                            <CardContent className="p-2">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <span className="text-sm font-medium">{model.marketing_name}</span>
+                                  <Badge variant="outline" className="text-xs ml-2 bg-blue-500/10 text-blue-400">{model.series}</Badge>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <Badge variant="outline" className={
+                                    model.chipset_family === "MediaTek" ? "text-xs bg-green-500/10 text-green-400" :
+                                    model.chipset_family === "Qualcomm" ? "text-xs bg-red-500/10 text-red-400" :
+                                    model.chipset_family === "Spreadtrum" ? "text-xs bg-purple-500/10 text-purple-400" :
+                                    model.chipset_family === "Kirin" ? "text-xs bg-orange-500/10 text-orange-400" :
+                                    "text-xs bg-blue-500/10 text-blue-400"
+                                  }>
+                                    {model.chipset_family}
+                                  </Badge>
+                                  <Badge variant="outline" className="text-xs bg-orange-500/10 text-orange-400">{model.supported_methods.length} methods</Badge>
+                                  {model.has_mtk_auth && <Badge variant="outline" className="text-xs bg-red-500/10 text-red-400">Auth</Badge>}
+                                </div>
+                              </div>
+                              <div className="text-xs text-muted-foreground mt-1">{model.chipset}</div>
+                              {model.notes && <div className="text-xs text-muted-foreground mt-1 italic">{model.notes}</div>}
                             </CardContent>
                           </Card>
                         ))}
