@@ -1,13 +1,56 @@
 {
   "name": "droidkit",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Enterprise-grade cross-platform Android toolkit — device management, FRP removal, system diagnostics, and developer utilities powered by Tauri + React",
+  "author": {
+    "name": "AISACTECH",
+    "email": "support@droidkit.tech"
+  },
+  "license": "MIT",
   "type": "module",
+  "keywords": [
+    "android",
+    "adb",
+    "frp",
+    "tauri",
+    "rust",
+    "react",
+    "device-management",
+    "developer-tools",
+    "mobile"
+  ],
+  "homepage": "https://github.com/AISACTECH/droidkitv1#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AISACTECH/droidkitv1.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AISACTECH/droidkitv1/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "packageManager": "npm@10.9.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "lint": "tsc --noEmit",
+    "lint:strict": "tsc --noEmit --strict",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" || echo 'prettier not installed, skipping'",
+    "analyze": "vite build --mode analyze",
+    "audit:prod": "node scripts/production-audit.js",
+    "simulate": "node scripts/simulate-large-scale.js",
+    "simulate:devs": "node scripts/simulate-large-scale.js --devs=20000",
+    "simulate:users": "node scripts/simulate-large-scale.js --users=20000",
+    "simulate:full": "node scripts/simulate-large-scale.js --devs=20000 --users=20000",
+    "postinstall": "echo 'DroidKit v1.0.0 installed. Run npm run tauri:dev for desktop or npm run dev for browser mock mode.'",
+    "prepare": "husky install || true"
   },
   "dependencies": {
     "@fontsource-variable/jost": "^5.1.1",

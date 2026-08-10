@@ -1,4 +1,7 @@
-/target
+# Rust / Tauri build artifacts
+/src-tauri/target/
+target/
+
 # Logs
 logs
 *.log
@@ -8,14 +11,27 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+.pnp
+.pnp.js
+
+# Build outputs
 dist
 dist-ssr
-*.local
+build
+out
 
-# Editor directories and files
-../.vscode/*
-!../.vscode/extensions.json
+# Env & secrets
+*.local
+.env
+.env.*
+!.env.example
+
+# Editor & OS
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
 .idea
 .DS_Store
 *.suo
@@ -23,3 +39,26 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+Thumbs.db
+
+# Bun
+bun.lockb
+
+# Coverage
+coverage
+.nyc_output
+
+# Tauri updater artifacts
+*.AppImage
+*.deb
+*.rpm
+*.dmg
+*.exe
+*.msi
+*.app
+
+# Misc
+tmp
+temp
+.cache
+.parcel-cache

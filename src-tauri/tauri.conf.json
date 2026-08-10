@@ -1,24 +1,29 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "droidkit",
-  "version": "0.0.0",
-  "identifier": "com.pavi2410.droidkit",
+  "productName": "DroidKit",
+  "version": "1.0.0",
+  "identifier": "com.aisactech.droidkit",
   "build": {
-    "beforeDevCommand": "bun run dev",
+    "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "bun run build",
+    "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
   "app": {
     "windows": [
       {
-        "title": "droidkit",
-        "width": 800,
-        "height": 600
+        "title": "DroidKit — Android Toolkit",
+        "width": 1280,
+        "height": 800,
+        "minWidth": 1100,
+        "minHeight": 700,
+        "resizable": true,
+        "center": true,
+        "decorations": true
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: https://asset.localhost blob: data:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost https://*.droidkit.tech http://localhost:* ws://localhost:*; media-src 'self'"
     }
   },
   "bundle": {
@@ -30,6 +35,28 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "category": "DeveloperTool",
+    "shortDescription": "Android Toolkit for Developers — ADB, FRP, System Diagnostics",
+    "longDescription": "DroidKit is an enterprise-grade cross-platform Android toolkit providing ADB file management, app management, logcat streaming, system diagnostics, wireless pairing, emulator control, and advanced FRP removal with 170+ device models across Samsung, Tecno, Infinix, Itel, Xiaomi, OPPO, Realme, Vivo, Nokia, Motorola, Huawei, Sony, Pixel and asset finance locked devices.",
+    "publisher": "AISACTECH",
+    "copyright": "Copyright © 2025 AISACTECH. All rights reserved.",
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "nsis": {
+        "installMode": "both"
+      },
+      "publisher": "AISACTECH"
+    },
+    "macOS": {
+      "minimumSystemVersion": "10.15"
+    },
+    "resources": []
+  },
+  "plugins": {
+    "store": {
+      "autoSave": 30000
+    }
   }
 }
