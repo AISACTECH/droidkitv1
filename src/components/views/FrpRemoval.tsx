@@ -419,9 +419,39 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
             {bypassResult && (
               <Card className={bypassResult.success ? "border-green-500/30" : "border-orange-500/30"}>
                 <CardHeader className="pb-3">
-                  <div className="flex items-center gap-2">
-                    {bypassResult.success ? <CheckCircle2 className="h-5 w-5 text-green-400" /> : <XCircle className="h-5 w-5 text-red-400" />}
-                    <CardTitle className="text-base">{bypassResult.success ? "Bypass Successful!" : "Bypass Result"}</CardTitle>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {bypassResult.success ? <CheckCircle2 className="h-5 w-5 text-green-400" /> : <XCircle className="h-5 w-5 text-red-400" />}
+                      <CardTitle className="text-base">{bypassResult.success ? "Bypass Successful!" : "Bypass Result"}</CardTitle>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button size="sm" variant="outline" className="text-xs h-7"
+                        onClick={() => {
+                          const auditData = {
+                            timestamp: new Date().toISOString(),
+                            device: selectedDevice,
+                            profile: deviceProfile,
+                            result: bypassResult,
+                            status: bypassResult.success ? "SUCCESS" : "REQUIRES_MANUAL"
+                          };
+                          const blob = new Blob([JSON.stringify(auditData, null, 2)], { type: "application/json" });
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement("a");
+                          a.href = url;
+                          a.download = `droidkit-frp-audit-${selectedDevice.serial_no || "device"}.json`;
+                          a.click();
+                        }}
+                      >
+                        📄 Export Audit JSON
+                      </Button>
+                      {!bypassResult.success && (
+                        <Button size="sm" variant="default" className="text-xs h-7 bg-orange-500 hover:bg-orange-600"
+                          onClick={() => handleRunMethod(typeof bypassResult.method === 'string' ? bypassResult.method : bypassResult.method.id)}
+                        >
+                          🔄 Auto-Retry Bypass
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
