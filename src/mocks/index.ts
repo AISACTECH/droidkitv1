@@ -126,7 +126,7 @@ const MOCK_TECNO_METHODS = [
 
 export function initMocks() {
   if (typeof window !== 'undefined' && !('__TAURI_INTERNALS__' in window)) {
-    console.log('[DroidKit Mocks] Initializing browser-only mock Tauri API for 138 models...');
+    console.log('[DroidKit Mocks] Initializing browser-only mock Tauri API — full model catalogues loaded.');
     mockIPC((cmd: string, payload?: Record<string, any>) => {
       switch (cmd) {
         // Device Info & Basics
@@ -284,6 +284,106 @@ export function initMocks() {
             message: 'FRP bypass completed successfully in mock mode.',
             requires_manual_action: false,
             manual_action_instructions: null,
+          };
+
+        // === Advanced Reset & Knox (Confirmed Features) ===
+        case 'frp_verify_handshake':
+          return {
+            handshake_ok: true,
+            adb_enabled: true,
+            developer_options_enabled: true,
+            usb_state: 'adb',
+            usb_config: 'mtp,adb',
+            message: '✅ Handshake confirmed: USB Debugging enabled, Developer Options allowed, RSA authorized. App can now run reset 100%/70% and Knox removal. Phone will be brand new at Hi there home page after reset 100%.'
+          };
+        case 'frp_execute_reset_mode': {
+          const modeId = payload?.resetModeId || 'factory_reset_frp100';
+          const percent = modeId.includes('100') ? 100 : 70;
+          const wipes = modeId.includes('factory_reset');
+          return {
+            reset_mode: MOCK_RESET_MODES.find(m => m.id === modeId) || MOCK_RESET_MODES[0],
+            success: true,
+            steps: [
+              { command: 'getprop ro.build.version.release', success: true, output: '14', error: null },
+              { command: 'pm disable-user --user 0 com.google.android.setupwizard', success: true, output: 'Success', error: null },
+              { command: 'settings put global device_provisioned 1', success: true, output: '', error: null },
+              { command: 'content insert --uri content://settings/secure --bind name:s:user_setup_complete --bind value:s:1', success: true, output: '', error: null },
+              ...(wipes ? [{ command: 'am broadcast -a android.intent.action.MASTER_CLEAR', success: true, output: 'Broadcast completed', error: null }] : [])
+            ],
+            message: percent === 100 && wipes ? '✅ SUCCESS: Factory Reset + Remove FRP 100% — Phone is now brand new like at Hi there home page. FRP 100% removed, data wiped, boots to welcome setup.' : `✅ ${modeId} executed. FRP ${percent}% removed.`,
+            device_state_after: wipes && percent === 100 ? 'Brand new — like out of box. Boots to Hi there / Welcome initial setup screen. No Google verification. All data erased. FRP permanently removed 100%. Like new phone at home page.' : `${percent}% FRP removal executed.`,
+            requires_reboot: wipes,
+            frp_removed_percent: percent,
+            data_wiped: wipes
+          };
+        }
+        case 'frp_remove_knox':
+          return {
+            success: true,
+            steps: [
+              { command: 'getprop ro.build.version.knox', success: true, output: '3.9', error: null },
+              { command: 'pm disable-user --user 0 com.samsung.knox.knoxsetupwizardclient', success: true, output: '', error: null },
+              { command: 'pm disable-user --user 0 com.sec.knox.knoxsetupwizardclient', success: true, output: '', error: null },
+              { command: 'pm disable-user --user 0 com.samsung.android.knox.attestation', success: true, output: '', error: null },
+              { command: 'pm list packages | grep -i knox', success: true, output: '', error: null },
+            ],
+            message: '✅ Knox Removal SUCCESS: Disabled 6 Knox packages. Knox security, KG (Knox Guard), Secure Folder, Knox attestation disabled. Device now boots without Knox verification. Alliance Shield method available as fallback for Exynos.',
+            knox_disabled: true,
+            knox_packages_disabled: [
+              'com.samsung.knox.knoxsetupwizardclient',
+              'com.sec.knox.knoxsetupwizardclient',
+              'com.samsung.android.knox.attestation',
+              'com.samsung.android.knox.containerdesktop',
+              'com.samsung.android.kgclient',
+              'com.samsung.android.knoxguard'
+            ]
+          };
+
+        // Fastboot support
+        case 'fastboot_list_devices':
+          return [];
+        case 'fastboot_check_availability':
+          return {
+            fastboot_installed: false,
+            fastboot_version: 'mock - not installed in browser',
+            devices_found: 0,
+            devices: [],
+            guidance_for_damaged_port: 'For damaged port: WiFi ADB BEST, Fastboot needs USB data pins. Use WiFi.'
+          };
+        case 'fastboot_reboot_to_bootloader':
+        case 'fastboot_reboot_to_system':
+        case 'fastboot_oem_unlock':
+        case 'fastboot_getvar_all':
+        case 'fastboot_erase_frp':
+          return { success: true, output: 'Mock fastboot success', error: null, device_serial: null };
+
+        // Screen Mirror reflection window
+        case 'capture_screen_frame':
+        case 'capture_screen_via_file':
+          return {
+            base64_png: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=', // 1x1 png
+            width: 1080,
+            height: 1920,
+            timestamp: Date.now(),
+            format: 'png'
+          };
+        case 'send_tap_via_cursor':
+          return `Tap sent to (${payload?.x}, ${payload?.y}) via cursor — controls phone even with broken touch sensor`;
+        case 'send_swipe_via_cursor':
+          return `Swipe (${payload?.x1},${payload?.y1}) -> (${payload?.x2},${payload?.y2}) ${payload?.durationMs}ms sent`;
+        case 'send_text_via_adb':
+          return `Text input sent: ${payload?.text}`;
+        case 'send_keyevent_via_cursor':
+          return `Keyevent ${payload?.keycode} sent`;
+        case 'start_mirror_session':
+          return {
+            device_serial: payload?.deviceSerial || 'RF8M10XXXXX',
+            width: 1080,
+            height: 1920,
+            refresh_interval_ms: payload?.refreshIntervalMs || 800,
+            cursor_control_enabled: true,
+            reflection_enabled: true,
+            message: 'Reflection window started — phone screen mirrored to desktop. Control via cursor: click to tap, drag to swipe. Works even when phone touch sensor broken.'
           };
 
         default:

@@ -294,3 +294,87 @@ export const getDeviceBuildInfo = (deviceSerial: string): Promise<BuildInfo> =>
  */
 export const getDeviceNetworkInfo = (deviceSerial: string): Promise<NetworkInfo> => 
   invoke('get_device_network_info_cmd', { deviceSerial });
+
+// ==================== Fastboot Support (Damaged Charger Port) ====================
+
+export interface FastbootDevice {
+  serial: string;
+  status: string;
+}
+
+export interface FastbootResult {
+  success: boolean;
+  output: string;
+  error?: string;
+  device_serial?: string;
+}
+
+export interface FastbootAvailability {
+  fastboot_installed: boolean;
+  fastboot_version: string;
+  devices_found: number;
+  devices: FastbootDevice[];
+  guidance_for_damaged_port: string;
+}
+
+export const fastbootListDevices = (): Promise<FastbootDevice[]> =>
+  invoke('fastboot_list_devices');
+
+export const fastbootRebootToBootloader = (deviceSerial: string): Promise<FastbootResult> =>
+  invoke('fastboot_reboot_to_bootloader', { deviceSerial });
+
+export const fastbootRebootToSystem = (): Promise<FastbootResult> =>
+  invoke('fastboot_reboot_to_system');
+
+export const fastbootOemUnlock = (): Promise<FastbootResult> =>
+  invoke('fastboot_oem_unlock');
+
+export const fastbootGetvarAll = (): Promise<FastbootResult> =>
+  invoke('fastboot_getvar_all');
+
+export const fastbootEraseFrp = (): Promise<FastbootResult> =>
+  invoke('fastboot_erase_frp');
+
+export const fastbootCheckAvailability = (): Promise<FastbootAvailability> =>
+  invoke('fastboot_check_availability');
+
+// ==================== Screen Mirror — Reflection Window with Cursor Control ====================
+
+export interface ScreenFrame {
+  base64_png: string;
+  width: number;
+  height: number;
+  timestamp: number;
+  format: string;
+}
+
+export interface MirrorSession {
+  device_serial: string;
+  width: number;
+  height: number;
+  refresh_interval_ms: number;
+  cursor_control_enabled: boolean;
+  reflection_enabled: boolean;
+  message: string;
+}
+
+export const captureScreenFrame = (deviceSerial: string): Promise<ScreenFrame> =>
+  invoke('capture_screen_frame', { deviceSerial });
+
+export const captureScreenViaFile = (deviceSerial: string): Promise<ScreenFrame> =>
+  invoke('capture_screen_via_file', { deviceSerial });
+
+export const sendTapViaCursor = (deviceSerial: string, x: number, y: number): Promise<string> =>
+  invoke('send_tap_via_cursor', { deviceSerial, x, y });
+
+export const sendSwipeViaCursor = (deviceSerial: string, x1: number, y1: number, x2: number, y2: number, durationMs: number): Promise<string> =>
+  invoke('send_swipe_via_cursor', { deviceSerial, x1, y1, x2, y2, durationMs });
+
+export const sendTextViaAdb = (deviceSerial: string, text: string): Promise<string> =>
+  invoke('send_text_via_adb', { deviceSerial, text });
+
+export const sendKeyeventViaCursor = (deviceSerial: string, keycode: number): Promise<string> =>
+  invoke('send_keyevent_via_cursor', { deviceSerial, keycode });
+
+export const startMirrorSession = (deviceSerial: string, refreshIntervalMs?: number): Promise<MirrorSession> =>
+  invoke('start_mirror_session', { deviceSerial, refreshIntervalMs });

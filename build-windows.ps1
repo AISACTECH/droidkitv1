@@ -1,11 +1,12 @@
 # ==============================================================================
-# DroidKit - Automated Windows Build Script
+# DroidKit v1.1.0 - Automated Windows Build Script
 # ==============================================================================
 # Builds DroidKit for Windows (x64 native installer and standalone executable).
 # Supports both Bun and Node.js/NPM environments automatically.
-# Output:
-#   Installer: src-tauri/target/release/bundle/nsis/DroidKit_0.1.0_x64-setup.exe
+# Output (version read dynamically from package.json at build time):
+#   Installer:  src-tauri/target/release/bundle/nsis/DroidKit_<version>_x64-setup.exe
 #   Executable: src-tauri/target/release/droidkit.exe
+# Full guide: docs/WINDOWS-SETUP.md
 # ==============================================================================
 
 $ErrorActionPreference = "Stop"
@@ -48,13 +49,13 @@ if (Get-Command bun -ErrorAction SilentlyContinue) {
     $nodeVersion = node -v
     Write-Success "Node.js found: $nodeVersion (Using NPM)"
 } else {
-    Write-Err "Neither Bun nor Node.js found in PATH. Installing Bun via official script..."
+    Write-Err "Neither Bun nor Node.js found in PATH. Attempting Bun via official PowerShell installer..."
     try {
-        iwr https://bun.sh/install -UseBasicParsing | iex
+        irm https://bun.sh/install.ps1 | iex
         $pkgCmd = "bun"
         $runCmd = "bun run"
     } catch {
-        Write-Err "Failed to install Bun automatically. Please install Node.js 18+ (https://nodejs.org) or Bun (https://bun.sh)."
+        Write-Err "Failed to install Bun automatically. Please install Node.js 18+ LTS via: winget install --id OpenJS.NodeJS.LTS -e"
         exit 1
     }
 }

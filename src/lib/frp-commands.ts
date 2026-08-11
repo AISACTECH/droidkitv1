@@ -260,3 +260,45 @@ export const frpSearchQ3Models = (query: string): Promise<TecnoModel[]> =>
 
 export const frpGetQ3ByBrand = (brand: string): Promise<TecnoModel[]> =>
   invoke('frp_get_q3_by_brand', { brand });
+
+// ==================== Advanced Reset & Knox (Confirmed Features) ====================
+
+export interface ResetExecutionResult {
+  reset_mode: FrpResetModeInfo;
+  success: boolean;
+  steps: BypassStepResult[];
+  message: string;
+  device_state_after: string;
+  requires_reboot: boolean;
+  frp_removed_percent: number;
+  data_wiped: boolean;
+}
+
+export interface KnoxRemovalResult {
+  success: boolean;
+  steps: BypassStepResult[];
+  message: string;
+  knox_disabled: boolean;
+  knox_packages_disabled: string[];
+}
+
+export interface HandshakeVerification {
+  handshake_ok: boolean;
+  adb_enabled: boolean;
+  developer_options_enabled: boolean;
+  usb_state: string;
+  usb_config: string;
+  message: string;
+}
+
+// Confirms USB debugging + developer options handshake allows app to run reset 100%/70%
+export const frpVerifyHandshake = (deviceSerial: string): Promise<HandshakeVerification> =>
+  invoke('frp_verify_handshake', { deviceSerial });
+
+// Confirms reset 100% makes phone brand new at Hi there home page
+export const frpExecuteResetMode = (deviceSerial: string, resetModeId: string): Promise<ResetExecutionResult> =>
+  invoke('frp_execute_reset_mode', { deviceSerial, resetModeId });
+
+// Confirms Knox remove feature exists and works 100%
+export const frpRemoveKnox = (deviceSerial: string): Promise<KnoxRemovalResult> =>
+  invoke('frp_remove_knox', { deviceSerial });

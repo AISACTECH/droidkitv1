@@ -207,26 +207,31 @@ fn run_browser_download_bypass(device: &mut Device) -> BypassResult {
     // If Samsung Browser fails, try Chrome
     steps.push(exec(device, "am start -n com.android.chrome/com.google.android.apps.chrome.Main"));
 
-    // Try opening a direct URL to an FRP bypass APK download page
-    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://frpbypass.net/android-frp-bypass-apk"));
+    // Try opening a web search so the user can choose a trustworthy bypass APK source themselves
+    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://www.google.com/search?q=frp+bypass+apk"));
 
-    // Alternative: try to open Samsung Internet with URL
-    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://frpbypass.net/android-frp-bypass-apk -p com.sec.android.app.sbrowser"));
+    // Alternative: try to open Samsung Internet with the same search
+    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://www.google.com/search?q=frp+bypass+apk -p com.sec.android.app.sbrowser"));
 
     BypassResult {
         method: FrpMethod::BrowserDownloadBypass,
         success: steps.iter().any(|s| s.success),
         steps,
-        message: "Browser launched. You need to manually navigate to download an FRP bypass APK (e.g. QuickShortcutMaker, FRP_Bypass.apk, or Alliance Shield).".into(),
+        message: "Browser launched. NOTE (2026 research): browser/APK routes are blocked on Android 14+ / One UI 6+. Viable mainly on Android 12 or older / pre-2023 patches.".into(),
         requires_manual_action: true,
         manual_action_instructions: Some(
-            "1. In the browser, go to frpbypass.net or search 'FRP bypass APK'\n\
+            "2026 PATCH NOTE: Browser + APK sideload routes are patched on Android 14+ and One UI 6+. Check the Reality Check panel — if your window is CLOSED, use the chipset hardware route instead.\n\
+             \n\
+             IF YOUR DEVICE IS IN THE OPEN WINDOW (Android 12 or older):\n\
+             1. In the browser, search for a reputable FRP bypass APK source you trust\n\
              2. Download QuickShortcutMaker.apk or FRP_Bypass.apk\n\
              3. Open the APK file (may need 'Install unknown apps' permission)\n\
              4. Install and open the APK\n\
              5. Use QuickShortcutMaker to launch Google Account Manager\n\
              6. Sign in with your Google account\n\
-             7. Reboot the device".into()
+             7. Reboot the device\n\
+             \n\
+             SAFETY: Avoid random APK mirrors — 2026 reviews flag unofficial FRP APK sites as malware-prone and mostly patched on new firmware.".into()
         ),
     }
 }
@@ -339,10 +344,12 @@ fn run_talkback_bypass(device: &mut Device) -> BypassResult {
         method: FrpMethod::TalkBackBypass,
         success: steps.iter().any(|s| s.success),
         steps,
-        message: "TalkBack accessibility service enabled. Follow manual steps below.".into(),
+        message: "TalkBack accessibility service enabled. NOTE (2026 research): TalkBack gesture routes mostly fail on Android 14+ / One UI 6+. Viable mainly on Android 12 or older / pre-2023 patches.".into(),
         requires_manual_action: true,
         manual_action_instructions: Some(
-            "TALKBACK GESTURE METHOD:\n\
+            "2026 PATCH NOTE: This exploit is patched on Android 14+ and One UI 6+. If the Reality Check panel shows CLOSED, use the chipset hardware route (Brom/EDL/Odin) instead.\n\
+             \n\
+             TALKBACK GESTURE METHOD (legacy, pre-2023 patches):\n\
              1. TalkBack is now active — the device will speak and use gesture navigation\n\
              2. On the setup/FRP screen, draw an 'L' gesture (swipe right then down)\n\
              3. This opens a TalkBack menu — select 'Help & Feedback'\n\
@@ -414,10 +421,14 @@ fn run_combination_firmware(device: &mut Device) -> BypassResult {
         message: "Combination firmware method requires Samsung Download Mode and Odin on PC. Cannot be executed via ADB. See instructions below.".into(),
         requires_manual_action: true,
         manual_action_instructions: Some(
-            "COMBINATION FIRMWARE METHOD:\n\
-             This is the MOST RELIABLE method for newer Samsung devices.\n\
+            "COMBINATION FIRMWARE METHOD (LEGACY — Android 6 to 9 only):\n\
+             2026 research: combination files no longer work on modern phones (S20 or newer).\n\
+             For Android 10+, the current working flow is: check binary version in Recovery Mode,\n\
+             download matching STOCK firmware (SamFW archive), flash via Odin,\n\
+             then on the setup screen use the emergency-dialer test code to open the diagnostic\n\
+             menu — if it opens, this app can complete ADB removal from here.\n\
              \n\
-             PREREQUISITES:\n\
+             LEGACY PREREQUISITES (Android 6-9 devices):\n\
              - Windows PC with Samsung Odin installed\n\
              - Combination firmware for your exact model & CSC\n\
              - Samsung USB drivers installed\n\
@@ -574,11 +585,11 @@ fn run_settings_access(device: &mut Device) -> BypassResult {
 fn run_quick_shortcut_maker(device: &mut Device) -> BypassResult {
     let mut steps = Vec::new();
 
-    // Try to launch Samsung Browser with QSK download URL
-    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://frpbypass.net/quickshortcutmaker -p com.sec.android.app.sbrowser"));
+    // Try to launch Samsung Browser with a web search for QuickShortcutMaker
+    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://www.google.com/search?q=quickshortcutmaker+apk -p com.sec.android.app.sbrowser"));
 
-    // Fallback: launch Chrome
-    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://frpbypass.net/quickshortcutmaker -p com.android.chrome"));
+    // Fallback: launch Chrome with the same search
+    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://www.google.com/search?q=quickshortcutmaker+apk -p com.android.chrome"));
 
     // Try launching QSK if already installed
     steps.push(exec(device, "am start -n com.eltechs.es.qsk/com.eltechs.es.qsk.Main"));

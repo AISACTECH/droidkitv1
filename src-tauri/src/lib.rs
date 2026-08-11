@@ -21,7 +21,9 @@ use std::net::IpAddr;
 
 mod adb_commands;
 mod emulator;
+mod fastboot;
 mod frp;
+mod screen_mirror;
 mod system_info;
 mod utils;
 
@@ -342,7 +344,27 @@ pub fn run() {
             // Q3 FRP commands
             frp::commands::frp_get_q3_database,
             frp::commands::frp_search_q3_models,
-            frp::commands::frp_get_q3_by_brand
+            frp::commands::frp_get_q3_by_brand,
+            // Advanced Reset & Knox Removal (confirmed features)
+            frp::commands::frp_execute_reset_mode,
+            frp::commands::frp_remove_knox,
+            frp::commands::frp_verify_handshake,
+            // Fastboot support — for damaged charger port data system, supports phone via fastboot mode
+            fastboot::fastboot_list_devices,
+            fastboot::fastboot_reboot_to_bootloader,
+            fastboot::fastboot_reboot_to_system,
+            fastboot::fastboot_oem_unlock,
+            fastboot::fastboot_getvar_all,
+            fastboot::fastboot_erase_frp,
+            fastboot::fastboot_check_availability,
+            // Screen Mirror — reflection window where phone screen reflected, control via cursor for broken touch sensor
+            screen_mirror::capture_screen_frame,
+            screen_mirror::capture_screen_via_file,
+            screen_mirror::send_tap_via_cursor,
+            screen_mirror::send_swipe_via_cursor,
+            screen_mirror::send_text_via_adb,
+            screen_mirror::send_keyevent_via_cursor,
+            screen_mirror::start_mirror_session
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

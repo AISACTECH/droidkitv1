@@ -7,6 +7,9 @@ import {
   getDeviceBuildInfo,
   getDeviceNetworkInfo
 } from '@/tauri-commands'
+import { createLogger } from '@/lib/logger'
+
+const logger = createLogger('SystemInfo')
 
 // Query Keys for system info
 export const systemInfoKeys = {
@@ -23,10 +26,19 @@ export const systemInfoKeys = {
 export function useDeviceHardwareInfo(device: DeviceInfo | undefined) {
   return useQuery({
     queryKey: systemInfoKeys.hardware(device?.serial_no || ''),
-    queryFn: () => getDeviceHardwareInfo(device!.serial_no),
+    queryFn: async () => {
+      try {
+        return await getDeviceHardwareInfo(device!.serial_no)
+      } catch (e) {
+        logger.warn('Failed to get hardware info', { serial: device?.serial_no, error: e })
+        throw e
+      }
+    },
     enabled: !!device,
-    staleTime: 5 * 60 * 1000, // Hardware info changes rarely
+    staleTime: 5 * 60 * 1000, // Hardware info changes rarely, 5min cache
+    gcTime: 10 * 60 * 1000,
     retry: 2,
+    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 5000),
   })
 }
 
@@ -36,30 +48,32 @@ export function useDeviceDisplayInfo(device: DeviceInfo | undefined) {
     queryKey: systemInfoKeys.display(device?.serial_no || ''),
     queryFn: () => getDeviceDisplayInfo(device!.serial_no),
     enabled: !!device,
-    staleTime: 5 * 60 * 1000, // Display info changes rarely
+    staleTime: 5 * 60 * 1000,
     retry: 2,
   })
 }
 
-// Battery Info Hook
+// Battery Info Hook - more frequent refresh
 export function useDeviceBatteryInfo(device: DeviceInfo | undefined) {
   return useQuery({
     queryKey: systemInfoKeys.battery(device?.serial_no || ''),
     queryFn: () => getDeviceBatteryInfo(device!.serial_no),
     enabled: !!device,
-    staleTime: 30 * 1000, // Battery info changes more frequently
-    refetchInterval: 60 * 1000, // Refresh every minute
+    staleTime: 30 * 1000,
+    gcTime: 2 * 60 * 1000,
+    refetchInterval: 60 * 1000, // Refresh every minute for production monitoring
     retry: 1, // Battery info might not be available on all devices
   })
 }
 
-// Build Info Hook
+// Build Info Hook - never changes, long cache
 export function useDeviceBuildInfo(device: DeviceInfo | undefined) {
   return useQuery({
     queryKey: systemInfoKeys.build(device?.serial_no || ''),
     queryFn: () => getDeviceBuildInfo(device!.serial_no),
     enabled: !!device,
-    staleTime: 10 * 60 * 1000, // Build info never changes
+    staleTime: 30 * 60 * 1000, // 30 min - build info never changes
+    gcTime: 60 * 60 * 1000,
     retry: 2,
   })
 }
@@ -70,7 +84,7 @@ export function useDeviceNetworkInfo(device: DeviceInfo | undefined) {
     queryKey: systemInfoKeys.network(device?.serial_no || ''),
     queryFn: () => getDeviceNetworkInfo(device!.serial_no),
     enabled: !!device,
-    staleTime: 2 * 60 * 1000, // Network info can change
-    retry: 1, // Network commands might be slow or fail
+    staleTime: 2 * 60 * 1000,
+    retry: 1,
   })
 }
