@@ -25,7 +25,8 @@ import {
   Camera,
   Activity,
   Settings,
-  ShieldAlert
+  ShieldAlert,
+  FlaskConical
 } from "lucide-react"
 
 interface SidebarProps {
@@ -40,6 +41,7 @@ const navigationItems = [
   { id: 'devices', label: 'Devices', icon: Smartphone },
   { id: 'system-info', label: 'System Info', icon: Info },
   { id: 'frp', label: 'FRP Removal', icon: ShieldAlert },
+  { id: 'frp-lab', label: 'FRP Lab 🧪', icon: FlaskConical },
   { id: 'files', label: 'Files', icon: FileText },
   { id: 'logcat', label: 'Logcat', icon: Terminal },
   { id: 'apps', label: 'Apps', icon: Package },
