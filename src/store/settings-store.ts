@@ -25,7 +25,7 @@ class SettingsStore {
 
   async initialize(): Promise<void> {
     try {
-      this.store = await Store.load('settings.json', { autoSave: false });
+   this.store = await Store.load('settings.json', { autoSave: false, defaults: {} });
       
       const savedSettings = await this.store.get('app-settings');
       if (savedSettings) {
