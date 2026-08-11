@@ -26,15 +26,15 @@ jobs:
 
     name: Building for ${{ matrix.os_name }}
     runs-on: ${{ matrix.platform }}
-    
+
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev libsoup-3.0-dev libappindicator3-dev librsvg2-dev patchelf libudev-dev libusb-1.0-0-dev
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -47,13 +47,18 @@ jobs:
         with:
           workspaces: './src-tauri -> target'
 
-      - uses: oven-sh/setup-bun@v2
+      # npm world == the world the app is verified green in (package-lock.json).
+      # Deliberately NOT bun: bun.lock resolves different dep versions, which is
+      # how the 4-runner TS2345 failure happened. One lockfile = one truth.
+      - uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: install frontend dependencies
-        run: bun install
-               
+        run: npm ci
+
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
