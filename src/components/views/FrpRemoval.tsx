@@ -47,6 +47,7 @@ import {
 import { BrandRibbon, BrandId, ChipsetFilter } from "./FrpRemoval/BrandRibbon"
 import { ModelBrowser } from "./FrpRemoval/ModelBrowser"
 import { DeviceStatusPanel } from "./FrpRemoval/DeviceStatusPanel"
+import { RealityCheckPanel } from "./FrpRemoval/RealityCheck"
 import { createLogger } from "@/lib/logger"
 
 const logger = createLogger("FrpEnhanced")
@@ -667,6 +668,9 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                   </CardContent>
                 </Card>
               )}
+
+              {/* Research Reality Check — evidence-based feasibility from Aug 2026 research */}
+              {deviceProfile && <RealityCheckPanel profile={deviceProfile} detection={frpState} />}
 
               {/* Security tab - FRP state + reset modes */}
               {(operationTab === "security" || activeTab === "universal") && (
