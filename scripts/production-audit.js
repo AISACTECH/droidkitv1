@@ -41,7 +41,7 @@ console.log("====================================\n");
 
 // 1. Check package.json & versions
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
-console.log(`Package version: ${pkg.version} ${pkg.version === '1.0.0' ? '✅' : '❌ SHOULD BE 1.0.0'}`);
+console.log(`Package version: ${pkg.version} ${/^\d+\.\d+\.\d+$/.test(pkg.version) ? '✅ valid semver' : '❌ invalid semver'}`);
 console.log(`Name: ${pkg.name}, license: ${pkg.license}, author: ${pkg.author?.name || pkg.author}`);
 
 // 2. Check tauri.conf
@@ -53,7 +53,8 @@ console.log(`Window size: ${tauriConf.app.windows[0].width}x${tauriConf.app.wind
 
 // 3. Cargo.toml
 const cargo = fs.readFileSync(path.join(root, 'src-tauri/Cargo.toml'), 'utf8');
-console.log(`Cargo version: ${cargo.match(/version\s*=\s*"([^"]+)"/)?.[1]} ${cargo.includes('version = "1.0.0"') ? '✅' : '❌'}`);
+const cargoVer = cargo.match(/version\s*=\s*"([^"]+)"/)?.[1];
+console.log(`Cargo version: ${cargoVer} ${cargoVer === pkg.version ? '✅ matches package' : '❌ mismatch'}`);
 console.log(`Cargo edition: ${cargo.match(/edition\s*=\s*"([^"]+)"/)?.[1]}`);
 console.log(`Cargo license MIT: ${cargo.includes('MIT') ? '✅' : '❌'}`);
 
@@ -193,7 +194,7 @@ try {
 
 // Final summary
 console.log("\n=== Production Readiness Summary ===");
-console.log(`Version alignment: ${pkg.version === tauriConf.version && pkg.version === '1.0.0' ? '✅' : '❌'}`);
+console.log(`Version alignment: ${pkg.version === tauriConf.version && cargoVer === pkg.version ? '✅' : '❌'} (package ${pkg.version} / tauri ${tauriConf.version} / cargo ${cargoVer})`);
 console.log(`Security CSP: ${tauriConf.app.security.csp ? '✅ hardened' : '❌ null'}`);
 console.log(`Storage optimized: ${distSize < 5*1024*1024 ? '✅ dist <5MB (gz 196kb main)' : '✅ dist present but check chunks'}`);
 console.log(`Reliability: ErrorBoundary + logger + hardened capabilities ✅`);

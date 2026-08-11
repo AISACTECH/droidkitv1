@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * DroidKit v1.0.0 — Comprehensive Test Suite
+ * DroidKit — Comprehensive Test Suite
  * Tests everything to pass, ready to clone/install on GitHub,
  * accuracy peak, speed efficiency, reliability, Windows support,
  * ADB/USB/WiFi/Fastboot, Screen Mirror reflection window
@@ -35,7 +35,7 @@ function exec(cmd, opts = {}) {
   }
 }
 
-console.log("\n🧪 DroidKit Comprehensive Test Suite v1.0.0");
+console.log("\n🧪 DroidKit Comprehensive Test Suite");
 console.log("==============================================\n");
 
 // 1. Clone / Install Ready
@@ -239,7 +239,11 @@ try {
 // 7. Best World Recommended App Criteria
 console.log("\n--- 7. Best World Recommended App Criteria ---");
 const criteria = [
-  { check: tauriConf.version === '1.0.0', msg: 'Version aligned 1.0.0 across manifests' },
+  { check: (() => {
+      const pv = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version;
+      const cv = fs.readFileSync(path.join(root, 'src-tauri/Cargo.toml'), 'utf8').match(/version\s*=\s*"([^"]+)"/)?.[1];
+      return /^\d+\.\d+\.\d+$/.test(pv) && tauriConf.version === pv && cv === pv;
+    })(), msg: 'Version aligned across manifests (package.json + tauri.conf.json + Cargo.toml)' },
   { check: tauriConf.app.security.csp && !tauriConf.app.security.csp.includes('null'), msg: 'Security CSP hardened not null' },
   { check: fs.existsSync(path.join(root, 'LICENSE')), msg: 'License MIT exists' },
   { check: fs.existsSync(path.join(root, 'README.md')) && fs.readFileSync(path.join(root, 'README.md'), 'utf8').includes('DroidKit'), msg: 'README exists with DroidKit' },

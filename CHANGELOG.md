@@ -2,6 +2,24 @@
 
 All notable changes to DroidKit will be documented here.
 
+## [1.1.0] - 2026-08-11 — Evidence-Based FRP Release
+
+### Added
+- `src/components/views/DeveloperLab.tsx` — **EXPERIMENTAL** developer view that closes gaps #6/#7/#8 from `FRP-ALGORITHM-ANALYSIS.md`: auto-escalation engine (evidence-ranked ADB ladder), post-method verification loop (fresh `frp_detect` after every run, before/after comparison, measured verdicts `removed_verified 92%` / `flags_set_unverified 70%` / `escalated_failed 0%`), deterministic weighted progress, chipset Phase Runbook driven by real `algorithm.rs` phase weights, session journal (300-entry cap) + JSON export, raw snapshot dump
+- `src/components/views/FrpRemoval/RealityCheck.tsx` — Research Reality Check panel: computes an evidence-based feasibility band per scanned device (Android version + security patch + chipset family) and routes to the method class the Aug-2026 research supports; wired into the FRP Removal device-profile area
+- `RESEARCH-2026-FRP.md` — deep-research evidence base with industry sources (SamFw/Dr.Fone/TSM reviews, MTKClient, XDA SPD tools, Android 14/15/16 patch-wall consensus)
+- `DEBATE-AI-VS-GOOGLE.md` — structured scored debate on the claim "no agent AI can build an FRP removal app" (verdict: claim false as stated; patch wall real for everyone)
+- Sidebar nav item **FRP Lab 🧪** routing to the new view (additive; no existing flow modified)
+
+### Changed
+- Version bump **1.0.0 → 1.1.0** across package.json, src-tauri/tauri.conf.json, src-tauri/Cargo.toml + synced package-lock.json
+- `src-tauri/src/frp/bypass.rs` (string-only edits): browser-APK & TalkBack instructions now carry the verified patch-era caveats (blocked on Android 14+/One UI 6+); combination firmware reframed as legacy Android 6–9 with the modern stock-firmware Odin flow; unverified third-party APK mirror URLs replaced with neutral web-search launches
+- README rewritten for 1.1.0 with Honest Scope section, verified fresh-clone steps, full feature/evidence index
+
+### Fixed
+- Fresh-clone noise: removed `prepare: husky install` script (husky was never a dependency)
+- Browser mock console line no longer states an outdated model count
+
 ## [1.0.0] - 2026-08-10 — Production Release
 
 ### 🎉 Production Ready

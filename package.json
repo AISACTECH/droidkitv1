@@ -1,7 +1,7 @@
 {
   "name": "droidkit",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Enterprise-grade cross-platform Android toolkit — device management, FRP removal, system diagnostics, and developer utilities powered by Tauri + React",
   "author": {
     "name": "AISACTECH",
@@ -49,8 +49,7 @@
     "simulate:devs": "node scripts/simulate-large-scale.js --devs=20000",
     "simulate:users": "node scripts/simulate-large-scale.js --users=20000",
     "simulate:full": "node scripts/simulate-large-scale.js --devs=20000 --users=20000",
-    "postinstall": "echo 'DroidKit v1.0.0 installed. Run npm run tauri:dev for desktop or npm run dev for browser mock mode.'",
-    "prepare": "husky install || true"
+    "postinstall": "echo 'DroidKit v1.1.0 installed. Run npm run tauri:dev for desktop or npm run dev for browser mock mode.'"
   },
   "dependencies": {
     "@fontsource-variable/jost": "^5.1.1",

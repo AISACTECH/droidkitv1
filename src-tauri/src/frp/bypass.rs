@@ -207,11 +207,11 @@ fn run_browser_download_bypass(device: &mut Device) -> BypassResult {
     // If Samsung Browser fails, try Chrome
     steps.push(exec(device, "am start -n com.android.chrome/com.google.android.apps.chrome.Main"));
 
-    // Try opening a direct URL to an FRP bypass APK download page
-    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://frpbypass.net/android-frp-bypass-apk"));
+    // Try opening a web search so the user can choose a trustworthy bypass APK source themselves
+    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://www.google.com/search?q=frp+bypass+apk"));
 
-    // Alternative: try to open Samsung Internet with URL
-    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://frpbypass.net/android-frp-bypass-apk -p com.sec.android.app.sbrowser"));
+    // Alternative: try to open Samsung Internet with the same search
+    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://www.google.com/search?q=frp+bypass+apk -p com.sec.android.app.sbrowser"));
 
     BypassResult {
         method: FrpMethod::BrowserDownloadBypass,
@@ -585,11 +585,11 @@ fn run_settings_access(device: &mut Device) -> BypassResult {
 fn run_quick_shortcut_maker(device: &mut Device) -> BypassResult {
     let mut steps = Vec::new();
 
-    // Try to launch Samsung Browser with QSK download URL
-    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://frpbypass.net/quickshortcutmaker -p com.sec.android.app.sbrowser"));
+    // Try to launch Samsung Browser with a web search for QuickShortcutMaker
+    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://www.google.com/search?q=quickshortcutmaker+apk -p com.sec.android.app.sbrowser"));
 
-    // Fallback: launch Chrome
-    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://frpbypass.net/quickshortcutmaker -p com.android.chrome"));
+    // Fallback: launch Chrome with the same search
+    steps.push(exec(device, "am start -a android.intent.action.VIEW -d https://www.google.com/search?q=quickshortcutmaker+apk -p com.android.chrome"));
 
     // Try launching QSK if already installed
     steps.push(exec(device, "am start -n com.eltechs.es.qsk/com.eltechs.es.qsk.Main"));
