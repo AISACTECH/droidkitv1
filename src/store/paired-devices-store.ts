@@ -7,7 +7,7 @@ class PairedDevicesStore {
 
   async initialize(): Promise<void> {
     try {
-      this.store = await Store.load('paired-devices.json', { autoSave: false });
+      this.store = await Store.load('paired-devices.json', { autoSave: false });defaults: {} });
       
       const savedDevices = await this.store.get('devices');
       if (savedDevices && Array.isArray(savedDevices)) {
