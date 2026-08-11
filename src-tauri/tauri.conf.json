@@ -39,11 +39,11 @@
     "category": "DeveloperTool",
     "shortDescription": "Android Toolkit for Developers — ADB, FRP, System Diagnostics",
     "longDescription": "DroidKit is an enterprise-grade cross-platform Android toolkit providing ADB file management, app management, logcat streaming, system diagnostics, wireless pairing, emulator control, and advanced Android system utilities for developers and enterprises.",
+    "publisher": "AISACTECH",
     "copyright": "Copyright © 2025 AISACTECH. All rights reserved.",
     "windows": {
       "certificateThumbprint": null,
       "digestAlgorithm": "sha256",
-      "publisher": "AISACTECH",
       "nsis": {
         "installMode": "both"
       }
