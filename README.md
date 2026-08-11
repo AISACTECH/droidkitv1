@@ -70,6 +70,8 @@ Appearance (light/dark/system), Android SDK path, device polling, download paths
 
 ## 🚀 Getting Started (Fresh Clone)
 
+> **🪟 Windows user?** Full git-clone-to-installer walkthrough with one-command `winget` setup: [`docs/WINDOWS-SETUP.md`](./docs/WINDOWS-SETUP.md). TL;DR: install Git + Node LTS + Rust + VS Build Tools (`winget` lines inside), `git clone https://github.com/AISACTECH/droidkitv1.git`, `npm ci`, `npm run tauri:dev` — or build the NSIS installer with `powershell -ExecutionPolicy Bypass -File .\build-windows.ps1`.
+
 ### Prerequisites
 | Tool | Min Version | Notes |
 |------|-------------|-------|
@@ -77,6 +79,7 @@ Appearance (light/dark/system), Android SDK path, device polling, download paths
 | Rust stable | 1.75+ | only for the desktop app: `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh` |
 | Android SDK | latest | `ANDROID_HOME` set, `adb` on PATH |
 | Linux only | webkit deps | `sudo apt install libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf` |
+| Windows only | MSVC + WebView2 | see the Windows guide — usually two `winget` lines |
 
 ### Install & Run
 

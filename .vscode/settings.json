@@ -1,6 +1,10 @@
 {
-    "bun.runtime": "/Users/pavi2410/.local/share/mise/shims/bun",
-    "debug.javascript.defaultRuntimeExecutable": {
-        "pwa-node": "/Users/pavi2410/.local/share/mise/shims/node"
+    // Portable settings — no machine-specific absolute paths.
+    // Works identically on Windows, macOS and Linux clones.
+    "editor.formatOnSave": false,
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "rust-analyzer.check.command": "check",
+    "files.associations": {
+        "*.ps1": "powershell"
     }
 }
