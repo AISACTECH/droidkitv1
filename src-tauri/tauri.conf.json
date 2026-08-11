@@ -23,7 +23,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: https://asset.localhost blob: data:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost https://*.droidkit.tech http://localhost:* ws://localhost:*; media-src 'self'"
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: https://asset.localhost blob: data:; font-src 'self' data:; connect-src 'self' https: wss: tauri://*"
     }
   },
   "bundle": {
@@ -38,16 +38,15 @@
     ],
     "category": "DeveloperTool",
     "shortDescription": "Android Toolkit for Developers — ADB, FRP, System Diagnostics",
-    "longDescription": "DroidKit is an enterprise-grade cross-platform Android toolkit providing ADB file management, app management, logcat streaming, system diagnostics, wireless pairing, emulator control, and advanced FRP removal with 170+ device models across Samsung, Tecno, Infinix, Itel, Xiaomi, OPPO, Realme, Vivo, Nokia, Motorola, Huawei, Sony, Pixel and asset finance locked devices.",
-    "publisher": "AISACTECH",
+    "longDescription": "DroidKit is an enterprise-grade cross-platform Android toolkit providing ADB file management, app management, logcat streaming, system diagnostics, wireless pairing, emulator control, and advanced Android system utilities for developers and enterprises.",
     "copyright": "Copyright © 2025 AISACTECH. All rights reserved.",
     "windows": {
       "certificateThumbprint": null,
       "digestAlgorithm": "sha256",
+      "publisher": "AISACTECH",
       "nsis": {
         "installMode": "both"
-      },
-      "publisher": "AISACTECH"
+      }
     },
     "macOS": {
       "minimumSystemVersion": "10.15"
