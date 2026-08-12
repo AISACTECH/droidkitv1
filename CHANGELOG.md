@@ -2,6 +2,16 @@
 
 All notable changes to DroidKit will be documented here.
 
+## [Unreleased] — Physics-Layer Experimental Lane
+
+### Added
+- `src/lib/patch-oracle.ts` — **EXPERIMENTAL** offline reasoning engine: evidence-banded method-survival matrix (alive / contested / blocked / unknown, never percentages), the patch stack model (app → OS → server → bootloader → bootROM → hardware, annotated by physical patchability), a curated dated patch-event timeline, and **falsifiable future-patch forecasts** with decide-by dates, falsifiers and a self-calibration meter (resolved hits/misses stay visible forever, including our miss)
+- `src/components/views/DeveloperLab/PatchOracle.tsx` — Patch Oracle 🔮 panel: manual or scan-prefilled device class inputs, survival bands with evidence dates + fallback rungs, physics stack explainer, forecast timeline, bench log with JSON export. Pure UI — sends zero device commands; additive card at the bottom of FRP Lab 🧪
+- `docs/PHYSICS-LAYER-RESEARCH.md` — the honest deep-layer research digest: why "quantum FRP" is a scam and what the real unpatchable silicon layer is (mask ROM, eFuses, RPMB caveats, fault-injection context), Nairobi-practical bench ladder, and the prediction theory behind the forecasts
+
+### Fixed
+- `src/store/paired-devices-store.ts` — repaired a malformed `Store.load(...)` options object (`{ autoSave: false });defaults: {} })` → `{ autoSave: false, defaults: {} })`) that broke every TypeScript/CI build
+
 ## [1.1.0] - 2026-08-11 — Evidence-Based FRP Release
 
 ### Added
