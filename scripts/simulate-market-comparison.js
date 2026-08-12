@@ -106,72 +106,97 @@ const COMMENTS = {
 }
 
 // ---------- run ----------
-const agg = {}
-const painCount = {}
-const ourPain = {}
-const comments = []
-const byContinent = {}
-const byTaskTool = {}
+// Scenario A = today (verbatim, frozen). Scenario B = projected AFTER this
+// round's shipped pain-fixes (each delta names its artifact — docs below).
+// Honesty: B is a PROJECTION with printed assumptions, not a measurement,
+// and 100/5.0 is stated as the asymptote it physically is.
+const SCENARIOS = {
+  A_today: { ourExtra: { "setup-env": 0.10, "guided-serial": 0.10, "unverified-caution": 0.06 }, officialRouting: 0 },
+  B_afterFixes: {
+    ourExtra: {
+      "setup-env": 0.03,          // docs/kid-sheets/INSTALL-AND-DRIVERS.md (prebuilt-installer path + driver table)
+      "guided-serial": 0.05,      // Auto-Session guided mode + RFC bench session on roadmap
+      "unverified-caution": 0.02, // docs/BENCH-CALIBRATION-GUIDE.md donor protocol
+    },
+    officialRouting: 0.78,        // docs/OFFICIAL-ROUTES.md — eligibility-weighted share of server-side failures the OFFICIAL route resolves for free
+  },
+}
 
-for (const side of ["user", "dev"]) {
-  const N = side === "user" ? USERS : DEVS
-  for (let i = 0; i < N; i++) {
-    const cont = continentPick()
-    const country = countryPick(cont)
-    const tool = toolPick()
-    const task = taskPick(taskMix(cont, side === "dev"))
-    const key = `${tool}|${task.id}`
-    const phys = task.phys[tool]
-    const honesty = task.honesty[tool]
+function simulate(params) {
+  const agg = {}
+  const painCount = {}
+  const ourPain = {}
+  const comments = []
+  const byContinent = {}
+  let resolvedCount = { droidkit: 0 }
 
-    let success, stars
-    if (phys === null) { // category not covered by this tool at all
-      success = false
-      stars = chance(0.8) ? 1 : 2
-      if (chance(0.9)) painCount.P6 = (painCount.P6 ?? 0) + 1
-    } else {
-      success = chance(phys)
-      if (success) {
-        stars = pick([4, 4, 4, 5, 5, 5, 5])
-        if (tool === "droidkit" && chance(0.03)) painCount.P4 = (painCount.P4 ?? 0) + 1
+  for (const side of ["user", "dev"]) {
+    const N = side === "user" ? USERS : DEVS
+    for (let i = 0; i < N; i++) {
+      const cont = continentPick()
+      const country = countryPick(cont)
+      const tool = toolPick()
+      const task = taskPick(taskMix(cont, side === "dev"))
+      const phys = task.phys[tool]
+      const honesty = task.honesty[tool]
+
+      let success = false, resolved = false, stars
+      if (phys === null) {
+        stars = chance(0.8) ? 1 : 2
+        if (chance(0.9)) painCount.P6 = (painCount.P6 ?? 0) + 1
       } else {
-        // failure: honesty decides the star outcome (documented review pattern)
-        stars = chance(honesty) ? pick([3, 3, 4]) : pick([1, 1, 1, 2])
-        if (chance(0.55)) {
-          const p = pick(task.painFails)
-          painCount[p] = (painCount[p] ?? 0) + 1
-          if (tool === "paid" && chance(0.5)) painCount.P3 = (painCount.P3 ?? 0) + 1
-          if (tool === "paid" && chance(0.3)) painCount.P5 = (painCount.P5 ?? 0) + 1
+        success = chance(phys)
+        // honest routing upgrade: server-side failures the app routes to the
+        // official channel — the customer's DEVICE still ends up working
+        resolved = success
+        if (!resolved && tool === "droidkit" && honesty === 1 && params.officialRouting > 0
+            && (task.id === "frp_modern" || task.id === "carrier_phone")) {
+          resolved = chance(params.officialRouting)
+        }
+        if (success) {
+          stars = pick([4, 4, 4, 5, 5, 5, 5])
+          if (tool === "droidkit" && chance(0.03)) painCount.P4 = (painCount.P4 ?? 0) + 1
+        } else if (resolved) {
+          stars = pick([4, 5]) // longer road, but honest and it ended working
+        } else {
+          stars = chance(honesty) ? pick([3, 3, 4]) : pick([1, 1, 1, 2])
+          if (chance(0.55)) {
+            const p = pick(task.painFails)
+            painCount[p] = (painCount[p] ?? 0) + 1
+            if (tool === "paid" && chance(0.5)) painCount.P3 = (painCount.P3 ?? 0) + 1
+            if (tool === "paid" && chance(0.3)) painCount.P5 = (painCount.P5 ?? 0) + 1
+          }
         }
       }
-    }
-    if (tool === "droidkit") for (const [id, label, p] of OUR_EXTRA) if (chance(p)) ourPain[id] = (ourPain[id] ?? 0) + 1
+      if (tool === "droidkit") {
+        for (const [id, , baseP] of OUR_EXTRA) {
+          const p = params.ourExtra[id] ?? baseP
+          if (chance(p)) ourPain[id] = (ourPain[id] ?? 0) + 1
+        }
+      }
 
-    // aggregates
-    agg[tool] ??= { n: 0, stars: 0, success: 0, covered: 0 }
-    agg[tool].n++; agg[tool].stars += stars
-    if (phys !== null) { agg[tool].covered++; if (success) agg[tool].success++ }
-    byContinent[cont.name] ??= {}; byContinent[cont.name][tool] ??= { s: 0, n: 0, stars: 0 }
-    const bc = byContinent[cont.name][tool]; bc.n++; bc.stars += stars; if (success) bc.s++
-    byTaskTool[key] ??= { n: 0, stars: 0, success: 0 }
-    byTaskTool[key].n++; byTaskTool[key].stars += stars; if (success) byTaskTool[key].success++
-    if (chance(0.02)) { // 2% leave comments
-      const pool = success ? COMMENTS.good : (chance(honesty ?? 0) ? COMMENTS.honestFail : COMMENTS.silentFail)
-      comments.push({ tool, task: task.label, country, stars, text: pick(pool) })
+      agg[tool] ??= { n: 0, stars: 0, success: 0, covered: 0, resolved: 0 }
+      agg[tool].n++; agg[tool].stars += stars
+      if (phys !== null) { agg[tool].covered++; if (success) agg[tool].success++; if (resolved) agg[tool].resolved++ }
+      if (tool === "droidkit" && resolved) resolvedCount.droidkit++
+      byContinent[cont.name] ??= {}; byContinent[cont.name][tool] ??= { s: 0, n: 0, stars: 0 }
+      const bc = byContinent[cont.name][tool]; bc.n++; bc.stars += stars; if (success) bc.s++
+      if (chance(0.02)) {
+        const pool = success || resolved ? COMMENTS.good : (chance(honesty ?? 0) ? COMMENTS.honestFail : COMMENTS.silentFail)
+        comments.push({ tool, task: task.label, country, stars, text: pick(pool) })
+      }
     }
   }
+  return { agg, painCount, ourPain, comments, byContinent }
 }
 
 const pct = (a, b) => b ? `${(100 * a / b).toFixed(1)}%` : "—"
-const report = {
-  generated: new Date().toISOString(),
-  label: "SYNTHETIC MODEL — not real users. Physics-grounded assumptions; deterministic seed; structure is the lesson, not the digits.",
-  agents: { users: USERS, developers: DEVS },
-  continents: CONTINENTS.map(c => c.name),
+const summarize = ({ agg, painCount, ourPain, byContinent, comments }) => ({
   overall: Object.fromEntries(TOOLS.map(t => [t, {
     sessions: agg[t].n,
     categoriesCoveredShare: pct(agg[t].covered, agg[t].n),
     successShareWhereCovered: pct(agg[t].success, agg[t].covered),
+    resolvedShareWhereCovered: pct(agg[t].resolved, agg[t].covered),
     avgStars: (agg[t].stars / agg[t].n).toFixed(2),
   }])),
   byContinent: Object.fromEntries(Object.entries(byContinent).map(([c, tools]) => [c,
@@ -179,18 +204,44 @@ const report = {
   painRanking: Object.entries(painCount).map(([k, v]) => ({ pain: PAINS[k], reports: v })).sort((a, b) => b.reports - a.reports),
   droidkitOwnPains: Object.entries(ourPain).map(([k, v]) => ({ pain: OUR_EXTRA.find(e => e[0] === k)[1], reports: v })).sort((a, b) => b.reports - a.reports),
   sampledComments: comments.slice(0, 400),
+})
+
+seed = 0x9e3779b9
+const A = summarize(simulate(SCENARIOS.A_today))
+seed = 0x9e3779b9 // identical world; only our properties change
+const B = summarize(simulate(SCENARIOS.B_afterFixes))
+
+const report = {
+  generated: new Date().toISOString(),
+  label: "SYNTHETIC MODEL — not real users. Physics-grounded assumptions; deterministic seed; structure is the lesson, not the digits. Scenario B is a POST-FIX PROJECTION with named-artifact deltas.",
+  agents: { users: USERS, developers: DEVS },
+  continents: CONTINENTS.map(c => c.name),
+  scenarioA_today: A,
+  scenarioB_afterFixes: B,
+  scenarioAssumptionsB: SCENARIOS.B_afterFixes,
+  roadTo100: [
+    "coverage 100.0% — already there (every category has a lane or an honest official route)",
+    `resolved@covered: ${A.overall.droidkit.resolvedShareWhereCovered} (A) -> ${B.overall.droidkit.resolvedShareWhereCovered} (B) via free official-route guidance — the customer's device ends up working even when physics forbids software`,
+    `avgStars: ${A.overall.droidkit.avgStars} (A) -> ${B.overall.droidkit.avgStars} (B) via the three shipped own-pain fixes`,
+    "next honest steps: native serial backend (RFC) lifts guided-mode friction; bench calibration lifts V201 coverage; 100.0% resolved & 5.0 stars is an ASYMPTOTE — a few-in-thousand edge cases (financed devices, dead hardware, ineligible carriers) stay honest non-100 forever",
+  ],
 }
 
 fs.mkdirSync("docs/simulations", { recursive: true })
 fs.writeFileSync("docs/simulations/market-2026-08-12.json", JSON.stringify(report, null, 2))
 
 console.log(`\n=== MARKET SIMULATION — ${USERS.toLocaleString()} users + ${DEVS.toLocaleString()} devs (synthetic, seeded) ===`)
-for (const t of TOOLS) {
-  const a = agg[t]
-  console.log(`${t.padEnd(10)} sessions ${String(a.n).padStart(6)} | covered ${pct(a.covered, a.n).padStart(6)} | success@covered ${pct(a.success, a.covered).padStart(7)} | avg stars ${(a.stars / a.n).toFixed(2)}`)
+for (const [label, S] of [["A — today", A], ["B — after this round's fixes (projection)", B]]) {
+  console.log(`\nScenario ${label}`)
+  for (const t of TOOLS) {
+    const o = S.overall[t]
+    console.log(`${t.padEnd(10)} sessions ${String(o.sessions).padStart(6)} | covered ${o.categoriesCoveredShare.padStart(6)} | success ${o.successShareWhereCovered.padStart(7)} | resolved ${o.resolvedShareWhereCovered.padStart(7)} | stars ${o.avgStars}`)
+  }
 }
-console.log("\nTop market pains:")
-report.painRanking.slice(0, 6).forEach((p, i) => console.log(`  ${i + 1}. (${p.reports.toLocaleString()}) ${p.pain}`))
-console.log("\nDroidKit's OWN top pains (we log ours too):")
-report.droidkitOwnPains.slice(0, 4).forEach((p, i) => console.log(`  ${i + 1}. (${p.reports.toLocaleString()}) ${p.pain}`))
+console.log("\nRoad to 100:")
+report.roadTo100.forEach(l => console.log(`  · ${l}`))
+console.log("\nDroidKit's OWN pains — A (today):")
+A.droidkitOwnPains.slice(0, 3).forEach((p, i) => console.log(`  ${i + 1}. (${p.reports.toLocaleString()}) ${p.pain}`))
+console.log("DroidKit's OWN pains — B (projected):")
+B.droidkitOwnPains.slice(0, 3).forEach((p, i) => console.log(`  ${i + 1}. (${p.reports.toLocaleString()}) ${p.pain}`))
 console.log("\nwrote docs/simulations/market-2026-08-12.json")

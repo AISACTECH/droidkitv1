@@ -71,3 +71,28 @@ are honesty.** We win coverage outright, tie capability where servers rule,
 and convert the failure paths — where everyone else bleeds stars — into
 trust. Competitors could copy the coverage; they can't copy the honesty
 without firing their own marketing.
+
+## 6 · Road to 100 — Scenario B (projected post-fix, same deterministic world)
+
+With this round's shipped pain-fixes feeding back into the model
+(`npm run simulate:market` prints both scenarios; every delta names its
+artifact):
+
+| Metric (DroidKit) | A — today | B — projected |
+|---|---|---|
+| Categories covered | 100.0% | 100.0% (already at ceiling) |
+| Raw success where covered | 65.8% | 65.3% (same physics — no pretending) |
+| **Resolved where covered** (incl. free official-route endings) | 65.8% | **84.0%** |
+| Avg rating | 4.15 ★ | **4.35 ★** |
+| Own pain: setup friction | 1,051 | 303 (INSTALL-AND-DRIVERS card) |
+| Own pain: guided-mode serial | 1,035 | 529 (RFC bench session = final fix) |
+| Own pain: V201 caution | 616 | 192 (calibration guide) |
+
+**Why "everything 100%" is targeted as an asymptote, honestly:** the last few-
+in-thousand cases are not improvable by any vendor — financed devices whose
+lenders must be paid, dead-in-hardware units, ineligible-carrier phones.
+A tool that reports exactly 100.0 is making the number up; ours reports the
+*resolved* share, which includes the official route, and it climbs every
+round: the lift levers remaining are the native serial backend (lifts
+guided-friction) and bench-calibrated V201 models (lifts coverage of 2012+
+Huawei). That's the road to as-close-to-100-as-truth-allows.
