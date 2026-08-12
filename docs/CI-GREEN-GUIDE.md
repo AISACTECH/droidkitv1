@@ -1,12 +1,21 @@
 # CI Green Guide — watching the GitHub bot (kid-simple, 2026-08-12)
 
-Your repo now has TWO robot jobs. You never type a command for either.
+Your repo has the publish bot, and a NEW fast check-bot is **ready to switch
+on with one copy-paste** (GitHub only lets its App create workflow files via
+the website, so you do one paste — never a command):
+
+### One-time switch-on (2 minutes, website only)
+1. In the repo on GitHub, open `docs/workflows-manual/ci.yml` → click **Raw**
+   → select all → copy.
+2. Back at the repo root: **Add file → Create new file** → name it exactly
+   `.github/workflows/ci.yml` → paste → **Commit changes** (to main).
+3. Done. From now on every push/PR shows green-or-red in minutes.
 
 ## The two bots
 
 | Bot file | When it runs | What it proves | Time |
 |---|---|---|---|
-| **ci.yml** (new, fast) | Every push & every pull request to `main` | Code typechecks, builds, all 111+ lab tests + engine vectors pass — **and the Rust backend finally compiles** (`cargo check` on Ubuntu + Windows) | ~5–15 min |
+| **ci.yml** (after the one-time paste) | Every push & every pull request to `main` | Code typechecks, builds, all 111+ lab tests + engine vectors pass — **and the Rust backend finally compiles** (`cargo check` on Ubuntu + Windows) | ~5–15 min |
 | **publish.yml** | Only when YOU press Run workflow (Actions → publish → Run) | Builds the real Windows/macOS/Linux installers into a draft Release | ~20–40 min |
 
 ## How to read the color
