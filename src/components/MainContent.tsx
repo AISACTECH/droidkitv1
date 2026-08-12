@@ -8,6 +8,7 @@ import { PerformanceMonitor } from "@/components/views/PerformanceMonitor"
 import { ShellTerminal } from "@/components/views/ShellTerminal"
 import { FrpRemoval } from "@/components/views/FrpRemoval"
 import { DeveloperLab } from "@/components/views/DeveloperLab"
+import { RescueLab } from "@/components/views/RescueLab"
 import { DeviceInfo } from "@/tauri-commands"
 import { Monitor } from "lucide-react"
 
@@ -65,6 +66,8 @@ export function MainContent({
         return <FrpRemoval selectedDevice={selectedDevice} />
       case 'frp-lab':
         return <DeveloperLab selectedDevice={selectedDevice} />
+      case 'rescue-lab':
+        return <RescueLab selectedDevice={selectedDevice} />
       case 'files':
         return <FileExplorer selectedDevice={selectedDevice} />
       case 'logcat':
