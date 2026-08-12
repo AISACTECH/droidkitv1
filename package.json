@@ -48,6 +48,7 @@
     "test:rescue": "node --experimental-strip-types scripts/verify-gesture-crack.mts",
     "test:nck": "node --experimental-strip-types scripts/verify-nck.mts",
     "test:lab": "node --experimental-strip-types scripts/verify-rescue-lab.mts",
+    "test:core": "node --experimental-strip-types scripts/verify-core-lib.mts",
     "build:help-pdf": "node --experimental-strip-types scripts/build-help-pdf.mts",
     "simulate": "node scripts/simulate-large-scale.js",
     "simulate:market": "node scripts/simulate-market-comparison.js",

@@ -22,6 +22,13 @@ const MAX_ENTRIES = 500;
 class Logger {
   private scope: string;
   private buffer: LogEntry[] = [];
+  // audit fix (2026-08-12): persist() ran on EVERY entry — the screen-mirror
+  // logger writes 1-3 lines/sec (frame log), serializing up to 500 entries
+  // to localStorage each time. Throttle to one flush per second; `clear()`
+  // stays immediate. In-memory buffer (getRecent) is unaffected.
+  private dirty = false;
+  private lastFlush = 0;
+  private static readonly FLUSH_EVERY_MS = 1000;
 
   constructor(scope: string) {
     this.scope = scope;
@@ -37,15 +44,25 @@ class Logger {
     }
   }
 
-  private persist() {
+  private flush() {
     try {
       if (this.buffer.length > MAX_ENTRIES) {
         this.buffer = this.buffer.slice(-MAX_ENTRIES);
       }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.buffer));
+      this.dirty = false;
+      this.lastFlush = Date.now();
     } catch {
       // ignore quota
     }
+  }
+
+  private persist(immediate = false) {
+    if (this.buffer.length > MAX_ENTRIES) {
+      this.buffer = this.buffer.slice(-MAX_ENTRIES);
+    }
+    if (!immediate && this.dirty && Date.now() - this.lastFlush < Logger.FLUSH_EVERY_MS) return;
+    this.flush();
   }
 
   private emit(level: LogLevel, msg: string, meta?: unknown) {
@@ -57,6 +74,7 @@ class Logger {
       meta,
     };
     this.buffer.push(entry);
+    this.dirty = true;
     this.persist();
 
     if (!isDev && level === "debug") return;
@@ -99,7 +117,8 @@ class Logger {
 
   clear() {
     this.buffer = [];
-    this.persist();
+    this.dirty = true;
+    this.persist(true);
   }
 
   child(childScope: string) {

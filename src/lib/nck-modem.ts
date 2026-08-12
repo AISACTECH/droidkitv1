@@ -296,6 +296,13 @@ export interface NckResult {
 
 export function huaweiCandidates(imeiRaw: string): NckResult {
   const imei = imeiRaw.replace(/\D/g, "")
+  // audit fix (2026-08-12): malformed input (short/empty) made algoSelector
+  // read past the string → NaN index → TypeError. Fail fast with guidance
+  // instead of throwing a naked TypeError or fabricating codes from
+  // garbage digits (a fabricated code = a real burned attempt).
+  if (imei.length !== 15) {
+    throw new Error(`huaweiCandidates needs a 15-digit IMEI (got ${imei.length}) — run checkImei first; never generate from a mistyped number`)
+  }
   const sel2 = algoSelector(imei, false)
   const sel201 = algoSelector(imei, true)
   const v2Algos: ((im: string) => string)[] = [

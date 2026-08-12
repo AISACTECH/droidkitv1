@@ -67,7 +67,7 @@ export const POLICIES: HelpPolicy[] = [
     title: "1. The Honesty Law (our first and highest policy)",
     tone: "green",
     paras: [
-      "DroidKit never prints a success number it cannot prove. You will not find '100% FRP removal, Android 15/16' here, because that claim is false for every tool on Earth - the decision lives on Google's server, not in any cable or app. Anyone selling you that line is selling a scam.",
+      "DroidKit never prints a success number it cannot prove. The famous advert line - 'total FRP bypass on Android 15/16, every model' - is false for every tool on Earth, because the decision lives on Google's server, not in any cable or app. Anyone selling you that promise is selling a scam; you will never find it in this app.",
       "Instead: traffic-light bands (DOABLE / CONDITIONAL / NOT-BY-SOFTWARE), named limits, named risks, and a bench log where real measurements - not marketing - calibrate every claim. Where we have not measured something, it is labelled UNVERIFIED in plain sight.",
       "Where the math genuinely is deterministic (legacy Huawei modems), we say exactly that and show the real published examples the engine was verified against. Per-class truth is the product.",
     ],
