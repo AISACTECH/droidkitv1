@@ -14,7 +14,7 @@ pub struct ScreenFrame {
 
 /// Capture screenshot for reflection window — works even with broken touch sensor
 #[tauri::command]
-pub fn capture_screen_frame(device_serial: String) -> Result<ScreenFrame, String> {
+pub async fn capture_screen_frame(device_serial: String) -> Result<ScreenFrame, String> {
     let mut device = reconnect_device(&device_serial)
         .ok_or_else(|| "Failed to connect to device. Ensure USB Debugging or WiFi ADB handshake is complete.".to_string())?;
 
@@ -59,7 +59,7 @@ pub fn capture_screen_frame(device_serial: String) -> Result<ScreenFrame, String
 
 /// Alternative screenshot via file path — more reliable for some devices
 #[tauri::command]
-pub fn capture_screen_via_file(device_serial: String) -> Result<ScreenFrame, String> {
+pub async fn capture_screen_via_file(device_serial: String) -> Result<ScreenFrame, String> {
     let mut device = reconnect_device(&device_serial)
         .ok_or_else(|| "Failed to connect to device".to_string())?;
     
@@ -98,7 +98,7 @@ pub fn capture_screen_via_file(device_serial: String) -> Result<ScreenFrame, Str
 
 /// Send tap via cursor — allows controlling phone via cursor when touch sensor not working
 #[tauri::command]
-pub fn send_tap_via_cursor(device_serial: String, x: u32, y: u32) -> Result<String, String> {
+pub async fn send_tap_via_cursor(device_serial: String, x: u32, y: u32) -> Result<String, String> {
     let mut device = reconnect_device(&device_serial)
         .ok_or_else(|| "Device not connected".to_string())?;
     
@@ -113,7 +113,7 @@ pub fn send_tap_via_cursor(device_serial: String, x: u32, y: u32) -> Result<Stri
 
 /// Send swipe via cursor drag
 #[tauri::command]
-pub fn send_swipe_via_cursor(device_serial: String, x1: u32, y1: u32, x2: u32, y2: u32, duration_ms: u32) -> Result<String, String> {
+pub async fn send_swipe_via_cursor(device_serial: String, x1: u32, y1: u32, x2: u32, y2: u32, duration_ms: u32) -> Result<String, String> {
     let mut device = reconnect_device(&device_serial)
         .ok_or_else(|| "Device not connected".to_string())?;
     
@@ -128,7 +128,7 @@ pub fn send_swipe_via_cursor(device_serial: String, x1: u32, y1: u32, x2: u32, y
 
 /// Send text via ADB input — helps when keyboard not working
 #[tauri::command]
-pub fn send_text_via_adb(device_serial: String, text: String) -> Result<String, String> {
+pub async fn send_text_via_adb(device_serial: String, text: String) -> Result<String, String> {
     let mut device = reconnect_device(&device_serial)
         .ok_or_else(|| "Device not connected".to_string())?;
     
@@ -145,7 +145,7 @@ pub fn send_text_via_adb(device_serial: String, text: String) -> Result<String, 
 
 /// Keyevent via cursor — back, home, power, etc.
 #[tauri::command]
-pub fn send_keyevent_via_cursor(device_serial: String, keycode: u32) -> Result<String, String> {
+pub async fn send_keyevent_via_cursor(device_serial: String, keycode: u32) -> Result<String, String> {
     let mut device = reconnect_device(&device_serial)
         .ok_or_else(|| "Device not connected".to_string())?;
     
@@ -171,7 +171,7 @@ pub struct MirrorSession {
 }
 
 #[tauri::command]
-pub fn start_mirror_session(device_serial: String, refresh_interval_ms: Option<u32>) -> Result<MirrorSession, String> {
+pub async fn start_mirror_session(device_serial: String, refresh_interval_ms: Option<u32>) -> Result<MirrorSession, String> {
     let device = reconnect_device(&device_serial)
         .ok_or_else(|| "Device not connected — ensure WiFi ADB or USB handshake OK. For damaged port, use WiFi ADB.".to_string())?;
     

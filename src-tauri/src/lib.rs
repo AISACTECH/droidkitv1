@@ -28,64 +28,64 @@ mod system_info;
 mod utils;
 
 #[tauri::command]
-fn device_info() -> Result<DeviceInfo, ()> {
+async fn device_info() -> Result<DeviceInfo, ()> {
     get_connected_device()
         .and_then(|mut device| get_device_info(&mut device).ok())
         .ok_or(())
 }
 
 #[tauri::command]
-fn get_android_sdk_path() -> Option<String> {
+async fn get_android_sdk_path() -> Option<String> {
     get_android_home().map(|path| path.to_string_lossy().to_string())
 }
 
 #[tauri::command]
-fn get_available_avds() -> Vec<String> {
+async fn get_available_avds() -> Vec<String> {
     list_avds()
 }
 
 #[tauri::command]
-fn start_avd(avd_name: String) -> Result<(), String> {
+async fn start_avd(avd_name: String) -> Result<(), String> {
     launch_avd(&avd_name)
 }
 
 #[tauri::command]
-fn browse_files(path: String) -> Result<Vec<FileInfo>, String> {
+async fn browse_files(path: String) -> Result<Vec<FileInfo>, String> {
     get_connected_device()
         .ok_or_else(|| "No device connected".to_string())
         .and_then(|mut device| list_files(&mut device, &path))
 }
 
 #[tauri::command]
-fn browse_files_for_device(device_serial: String, path: String) -> Result<Vec<FileInfo>, String> {
+async fn browse_files_for_device(device_serial: String, path: String) -> Result<Vec<FileInfo>, String> {
     reconnect_device(&device_serial)
         .ok_or_else(|| "Failed to connect to device".to_string())
         .and_then(|mut device| list_files(&mut device, &path))
 }
 
 #[tauri::command]
-fn download_file(remote_path: String, local_path: String) -> Result<(), String> {
+async fn download_file(remote_path: String, local_path: String) -> Result<(), String> {
     get_connected_device()
         .ok_or_else(|| "No device connected".to_string())
         .and_then(|mut device| pull_file(&mut device, &remote_path, &local_path))
 }
 
 #[tauri::command]
-fn get_apps() -> Result<Vec<String>, String> {
+async fn get_apps() -> Result<Vec<String>, String> {
     get_connected_device()
         .ok_or_else(|| "No device connected".to_string())
         .and_then(|mut device| get_installed_packages(&mut device))
 }
 
 #[tauri::command]
-fn get_apps_for_device(device_serial: String) -> Result<Vec<String>, String> {
+async fn get_apps_for_device(device_serial: String) -> Result<Vec<String>, String> {
     reconnect_device(&device_serial)
         .ok_or_else(|| "Failed to connect to device".to_string())
         .and_then(|mut device| get_installed_packages(&mut device))
 }
 
 #[tauri::command]
-fn get_logcat(lines: u32, on_event: tauri::ipc::Channel<Result<String, String>>) {
+async fn get_logcat(lines: u32, on_event: tauri::ipc::Channel<Result<String, String>>) {
     match get_connected_device() {
         Some(mut device) => {
             // Run logcat in a separate thread to avoid blocking
@@ -101,7 +101,7 @@ fn get_logcat(lines: u32, on_event: tauri::ipc::Channel<Result<String, String>>)
 }
 
 #[tauri::command]
-fn get_logcat_for_device(
+async fn get_logcat_for_device(
     device_serial: String,
     lines: u32,
     log_level: Option<String>,
@@ -122,7 +122,7 @@ fn get_logcat_for_device(
 }
 
 #[tauri::command]
-fn connect_wireless_device(ip: String, port: u16) -> Result<DeviceInfo, String> {
+async fn connect_wireless_device(ip: String, port: u16) -> Result<DeviceInfo, String> {
     let ip_addr: IpAddr = ip
         .parse()
         .map_err(|_| "Invalid IP address format".to_string())?;
@@ -139,7 +139,7 @@ fn connect_wireless_device(ip: String, port: u16) -> Result<DeviceInfo, String> 
 }
 
 #[tauri::command]
-fn pair_wireless_device(ip: String, port: u16, pairing_code: String) -> Result<DeviceInfo, String> {
+async fn pair_wireless_device(ip: String, port: u16, pairing_code: String) -> Result<DeviceInfo, String> {
     let ip_addr: IpAddr = ip
         .parse()
         .map_err(|_| "Invalid IP address format".to_string())?;
@@ -166,12 +166,12 @@ fn pair_wireless_device(ip: String, port: u16, pairing_code: String) -> Result<D
 }
 
 #[tauri::command]
-fn get_pairing_qr_data() -> Result<PairingData, String> {
+async fn get_pairing_qr_data() -> Result<PairingData, String> {
     generate_pairing_data()
 }
 
 #[tauri::command]
-fn start_qr_pairing(pairing_code: String) -> Result<PairingResult, String> {
+async fn start_qr_pairing(pairing_code: String) -> Result<PairingResult, String> {
     let result = start_pairing_listener(pairing_code, 60)?;
     Ok(PairingResult {
         success: result.success,
@@ -182,7 +182,7 @@ fn start_qr_pairing(pairing_code: String) -> Result<PairingResult, String> {
 }
 
 #[tauri::command]
-fn discover_devices() -> Result<Vec<String>, String> {
+async fn discover_devices() -> Result<Vec<String>, String> {
     discover_wireless_devices().map(|devices| {
         devices
             .into_iter()
@@ -192,24 +192,24 @@ fn discover_devices() -> Result<Vec<String>, String> {
 }
 
 #[tauri::command]
-fn list_discovered_devices_cmd() -> Result<Vec<DiscoveredDevice>, String> {
+async fn list_discovered_devices_cmd() -> Result<Vec<DiscoveredDevice>, String> {
     list_discovered_devices()
 }
 
 #[tauri::command]
-fn discover_wireless_devices_detailed_cmd() -> Result<Vec<DiscoveredWirelessDevice>, String> {
+async fn discover_wireless_devices_detailed_cmd() -> Result<Vec<DiscoveredWirelessDevice>, String> {
     discover_wireless_devices_detailed()
 }
 
 #[tauri::command]
-fn connect_to_discovered_device_cmd(device: DiscoveredDevice) -> Result<DeviceInfo, String> {
+async fn connect_to_discovered_device_cmd(device: DiscoveredDevice) -> Result<DeviceInfo, String> {
     connect_to_discovered_device(&device).and_then(|mut device| {
         get_device_info(&mut device).map_err(|_| "Failed to get device info".to_string())
     })
 }
 
 #[tauri::command]
-fn execute_shell_command_cmd(device_serial: String, command: String) -> Result<String, String> {
+async fn execute_shell_command_cmd(device_serial: String, command: String) -> Result<String, String> {
     reconnect_device(&device_serial)
         .ok_or_else(|| "Failed to connect to device".to_string())
         .and_then(|mut device| execute_shell_command(&mut device, &command))
