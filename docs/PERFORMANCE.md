@@ -51,3 +51,14 @@ behavior — and don't gamble with the rest.** Here's the honest inventory.
 4. On old shop PCs: close the browser while working — the machine's RAM is
    the bottleneck, not the app (~70 kB UI vs a 1 GB browser is the joke
    competitors can't tell about their Electron apps).
+
+## Measurement addendum — 2026-08-12 (Help Center round)
+
+After adding the Help & Info view + shared help-content module + bundled
+PDF guide, the same machine / same budget run (`npm run perf:report`):
+views chunk 68.5 → **83.1 kB gz** (budget 85 — still GREEN), total wire
+257.6 → **270.7 kB gz**. The +14.6 kB is the price of shipping the full
+policies/setup/FAQ text offline — deliberately bought, since the target
+users are counter shops with unreliable internet. Guardrail: the views
+budget stays 85 kB; if a future view pushes past it, split THAT view into
+its own chunk rather than raising the number silently.

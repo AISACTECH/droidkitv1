@@ -9,6 +9,7 @@ import { ShellTerminal } from "@/components/views/ShellTerminal"
 import { FrpRemoval } from "@/components/views/FrpRemoval"
 import { DeveloperLab } from "@/components/views/DeveloperLab"
 import { RescueLab } from "@/components/views/RescueLab"
+import { HelpCenter } from "@/components/views/HelpCenter"
 import { DeviceInfo } from "@/tauri-commands"
 import { Monitor } from "lucide-react"
 
@@ -27,6 +28,16 @@ export function MainContent({
   onDeviceSelect,
   onWirelessDeviceConnected
 }: MainContentProps) {
+
+  // Help is always available — it exists precisely for the moment
+  // when no device connects and the user needs instructions.
+  if (activeView === 'help') {
+    return (
+      <main className="flex-1 p-4 border-t border-l rounded-tl-xl">
+        <HelpCenter />
+      </main>
+    )
+  }
 
   // Devices view is always available
   if (activeView === 'devices') {

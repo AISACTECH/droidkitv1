@@ -48,6 +48,7 @@
     "test:rescue": "node --experimental-strip-types scripts/verify-gesture-crack.mts",
     "test:nck": "node --experimental-strip-types scripts/verify-nck.mts",
     "test:lab": "node --experimental-strip-types scripts/verify-rescue-lab.mts",
+    "build:help-pdf": "node --experimental-strip-types scripts/build-help-pdf.mts",
     "simulate": "node scripts/simulate-large-scale.js",
     "simulate:market": "node scripts/simulate-market-comparison.js",
     "perf:report": "node scripts/perf-report.js",
@@ -92,6 +93,7 @@
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.2",
     "@vitejs/plugin-react": "^5.0.0",
+    "pdfkit": "^0.15.2",
     "tw-animate-css": "^1.3.6",
     "typescript": "~5.9.2",
     "vite": "^7.1.2"

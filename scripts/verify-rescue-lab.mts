@@ -22,6 +22,10 @@ import {
   MYTH_HDMI, MYTH_100_RULE, RESCUE_CONSENT,
 } from "../src/lib/rescue-data.ts"
 import { buildSession, entryCommand, READONLY_COMMANDS } from "../src/lib/modem-session.ts"
+import {
+  POLICIES, FAQS, TOOL_GUIDES, GLOSSARY, SETUP_SECTIONS, TROUBLESHOOTING,
+  BAND_LEGEND, QUICK_START, GET_HELP_STEPS,
+} from "../src/lib/help-content.ts"
 
 let passed = 0, failed = 0
 const check = (name: string, cond: boolean) => {
@@ -123,6 +127,50 @@ for (const f of [
 check("nav wired", readFileSync("src/components/AppSidebar.tsx", "utf8").includes("rescue-lab"))
 check("router wired", readFileSync("src/components/MainContent.tsx", "utf8").includes("RescueLab"))
 check("button-phone lane registered", readFileSync("src/components/views/RescueLab.tsx", "utf8").includes("ButtonPhoneLane"))
+
+// ---------- 8 · help center & full-colour PDF guide ----------
+for (const f of [
+  "src/lib/help-content.ts",
+  "src/components/views/HelpCenter.tsx",
+  "scripts/build-help-pdf.mts",
+  "docs/DROIDKIT-HELP-GUIDE.pdf",
+  "public/help-guide.pdf",
+]) check(`help file exists: ${f}`, existsSync(f))
+check("help nav wired", readFileSync("src/components/AppSidebar.tsx", "utf8").includes("'help'"))
+check("help router wired", readFileSync("src/components/MainContent.tsx", "utf8").includes("HelpCenter"))
+check("help works deviceless (own early block)", MainContentIncludesHelpBeforeGate())
+function MainContentIncludesHelpBeforeGate() {
+  const src = readFileSync("src/components/MainContent.tsx", "utf8")
+  return src.indexOf("activeView === 'help'") !== -1 && src.indexOf("activeView === 'help'") < src.indexOf("!selectedDevice")
+}
+// policy content obeys the honesty law
+check("9 policies present", POLICIES.length >= 9)
+const policyText = POLICIES.map(p => p.title + p.paras.join(" ")).join(" ")
+check("lender-MDM refusal in policies", policyText.includes("Watu") && policyText.includes("refuse"))
+check("IMEI illegality in policies", policyText.includes("IMEI") && policyText.includes("illegal"))
+check("local-first privacy promise", policyText.includes("no DroidKit account") || policyText.includes("no DroidKit server"))
+check("bands taught with 4 tones", BAND_LEGEND.length === 4 && BAND_LEGEND.every(b => b.example.length > 10))
+// help guides cover the app
+check("quick start teaches build-number 7 taps", QUICK_START.some(s => s.includes("Build number")))
+check("setup sections >= 4", SETUP_SECTIONS.length >= 4)
+check("setup mentions charge-only cables", SETUP_SECTIONS.some(s => s.steps.some(x => x.text.includes("charge-only"))))
+check("symptom doctor has >= 6 rows", TROUBLESHOOTING.length >= 6)
+check("symptom doctor: git-install fix row", TROUBLESHOOTING.some(r => r.symptom.includes("fail") || r.symptom.includes("install")))
+check("tool guides cover all main views", TOOL_GUIDES.length >= 10 && ["frp", "frp-lab", "rescue-lab", "devices", "files"].every(id => TOOL_GUIDES.some(t => t.id === id)))
+// FAQ keeps the myths + Kenya truths visible
+check("FAQ >= 15 entries", FAQS.length >= 15)
+const faqText = FAQS.map(f => f.q + f.a).join(" ")
+check("FAQ: HDMI myth answered", faqText.includes("HDMI"))
+check("FAQ: dead-carrier MiFi (Orange) answered", faqText.includes("Orange"))
+check("FAQ: lender re-lock explained", faqText.includes("M-Kopa") || faqText.includes("re-lock"))
+check("FAQ: Windows worlds (Microsoft/local/domain)", faqText.includes("account.live.com"))
+check("FAQ: pattern crack count present", faqText.includes("389,112"))
+check("glossary has APN Kenya carriers", ["safaricom", "airtelgprs.com", "telkom", "jtl"].every(c => GLOSSARY.some(g => g.meaning.includes(c))))
+check("get-help has 5 route steps", GET_HELP_STEPS.length >= 5)
+// the shipped PDF is real and non-trivial
+import { statSync } from "node:fs"
+check("PDF guide is a real multi-page file (>40 kB)", statSync("docs/DROIDKIT-HELP-GUIDE.pdf").size > 40 * 1024)
+check("bundled copy matches repo copy byte-for-byte", readFileSync("docs/DROIDKIT-HELP-GUIDE.pdf").equals(readFileSync("public/help-guide.pdf")))
 
 console.log(`\n${passed} passed, ${failed} failed`)
 console.log(failed === 0 ? "ALL CHECKS GREEN" : `${failed} CHECK(S) FAILED`)
