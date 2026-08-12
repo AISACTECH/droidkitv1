@@ -46,6 +46,7 @@
     "analyze": "vite build --mode analyze",
     "audit:prod": "node scripts/production-audit.js",
     "test:rescue": "node --experimental-strip-types scripts/verify-gesture-crack.mts",
+    "test:nck": "node --experimental-strip-types scripts/verify-nck.mts",
     "simulate": "node scripts/simulate-large-scale.js",
     "simulate:devs": "node scripts/simulate-large-scale.js --devs=20000",
     "simulate:users": "node scripts/simulate-large-scale.js --users=20000",

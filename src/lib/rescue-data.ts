@@ -256,3 +256,129 @@ export const FORCE_RESTART: { brand: string; combo: string; recovery: string }[]
 
 export const RESCUE_CONSENT =
   "Repair-ethics rule for every lane in this view: work only on devices you own, or a customer's device with their clear authorization. We never defeat lender/finance locks (Watu, M-Kopa, Lipa Mdogo Mdogo) and never rewrite IMEIs (illegal in Kenya)."
+
+// ============ 📡 MiFi / POCKET-WIFI CARRIER UNLOCK (round 2) ============
+// The correction that matters: a modem/MiFi checks its unlock code
+// LOCALLY — there is no carrier server in the loop. A locked MiFi whose
+// carrier DIED (Orange KE, Telkom-era stock) is therefore fully
+// free-able, and self-unlocking your own device to use a better-covered
+// SIM is legal. This is different physics from iPhone/carrier phones —
+// the Lane says so explicitly so we stay honest in both directions.
+
+export const MIFI_PHYSICS_NOTE =
+  "Modems & pocket WiFis verify the unlock code INSIDE the device — no carrier server, ever. That's why a locked Orange/Telkom-era MiFi is NOT a dead device: only its lock is dead. Self-unlock = legal (you own it). The one real enemy is the attempt counter — read remaining attempts BEFORE typing anything, and enter ONE correct-generation code, not guesses."
+
+export const MIFI_IDENTIFY: RescueStep[] = [
+  { text: "Find the exact model: sticker under the battery / inside the cover (e.g. E5573Cs-609, MF927U, MW40V). The model — not the carrier logo — decides the route. Carriers rebrand the same hardware." },
+  { text: "Or plug it in and read it: ATI (terminal) or open the WebUI — Huawei 192.168.8.1, ZTE 192.168.0.1, Alcatel 192.168.1.1 → Device Information shows model + IMEI." },
+  { text: "Write the 15-digit IMEI down from the sticker and CROSS-CHECK it with AT+CGSN — you will validate it with the app's built-in checksum before generating anything." },
+  { text: "READ REMAINING ATTEMPTS before any code: Huawei — AT^CARDLOCK? (reply shows attempts left). Others — AT+CLCK=\"PN\",2. If it says 1-2 left: stop, get certainty first." },
+]
+
+export const MIFI_BRAND_ROUTES: { brand: string; band: RescueBand; route: string }[] = [
+  { brand: "Huawei legacy (E1550/E160/E1750 3G dongles, pre-2012)", band: "doable", route: "Codes are computable from the IMEI — OUR GENERATOR below (V1/V2, unit-verified against real published examples). Enter via WebUI unlock page or AT^CARDLOCK=\"code\"." },
+  { brand: "Huawei 2012+ (E3131/E3276/E5330/E5372-class)", band: "conditional", route: "V201 generation — our candidate is a faithful port but UNVERIFIED (labelled in-app); bench-confirm on a donor first, or use a $3–8 IMEI code service which answers in minutes for these." },
+  { brand: "Huawei E5573Cs-609 / -322 (the classic Telkom & Orange Kenya unit)", band: "conditional", route: "Famous documented route: boot-pin + modified firmware removes simlock entirely. Bench-only (opening the device, shorting a test point, flashing) with real brick risk — follow the model-exact guide, never a 'similar' one." },
+  { brand: "ZTE MF910/MF920/MF927U (Telkom KE favourites)", band: "conditional", route: "16-digit NCK from IMEI via cheap verified code services (~$3–8). Counter is short (often 5 tries) — never guess. WebUI at 192.168.0.1 asks for the code when a foreign SIM goes in." },
+  { brand: "Alcatel / TCL LINKZONE (MW40/MW41/MW45/MW70 — Orange & Airtel stock)", band: "conditional", route: "10–16 digit NCK via the 192.168.1.1 unlock page, code per exact model from a verified IMEI service. THREE wrong tries can hard-lock on several Alcatel models — measure twice, enter once." },
+  { brand: "Generic / open-market MiFis", band: "doable", route: "Many were never locked — test a different-carrier SIM first before paying anyone anything." },
+]
+
+export const MIFI_AFTER_UNLOCK: RescueStep[] = [
+  { text: "Insert the new SIM → the WebUI may ask for the unlock code once; enter the verified correct one." },
+  { text: "Set the new carrier's APN in WebUI → Settings → Network → APN. Common Kenya values (verify if unsure): Safaricom = safaricom · Airtel = airtelgprs.com · Telkom = telkom · Faiba 4G = jtl." },
+  { text: "No signal after unlock? Check the MiFi's LTE bands vs the carrier (Faiba is band-28-heavy — an old 3G-era dongle will never see it). Unlock removes the LOCK, not physics." },
+]
+
+// ==================== ☎️ BUTTON PHONE (FEATURE PHONE) ====================
+
+export const BUTTONPHONE_NOTE =
+  "Feature phones (Itel/Tecno/Nokia keypads) keep the phone lock in LOCAL firmware — no server, no gatekeeper, no counter on most. This is one of the most genuinely doable rescues in the whole app. The lock and the SIM PIN are different things — the SIM PIN card below saves people from needless flashing."
+
+export const BUTTONPHONE_METHODS: RescueMethod[] = [
+  {
+    title: "Is it actually a SIM PIN, not a phone lock?",
+    band: "doable",
+    when: "If the prompt appears immediately at boot before the menu, mentions the SIM card, or the owner changed nothing — it's the SIM's PIN, and NO phone tool fixes it, because it lives on the SIM card.",
+    steps: [
+      { text: "SIM PIN is usually 0000 or 1234 unless changed — 3 wrong tries and the SIM asks for the PUK." },
+      { text: "PUK is FREE: printed on the original SIM-card letter, or from the carrier (Safaricom care *100#, Airtel care line). 10 wrong PUK entries kill the SIM forever — then it's a SIM-swap at the carrier shop, still not a phone problem." },
+      { text: "Only proceed below when it's the PHONE's own lock (shows after the SIM PIN, or with the SIM removed)." },
+    ],
+  },
+  {
+    title: "Default & master codes (try these first — free, zero risk)",
+    band: "doable",
+    when: "A huge share of Itel/Tecno/Nokia keypads still carry a factory lock code. Order = most common first.",
+    steps: [
+      { text: "Try: 1234 → 0000 → 1122 → 12345 (THE Nokia default) → 1111 → 00000000 → 13579." },
+      { text: "Owner set a custom code and forgot? Codes don't help — service route below." },
+    ],
+  },
+  {
+    title: "Itel / Tecno / Nokia (HMD) keypad — service route (Unisoc/SPD inside)",
+    band: "conditional",
+    when: "Most Itel it-series / Tecno T-series / Nokia 105-110-215 (and their clones) are Unisoc SPD (SC6531E/SC7731-class). The lock flag lives in the user-data area — erase that region and the lock is gone.",
+    steps: [
+      { text: "Open-source route: spd_dump (the Spreadtrum research tool, github: ilyakurdyukov) with the model-matched FDL1/FDL2 loaders → read/format the user-data region → security code cleared." },
+      { text: "Bench boxes (Miracle, CM2/Infinity, UnlockTool...) do the same in one click — this is daily bread on every Nairobi repair street; it takes minutes, so charge fairly." },
+      { text: "Connection: usually USB with a boot key held, or test points on some boards — model-specific; check the exact model guide first." },
+    ],
+    warn: "Formatting user data ERASES phonebook & SMS stored on the PHONE (SIM contacts survive). Tell the customer before, not after.",
+  },
+  {
+    title: "MTK MT6261-era feature phones (many clone keypads)",
+    band: "conditional",
+    when: "Older clone/China keypads with MediaTek inside.",
+    steps: [
+      { text: "Some stock opens an engineering menu with *#9646633# — if it opens, the lock can often be cleared from inside; if not, Miracle/MRT-class tools read these over USB in one click." },
+    ],
+  },
+  {
+    title: "KaiOS phones (Nokia 8110 4G, Energizer KaiOS...)",
+    band: "conditional",
+    when: "Neither classic feature-phone NOR Android — Qualcomm/KaiOS stack with fastboot/adb surfaces.",
+    steps: [
+      { text: "Bench route per exact model (fastboot-based userdata paths exist for several) — research the model first; do not apply Android recipes here blindly." },
+    ],
+  },
+]
+
+// ================= 💻 PC EXTRA CARE CARDS (round 2 accuracy) =================
+
+export const PC_SAFETY_FIRST: RescueMethod = {
+  title: "⚠️ BEFORE ANY OFFLINE EDIT — the 2-minute disaster check",
+  band: "doable",
+  when: "Do this FIRST whenever you can still get into ANY admin session on the laptop, or before building the rescue USB. It is what 'careful and accurate' means on this job.",
+  steps: [
+    { text: "Check if the drive is encrypted — admin terminal:", cmd: "manage-bde -status C:" },
+    { text: "If it says 'Protection On' (BitLocker/Device Encryption): get the 48-digit recovery key BEFORE touching anything — it's in the owner's Microsoft account at account.microsoft.com/devices/recoverykey. Show the protectors:", cmd: "manage-bde -protectors -get C:" },
+    { text: "If you skip this on an encrypted drive, the rescue-USB method turns a locked laptop into an UNREADABLE one. Two minutes here saves the whole machine." },
+    { text: "Same steps for desktop computers — a 'computer' and a 'laptop' are identical for this job; only the boot-key brands differ (table below)." },
+  ],
+}
+
+export const PC_CHNTPW_METHOD: RescueMethod = {
+  title: "Linux rescue USB + chntpw (free, open-source route)",
+  band: "conditional",
+  when: "The free-software equivalent of NTPWEdit: boot any Ubuntu live USB on the locked PC. Local accounts on Win7–11; Ubuntu live boots fine with Secure Boot on.",
+  steps: [
+    { text: "Boot Ubuntu live USB → 'Try Ubuntu' → connect internet → open Terminal." },
+    { text: "Install the offline registry editor:", cmd: "sudo apt-get install -y chntpw" },
+    { text: "Go to the SAM hive on the Windows partition (folder name varies):", cmd: "cd /media/ubuntu/*/Windows/System32/config" },
+    { text: "List the accounts:", cmd: "sudo chntpw -l SAM" },
+    { text: "Open the editor for the locked user:", cmd: "sudo chntpw -u USERNAME SAM" },
+    { text: "Menu: press 1 (BLANK password = remove it) → q (quit) → y (write hive). Reboot without the USB, sign in with an empty password, set a new one from inside Windows." },
+  ],
+  warn: "Blanking is the safer mode, but ANY outside edit loses that account's DPAPI secrets (saved browser passwords, EFS files) on modern Windows. BitLocker check first (card above).",
+}
+
+export const PC_DOMAIN_METHOD: RescueMethod = {
+  title: "Company / school laptop (Domain or AzureAD joined)",
+  band: "not-by-software",
+  when: "Sign-in shows WORK\\user, an org email, or says the device is managed.",
+  steps: [
+    { text: "The account's truth lives on the organization's servers — identical physics to Android 15/16 FRP and carrier phone locks: nobody's software changes it from outside." },
+    { text: "Route: the org's IT admin resets it (legal, instant, free). If the owner bought an ex-company laptop: the honest fix is a clean Windows reinstall with their own license — offline 'account adds' break compliance and often re-lock at first network contact." },
+  ],
+}

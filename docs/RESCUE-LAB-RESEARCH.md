@@ -47,6 +47,48 @@ The in-app honesty law, applied lane by lane. Bands: **DOABLE** (verified/reliab
 - Content sources: Microsoft account/BitLocker recovery documentation, AT&T/T-Mobile/Verizon official unlock policies, Android lockscreen-forensics literature (gesture.key SHA-1 era), Huawei AT-command references for Balong-class modems, CA (Kenya) IMEI rules.
 - Everything else in the lanes is teach/checklist content and makes **no success-rate claim** — that is deliberate.
 
+---
+
+## Round 2 (2026-08-12) — MiFi unlock correction + feature phones
+
+**Correction we publicly own:** round 1 lumped modems under "server-side —
+can't compute." That was over-generalized. A modem/MiFi verifies its NCK
+**locally, inside the device** — no carrier server in the loop (that is
+precisely why the public Huawei calculators worked for a decade). The lane
+now states the corrected physics in both directions: carrier-locked PHONES
+(iPhone/modern carrier Android) remain server-side; carrier-locked MODEMS
+/MiFis are local and genuinely free-able — including stock from carriers
+that no longer exist (Orange Kenya, Telkom-era units). Self-unlocking your
+own device is legal; the app says so.
+
+**Verified code shipped:** `src/lib/nck-modem.ts` — pure MD5 + CRC32 +
+Huawei V1/V2/V201 NCK candidate engine, ported from the long-public
+reference (ket-c/huaweiv3calculator `calc.php`) and corroborated by
+xnuxer/huawei-modem-calc. `npm run test:nck` proves it against REAL
+published examples — IMEI 867648011803309 → V1 34560983 + flash 34591526;
+IMEI 968480435684491 → V2 23823444 — plus RFC MD5 vectors, zlib-matching
+CRC32, and IMEI Luhn validation. The V201 (2012+) candidate ships labelled
+**UNVERIFIED — bench first** (faithful port, no published vector found);
+labels, not lies.
+
+**Safety law encoded in UI:** attempt counters are the one real enemy
+(Huawei ~10, Alcatel ~3–10, ZTE ~5). The generator demands `AT^CARDLOCK?`
+/ `AT+CLCK="PN",2` pre-flight, validates IMEI checksum (catches typos
+before they burn attempts), and instructs ONE-era entry, never sequential
+guessing.
+
+**New lane: Button Phone ☎️** — Itel/Tecno/Nokia keypad locks: SIM-PIN-vs-
+phone-lock triage (PUK is free from the carrier — never flash for a SIM
+PIN!), factory default codes, then the Unisoc/SPD service route
+(open-source `spd_dump` with matched FDL loaders / one-click boxes) with
+the honest data-loss warning; KaiOS flagged as its own beast.
+
+**PC lane accuracy upgrades:** mandatory BitLocker pre-check card
+(`manage-bde -status C:` + recovery-key retrieval before any offline edit —
+the 2-minute step that separates a rescue from an unreadable drive), free
+chntpw/Linux route with exact commands, Domain/AzureAD honesty card
+(servers again — org admin only), and explicit "desktop == laptop" note.
+
 ### Roadmap (bench-gated, like the MTK RFC)
 
 - Serial-port AT terminal + lock-state auto-detection (needs Rust bench session).

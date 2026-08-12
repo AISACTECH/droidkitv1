@@ -10,7 +10,8 @@ import { CarrierUnlockLane } from "./RescueLab/CarrierUnlockLane"
 import { ModemLane } from "./RescueLab/ModemLane"
 import { ScreenLockLane } from "./RescueLab/ScreenLockLane"
 import { BlackScreenLane } from "./RescueLab/BlackScreenLane"
-import { LifeBuoy, ShieldAlert, Scale, Laptop, RadioTower, Router, KeyRound, MonitorOff } from "lucide-react"
+import { ButtonPhoneLane } from "./RescueLab/ButtonPhoneLane"
+import { LifeBuoy, ShieldAlert, Scale, Laptop, RadioTower, Router, KeyRound, MonitorOff, Phone } from "lucide-react"
 
 // =====================================================================
 // Rescue Lab 🛠️ — EXPERIMENTAL multi-device repair bench.
@@ -25,12 +26,13 @@ interface RescueLabProps {
   selectedDevice: DeviceInfo
 }
 
-type LaneId = "pc" | "carrier" | "modem" | "screenlock" | "blackscreen"
+type LaneId = "pc" | "carrier" | "modem" | "buttonphone" | "screenlock" | "blackscreen"
 
 const LANES: { id: LaneId; label: string; icon: typeof Laptop }[] = [
   { id: "pc", label: "PC Password 💻", icon: Laptop },
   { id: "carrier", label: "Carrier Unlock 📶", icon: RadioTower },
-  { id: "modem", label: "Modem 📡", icon: Router },
+  { id: "modem", label: "Modem & MiFi 📡", icon: Router },
+  { id: "buttonphone", label: "Button Phone ☎️", icon: Phone },
   { id: "screenlock", label: "Screen Lock 🔓", icon: KeyRound },
   { id: "blackscreen", label: "Black Screen 🖥️", icon: MonitorOff },
 ]
@@ -99,6 +101,7 @@ export function RescueLab({ selectedDevice }: RescueLabProps) {
               {lane === "pc" && <PcRescueLane />}
               {lane === "carrier" && <CarrierUnlockLane />}
               {lane === "modem" && <ModemLane />}
+              {lane === "buttonphone" && <ButtonPhoneLane />}
               {lane === "screenlock" && <ScreenLockLane />}
               {lane === "blackscreen" && <BlackScreenLane />}
             </CardContent>
