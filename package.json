@@ -49,6 +49,7 @@
     "test:nck": "node --experimental-strip-types scripts/verify-nck.mts",
     "test:lab": "node --experimental-strip-types scripts/verify-rescue-lab.mts",
     "simulate": "node scripts/simulate-large-scale.js",
+    "simulate:market": "node scripts/simulate-market-comparison.js",
     "simulate:devs": "node scripts/simulate-large-scale.js --devs=20000",
     "simulate:users": "node scripts/simulate-large-scale.js --users=20000",
     "simulate:full": "node scripts/simulate-large-scale.js --devs=20000 --users=20000",
