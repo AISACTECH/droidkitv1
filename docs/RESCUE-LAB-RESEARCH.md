@@ -87,7 +87,38 @@ the honest data-loss warning; KaiOS flagged as its own beast.
 (`manage-bde -status C:` + recovery-key retrieval before any offline edit —
 the 2-minute step that separates a rescue from an unreadable drive), free
 chntpw/Linux route with exact commands, Domain/AzureAD honesty card
-(servers again — org admin only), and explicit "desktop == laptop" note.
+(servers again — org admin only), explicit "desktop == laptop" note, and
+the "reset everything" honest card (Windows Reset-this-PC — no cable
+between computers can reset a PC password; the bootable USB IS the cable
+method).
+
+## Round 3 (2026-08-12) — USB handshake + cable myths, plainly
+
+**Built:** Auto-Session workflow (`src/lib/modem-session.ts` + Modem lane):
+full plug-in pipeline (port → AT handshake → ATI/CGSN/^CARDLOCK? → IMEI
+checksum → era-matched ONE candidate → human-confirmed entry → verify →
+bench-log), with hard interlocks I1–I5 (never past dead handshake; ≤2
+attempts → flow locks; no Luhn pass → no code; exactly one era; human fires
+the entry, always). A live probe for a future native serial backend makes
+the same UI autofire the moment the backend lands — frontend needs zero
+edits (`docs/RFC-MODEM-SERIAL-BACKEND.md` is the ready-to-build spec with
+its own safety contract: allowlisted AT commands, one-entry-per-session,
+no IMEI writes, TX/RX journal).
+
+**Cable physics, printed in-app:**
+- HDMI/DP = picture + sound ONLY. No command channel exists in the cable.
+  It cannot remove a password, cannot bypass FRP, cannot unlock — on any
+  device, of any age. "HDMI bypass" claims are scams. What display-out
+  genuinely does (and we use it): broken-screen phones with DeX/DP-out can
+  be SEEN, and with an OTG mouse, CLICKED — rescue through visibility,
+  already in the Black Screen lane.
+- PC to PC over USB/HDMI: no password-reset protocol exists — the bootable
+  rescue USB IS the cable method; Windows' own Reset-this-PC is the
+  built-in no-cable version.
+- The 100% rule, per class, in-app: legacy Huawei modem math IS
+  deterministic for its generation (vector-verified), button phones are
+  near-total via defaults/service route, server-side classes are 0% for
+  everyone — one blanket number for everything would be the lie.
 
 ### Roadmap (bench-gated, like the MTK RFC)
 

@@ -382,3 +382,24 @@ export const PC_DOMAIN_METHOD: RescueMethod = {
     { text: "Route: the org's IT admin resets it (legal, instant, free). If the owner bought an ex-company laptop: the honest fix is a clean Windows reinstall with their own license — offline 'account adds' break compliance and often re-lock at first network contact." },
   ],
 }
+
+export const PC_RESET_METHOD: RescueMethod = {
+  title: "\"Reset everything\" — the honest version (Windows' own Reset)",
+  band: "conditional",
+  when: "When the goal is to WIPE the PC's accounts and start fresh (you don't need the old password, just the machine). No cable from another computer can do this — Windows accepts no such commands over USB/HDMI; the 'cable method' for PCs IS the bootable USB, except this built-in route needs no USB at all.",
+  steps: [
+    { text: "On the lock screen: click the Power icon → hold Shift → click Restart → Troubleshoot → Reset this PC." },
+    { text: "'Keep my files' removes the accounts/passwords but keeps user files (apps are lost). 'Remove everything' = factory-fresh." },
+    { text: "If the drive is BitLocker-encrypted it will demand the recovery key first — same 2-minute check from the safety card." },
+    { text: "After reset: Windows asks you to create a NEW account. Done — the old password is gone forever." },
+  ],
+  warn: "Saved browser passwords / EFS files of the old accounts die with this route. If the customer needs THOSE, use the chntpw/rescue-USB route instead.",
+}
+
+// ============ 🎥 MYTH vs PHYSICS: cables & bypass claims (keep visible) ============
+
+export const MYTH_HDMI =
+  "HDMI (and USB-C DisplayPort) carries PICTURE AND SOUND — nothing else. There is no command channel in it: an HDMI cable cannot remove a password, cannot bypass FRP, cannot unlock anything, on ANY device — modern or old. Any tool/video claiming an 'HDMI bypass' is a scam. What display-out REALLY does (and it's valuable): with a phone that has HDMI/DP-out (Samsung DeX, some flagships), you SEE the screen of a broken-touch phone — paired with a USB-OTG mouse you can CLICK it too. That's rescue through visibility, not bypass. Same cable law for PCs: computers take no password-reset commands through cables — the bootable USB you build IS the 'cable method'."
+
+export const MYTH_100_RULE =
+  "Where the 100% honesty lands, per device class: LEGACY Huawei modems → the math IS deterministic for that generation (as close to 100% as physics allows — codes verified against real published examples, the risk is only attempts-management, which the app gates). Button phones → defaults or one service-route format covers the great majority; the rest are named exceptions. Android 15/16 FRP & carrier-locked phones & Microsoft/Apple/account laptops → server-side: 0% by software for anyone. One number for everything would be a lie; per-class truth is the product."

@@ -1,5 +1,5 @@
 import { LaneHeader, MethodCard, BandBadge } from "./shared"
-import { PC_ACCOUNT_TYPES, PC_BOOT_KEYS, PC_WINDOWS_METHODS, PC_SAFETY_FIRST, PC_CHNTPW_METHOD, PC_DOMAIN_METHOD } from "@/lib/rescue-data"
+import { PC_ACCOUNT_TYPES, PC_BOOT_KEYS, PC_WINDOWS_METHODS, PC_SAFETY_FIRST, PC_CHNTPW_METHOD, PC_DOMAIN_METHOD, PC_RESET_METHOD } from "@/lib/rescue-data"
 import { Laptop, Keyboard } from "lucide-react"
 
 export function PcRescueLane() {
@@ -25,6 +25,7 @@ export function PcRescueLane() {
       <div className="space-y-1.5">
         {PC_WINDOWS_METHODS.map(m => <MethodCard key={m.title} m={m} />)}
         <MethodCard m={PC_CHNTPW_METHOD} />
+        <MethodCard m={PC_RESET_METHOD} />
         <MethodCard m={PC_DOMAIN_METHOD} />
       </div>
 

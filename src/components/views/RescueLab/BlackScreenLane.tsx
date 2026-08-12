@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { LaneHeader, CopyButton, BandBadge } from "./shared"
-import { BLACKSCREEN_TRIAGE, FORCE_RESTART } from "@/lib/rescue-data"
-import { MonitorOff, Power } from "lucide-react"
+import { BLACKSCREEN_TRIAGE, FORCE_RESTART, MYTH_HDMI } from "@/lib/rescue-data"
+import { MonitorOff, Power, AlertTriangle } from "lucide-react"
 
 export function BlackScreenLane() {
   const [answers, setAnswers] = useState<Record<string, boolean | null>>({})
@@ -15,8 +15,12 @@ export function BlackScreenLane() {
         blurb="Golden rule: DATA FIRST, repair second. A dead panel hides a live brain surprisingly often — answer one question and follow the verdict."
       />
 
-      {BLACKSCREEN_TRIAGE.map(q => {
-        const a = answers[q.id]
+      <div className="flex items-start gap-2 text-[10px] p-2 rounded bg-blue-500/5 border border-blue-500/25">
+        <AlertTriangle className="h-4 w-4 text-blue-300 mt-0.5 shrink-0" />
+        <p className="text-muted-foreground">{MYTH_HDMI}</p>
+      </div>
+
+      {BLACKSCREEN_TRIAGE.map(q => {        const a = answers[q.id]
         const branch = a === undefined || a === null ? null : a ? q.yes : q.no
         return (
           <div key={q.id} className="p-2.5 rounded-lg border bg-muted/30 space-y-2">

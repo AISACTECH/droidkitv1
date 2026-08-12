@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { type DeviceInfo } from "@/tauri-commands"
-import { RESCUE_CONSENT } from "@/lib/rescue-data"
+import { RESCUE_CONSENT, MYTH_100_RULE } from "@/lib/rescue-data"
 import { PcRescueLane } from "./RescueLab/PcRescueLane"
 import { CarrierUnlockLane } from "./RescueLab/CarrierUnlockLane"
 import { ModemLane } from "./RescueLab/ModemLane"
@@ -68,6 +68,10 @@ export function RescueLab({ selectedDevice }: RescueLabProps) {
               <div className="flex items-start gap-2 text-[11px]">
                 <Scale className="h-4 w-4 text-teal-300 mt-0.5 shrink-0" />
                 <p className="text-muted-foreground">{RESCUE_CONSENT}</p>
+              </div>
+              <div className="flex items-start gap-2 text-[11px]">
+                <ShieldAlert className="h-4 w-4 text-violet-300 mt-0.5 shrink-0" />
+                <p className="text-muted-foreground">{MYTH_100_RULE}</p>
               </div>
             </CardContent>
           </Card>
