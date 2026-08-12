@@ -1,5 +1,5 @@
-import { LaneHeader, MethodCard } from "./shared"
-import { BUTTONPHONE_METHODS, BUTTONPHONE_NOTE } from "@/lib/rescue-data"
+import { LaneHeader, MethodCard, BandBadge } from "./shared"
+import { BUTTONPHONE_METHODS, BUTTONPHONE_NOTE, BUTTONPHONE_BRAND_GUIDE } from "@/lib/rescue-data"
 import { Phone, ShieldCheck } from "lucide-react"
 
 export function ButtonPhoneLane() {
@@ -16,6 +16,23 @@ export function ButtonPhoneLane() {
       </div>
       <div className="space-y-1.5">
         {BUTTONPHONE_METHODS.map(m => <MethodCard key={m.title} m={m} />)}
+      </div>
+
+      <div className="space-y-1">
+        <div className="text-[11px] font-semibold">Brand coverage map ({BUTTONPHONE_BRAND_GUIDE.length} families — know the silicon before you open the toolbox)</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
+          {BUTTONPHONE_BRAND_GUIDE.map(b => (
+            <div key={b.brand} className="p-1.5 rounded border bg-muted/30 text-[10px] space-y-0.5">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="font-medium text-[11px]">{b.brand}</span>
+                <BandBadge band={b.band} />
+              </div>
+              <div className="text-muted-foreground">Inside: {b.chipset}</div>
+              <div>Defaults: <span className="font-mono">{b.defaults}</span></div>
+              <div className="text-muted-foreground">{b.route}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )

@@ -295,6 +295,19 @@ export const MIFI_AFTER_UNLOCK: RescueStep[] = [
 export const BUTTONPHONE_NOTE =
   "Feature phones (Itel/Tecno/Nokia keypads) keep the phone lock in LOCAL firmware — no server, no gatekeeper, no counter on most. This is one of the most genuinely doable rescues in the whole app. The lock and the SIM PIN are different things — the SIM PIN card below saves people from needless flashing."
 
+/** Per-brand coverage map — the road to maximum button-phone accuracy is
+ *  knowing which silicon is inside before you open the toolbox. */
+export const BUTTONPHONE_BRAND_GUIDE: { brand: string; chipset: string; defaults: string; route: string; band: RescueBand }[] = [
+  { brand: "Itel (it2160/it5626/21-26 series)", chipset: "Unisoc SPD (SC6531E/SC7731) dominant", defaults: "1234 / 0000 / 1122", route: "spd_dump + matched FDL → format user-data; boxes one-click", band: "conditional" },
+  { brand: "Tecno (T301/T35x/T4xx/T5xx series)", chipset: "Unisoc SPD / some MT6261", defaults: "1234 / 1122 / 0000", route: "SPD route; MT6261 stock → engineering menu or box", band: "conditional" },
+  { brand: "Nokia HMD keypad (105/106/110/215/225)", chipset: "Unisoc (6531/8910) inside", defaults: "12345 (documented factory default)", route: "try 12345 first; else SPD service route", band: "doable" },
+  { brand: "Nokia classic Series 40 (older 100/200/300)", chipset: "Broadcom/Infineon era", defaults: "12345", route: "legacy JAF/box era — bench; new SPD recipes don't apply", band: "conditional" },
+  { brand: "Clone / China keypads (unbranded, 'SQ', 'X-Bo'…)", chipset: "MediaTek MT6260/6261 dominant", defaults: "1122 / 1234 / 0000 / 13579", route: "some accept *#9646633# engineering menu; else Miracle/MRT one-click", band: "conditional" },
+  { brand: "QMobile / VGO Tel / African store brands", chipset: "MTK or Unisoc (model decides)", defaults: "1122 / 1234", route: "identify inside (boot logo trick or box autodetect) → matching route", band: "conditional" },
+  { brand: "Safaricom Neon / carrier-branded keypads", chipset: "mostly KaiOS-Qualcomm or SPD", defaults: "1234 / 12345", route: "SPD units → SPD route; KaiOS units → own bench path (never Android recipes)", band: "conditional" },
+  { brand: "KaiOS smart-keypads (Nokia 8110 4G, Energizer…)", chipset: "Qualcomm MSM8909-era", defaults: "none documented", route: "fastboot/adb bench path per exact model", band: "conditional" },
+]
+
 export const BUTTONPHONE_METHODS: RescueMethod[] = [
   {
     title: "Is it actually a SIM PIN, not a phone lock?",
