@@ -58,7 +58,8 @@
     "simulate:devs": "node scripts/simulate-large-scale.js --devs=20000",
     "simulate:users": "node scripts/simulate-large-scale.js --users=20000",
     "simulate:full": "node scripts/simulate-large-scale.js --devs=20000 --users=20000",
-    "postinstall": "echo 'DroidKit v1.1.0 installed. Run npm run tauri:dev for desktop or npm run dev for browser mock mode.'"
+    "postinstall": "echo 'DroidKit v1.1.0 installed. Run npm run tauri:dev for desktop or npm run dev for browser mock mode.'",
+    "simulate:frp-mock": "node scripts/sim-harness.mjs"
   },
   "dependencies": {
     "@fontsource-variable/jost": "^5.1.1",

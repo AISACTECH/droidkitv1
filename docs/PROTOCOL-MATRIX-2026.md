@@ -69,3 +69,21 @@ Honor 6 · POCO 6 · Huawei 6 · Pixel 4 · Sony 3 · Xiaomi 2 (and a small
 percentage. It is: *your exact model row + your real channel + your band
 colour* — visible in the app (FRP Lab / Rescue Lab) and now executable as a
 CI gate.
+
+## Part 3 — `npm run simulate:frp-mock` (the harness that runs THEIR script honestly)
+
+Because the pipeline "run sim → read exit code → re-run until 100%" is a
+workflow people will bring again, the repo now owns a harness for it:
+`scripts/sim-harness.mjs`. It executes the external mock twice, parses its
+stdout, scans its SOURCE for the hardcoded failure rule and the random
+draws, then states the decomposition plainly:
+
+- forced failures (pre-typed) vs dice variance (seed-dependent) — proven by
+  the run-to-run drift it prints live;
+- the mock's exit code classified as pre-ordained, never a product verdict;
+- then runs the real coverage gate (`test:matrix`) and echoes its headline.
+
+The harness exits 0 when the measurement ran correctly. It will never print
+the banned 100% claim — from any script, including ours. Runtime comparison
+on this machine: the mock takes ~21–22 s (spent inside its own
+`time.sleep`); the real matrix gate completes in ~0.3 s and answers more.
