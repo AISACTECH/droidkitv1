@@ -52,6 +52,7 @@
     "test:adaptive": "node --experimental-strip-types scripts/verify-adaptive-engine.mts",
     "test:research": "node --experimental-strip-types scripts/verify-parallel-research.mts",
     "benchmark:frp": "node --experimental-strip-types scripts/benchmark-frp-tools.mts",
+    "benchmark:sheet": "node --experimental-strip-types scripts/benchmark-comparison-sheet.mts",
     "refine:ui-flows": "node --experimental-strip-types scripts/refine-ui-flows.mts",
     "update:validate": "node --experimental-strip-types scripts/validate-update-pack.mts",
     "test:brands": "node --experimental-strip-types scripts/verify-brand-db.mts",

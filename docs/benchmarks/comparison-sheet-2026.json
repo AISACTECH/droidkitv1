@@ -1,0 +1,271 @@
+{
+  "generatedAt": "2026-08-13T10:32:15.715Z",
+  "inputHash": "35016ab91239294c",
+  "frpInputHash": "026c2d236d0b8819",
+  "frpComposite": [
+    {
+      "tool": "ours",
+      "name": "DroidKit v1 (AISACTECH — this repo)",
+      "composite": 87.6,
+      "raw": 69
+    },
+    {
+      "tool": "tsm",
+      "name": "TSM Tool (bench-grade)",
+      "composite": 55.4,
+      "raw": 57.3
+    },
+    {
+      "tool": "fourukey",
+      "name": "Tenorshare 4uKey",
+      "composite": 54.9,
+      "raw": 63.4
+    },
+    {
+      "tool": "drfone",
+      "name": "Dr.Fone Screen Unlock",
+      "composite": 51.9,
+      "raw": 57.9
+    },
+    {
+      "tool": "imobie",
+      "name": "DroidKit (iMobie — name-collision)",
+      "composite": 50.1,
+      "raw": 55.1
+    },
+    {
+      "tool": "unlockgo",
+      "name": "iToolab UnlockGo",
+      "composite": 47.2,
+      "raw": 51.7
+    },
+    {
+      "tool": "samfw",
+      "name": "SamFw FRP Tool",
+      "composite": 42.3,
+      "raw": 28.3
+    },
+    {
+      "tool": "lockwiper",
+      "name": "iMyFone LockWiper (Android)",
+      "composite": 41.4,
+      "raw": 41
+    },
+    {
+      "tool": "griffin",
+      "name": "Griffin/TFM-class (community)",
+      "composite": 33.3,
+      "raw": 32.1
+    }
+  ],
+  "network": {
+    "weights": {
+      "modem": 0.35,
+      "mifi": 0.3,
+      "router": 0.2,
+      "wifi": 0.1,
+      "honesty": 0.05
+    },
+    "corpus": [
+      {
+        "id": "huawei-e1750",
+        "category": "modem",
+        "ours": 100
+      },
+      {
+        "id": "huawei-e3131",
+        "category": "modem",
+        "ours": 100
+      },
+      {
+        "id": "huawei-e5573",
+        "category": "modem",
+        "ours": 40
+      },
+      {
+        "id": "zte-mf927u",
+        "category": "modem",
+        "ours": 25
+      },
+      {
+        "id": "huawei-e5573cs",
+        "category": "mifi",
+        "ours": 55
+      },
+      {
+        "id": "zte-mf910",
+        "category": "mifi",
+        "ours": 45
+      },
+      {
+        "id": "alcatel-mw40",
+        "category": "mifi",
+        "ours": 45
+      },
+      {
+        "id": "huawei-e5330",
+        "category": "mifi",
+        "ours": 40
+      },
+      {
+        "id": "tp-link-mr6400",
+        "category": "router",
+        "ours": 55
+      },
+      {
+        "id": "tenda-f300",
+        "category": "router",
+        "ours": 50
+      },
+      {
+        "id": "huawei-b315",
+        "category": "router",
+        "ours": 45
+      },
+      {
+        "id": "own-wifi-recovery",
+        "category": "wifi",
+        "ours": 30
+      }
+    ],
+    "tools": [
+      {
+        "id": "dcunlocker",
+        "name": "DC-Unlocker",
+        "composite": 69.5,
+        "honesty": 40
+      },
+      {
+        "id": "z3x",
+        "name": "Z3X / SigmaKey (box)",
+        "composite": 62.8,
+        "honesty": 30
+      },
+      {
+        "id": "chimera",
+        "name": "ChimeraTool",
+        "composite": 59,
+        "honesty": 35
+      },
+      {
+        "id": "nckdongle",
+        "name": "NCK Dongle / Octopus",
+        "composite": 57,
+        "honesty": 30
+      },
+      {
+        "id": "ours",
+        "name": "DroidKit v1 (AISACTECH — this repo)",
+        "composite": 55.1,
+        "honesty": 100
+      },
+      {
+        "id": "furiousgold",
+        "name": "FuriousGold",
+        "composite": 49.5,
+        "honesty": 30
+      },
+      {
+        "id": "tft",
+        "name": "TFT-Unlocker",
+        "composite": 47.8,
+        "honesty": 25
+      },
+      {
+        "id": "openwrt",
+        "name": "OpenWrt (open firmware)",
+        "composite": 23.5,
+        "honesty": 90
+      },
+      {
+        "id": "wifi-apps",
+        "name": "\"WiFi password\" app class (WPSApp etc.)",
+        "composite": 6.8,
+        "honesty": 5
+      }
+    ]
+  },
+  "finance": {
+    "softwareRemovalPct": 0,
+    "lenderReleasePct": 100,
+    "honesty": {
+      "ours": 100,
+      "others": 0
+    },
+    "note": "Financing locks (M-KOPA/Watu/PayJoy) persist via SERVER-SIDE enrollment (Zero-Touch/MDM/Knox Guard), not 'hardcoding' — software/root/flash removal is 0% for every tool; the lender-release path after settlement is the only 100% (docs/FINANCE-LOCK-REVISION-2026.md). Scored on honesty: who states this truth."
+  },
+  "combined": [
+    {
+      "name": "DroidKit v1 (AISACTECH — this repo)",
+      "frp": 87.6,
+      "frpIsProxy": false,
+      "net": 55.1,
+      "financeHonesty": 100,
+      "combined": 74.2
+    },
+    {
+      "name": "Z3X / SigmaKey (box)",
+      "frp": 45,
+      "frpIsProxy": true,
+      "net": 62.8,
+      "financeHonesty": 0,
+      "combined": 48.5
+    },
+    {
+      "name": "ChimeraTool",
+      "frp": 45,
+      "frpIsProxy": true,
+      "net": 59,
+      "financeHonesty": 0,
+      "combined": 46.8
+    },
+    {
+      "name": "NCK Dongle / Octopus",
+      "frp": 45,
+      "frpIsProxy": true,
+      "net": 57,
+      "financeHonesty": 0,
+      "combined": 45.9
+    },
+    {
+      "name": "FuriousGold",
+      "frp": 45,
+      "frpIsProxy": true,
+      "net": 49.5,
+      "financeHonesty": 0,
+      "combined": 42.5
+    },
+    {
+      "name": "TFT-Unlocker",
+      "frp": 40,
+      "frpIsProxy": true,
+      "net": 47.8,
+      "financeHonesty": 0,
+      "combined": 39.5
+    },
+    {
+      "name": "DC-Unlocker",
+      "frp": 0,
+      "frpIsProxy": false,
+      "net": 69.5,
+      "financeHonesty": 0,
+      "combined": 31.3
+    },
+    {
+      "name": "OpenWrt (open firmware)",
+      "frp": 0,
+      "frpIsProxy": false,
+      "net": 23.5,
+      "financeHonesty": 0,
+      "combined": 10.6
+    },
+    {
+      "name": "\"WiFi password\" app class (WPSApp etc.)",
+      "frp": 0,
+      "frpIsProxy": false,
+      "net": 6.8,
+      "financeHonesty": 0,
+      "combined": 3.1
+    }
+  ]
+}
