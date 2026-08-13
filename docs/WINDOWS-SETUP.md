@@ -27,7 +27,7 @@ Close and reopen PowerShell so PATH refreshes, then sanity-check:
 
 ```powershell
 git --version        # any 2.x
-node -v              # v18 or newer
+node -v              # v22.x LTS (>= 22.6) — Vite 7 + type-stripped tests require it
 rustc --version      # e.g. 1.7x+
 ```
 

@@ -1,0 +1,729 @@
+{
+  "generatedAt": "2026-08-13T12:34:24.612Z",
+  "inputHash": "026c2d236d0b8819",
+  "weights": {
+    "raw": 0.4,
+    "decision": 0.15,
+    "safety": 0.15,
+    "honesty": 0.15,
+    "access": 0.1,
+    "openness": 0.05
+  },
+  "corpus": [
+    {
+      "id": "samsung-a05s",
+      "band": "adb_live",
+      "brand": "samsung",
+      "brandRaw": "samsung",
+      "modelCode": "SM-A057F",
+      "marketingName": "Galaxy A05s",
+      "chipsetFamily": "MediaTek",
+      "chipsetName": "mt6768",
+      "androidMajor": 12,
+      "androidVersionRaw": "12",
+      "sdkVersion": "31",
+      "securityPatch": "2021-11-01",
+      "binaryVersion": "U3",
+      "bootloaderVersion": null,
+      "buildFingerprint": null,
+      "knoxVersion": null,
+      "frpState": "Active",
+      "adbState": "Unauthorized",
+      "deviceMode": "Normal",
+      "hasSim": true,
+      "hasWifi": true
+    },
+    {
+      "id": "samsung-a13",
+      "band": "testmode_contested",
+      "brand": "samsung",
+      "brandRaw": "samsung",
+      "modelCode": "SM-A137F",
+      "marketingName": "Galaxy A13",
+      "chipsetFamily": "Exynos",
+      "chipsetName": "exynos850",
+      "androidMajor": 13,
+      "androidVersionRaw": "13",
+      "sdkVersion": "33",
+      "securityPatch": "2023-05-01",
+      "binaryVersion": "U6",
+      "bootloaderVersion": null,
+      "buildFingerprint": null,
+      "knoxVersion": null,
+      "frpState": "Active",
+      "adbState": "Unauthorized",
+      "deviceMode": "Normal",
+      "hasSim": true,
+      "hasWifi": true
+    },
+    {
+      "id": "samsung-a15",
+      "band": "chipset_hardware",
+      "brand": "samsung",
+      "brandRaw": "samsung",
+      "modelCode": "SM-A155F",
+      "marketingName": "Galaxy A15",
+      "chipsetFamily": "MediaTek",
+      "chipsetName": "mt6789",
+      "androidMajor": 15,
+      "androidVersionRaw": "15",
+      "sdkVersion": "35",
+      "securityPatch": "2025-09-01",
+      "binaryVersion": "U18",
+      "bootloaderVersion": null,
+      "buildFingerprint": null,
+      "knoxVersion": "3.9",
+      "frpState": "Active",
+      "adbState": "Unauthorized",
+      "deviceMode": "Normal",
+      "hasSim": true,
+      "hasWifi": true
+    },
+    {
+      "id": "samsung-a16",
+      "band": "chipset_hardware",
+      "brand": "samsung",
+      "brandRaw": "samsung",
+      "modelCode": "SM-A167F",
+      "marketingName": "Galaxy A16",
+      "chipsetFamily": "Exynos",
+      "chipsetName": "exynos1330",
+      "androidMajor": 16,
+      "androidVersionRaw": "16",
+      "sdkVersion": "36",
+      "securityPatch": "2025-12-01",
+      "binaryVersion": "U20",
+      "bootloaderVersion": null,
+      "buildFingerprint": null,
+      "knoxVersion": "3.9",
+      "frpState": "Active",
+      "adbState": "Unauthorized",
+      "deviceMode": "Normal",
+      "hasSim": true,
+      "hasWifi": true
+    },
+    {
+      "id": "samsung-s25",
+      "band": "chipset_hardware",
+      "brand": "samsung",
+      "brandRaw": "samsung",
+      "modelCode": "SM-S931B",
+      "marketingName": "Galaxy S25",
+      "chipsetFamily": "Qualcomm",
+      "chipsetName": "sm8750",
+      "androidMajor": 16,
+      "androidVersionRaw": "16",
+      "sdkVersion": "36",
+      "securityPatch": "2026-01-01",
+      "binaryVersion": "U1",
+      "bootloaderVersion": null,
+      "buildFingerprint": null,
+      "knoxVersion": "3.9",
+      "frpState": "Active",
+      "adbState": "Unauthorized",
+      "deviceMode": "Normal",
+      "hasSim": true,
+      "hasWifi": true
+    },
+    {
+      "id": "google-pixel9",
+      "band": "official_only",
+      "brand": "google",
+      "brandRaw": "google",
+      "modelCode": "Pixel 9",
+      "marketingName": "Pixel 9",
+      "chipsetFamily": "Unknown",
+      "chipsetName": "tensor g4",
+      "androidMajor": 16,
+      "androidVersionRaw": "16",
+      "sdkVersion": "36",
+      "securityPatch": "2025-12-01",
+      "binaryVersion": null,
+      "bootloaderVersion": null,
+      "buildFingerprint": null,
+      "knoxVersion": null,
+      "frpState": "Active",
+      "adbState": "Unauthorized",
+      "deviceMode": "Normal",
+      "hasSim": true,
+      "hasWifi": true
+    },
+    {
+      "id": "tecno-spark30",
+      "band": "chipset_hardware",
+      "brand": "tecno",
+      "brandRaw": "TECNO",
+      "modelCode": "KL4",
+      "marketingName": "Spark 30",
+      "chipsetFamily": "MediaTek",
+      "chipsetName": "mt6769",
+      "androidMajor": 15,
+      "androidVersionRaw": "15",
+      "sdkVersion": "35",
+      "securityPatch": "2025-10-01",
+      "binaryVersion": null,
+      "bootloaderVersion": null,
+      "buildFingerprint": null,
+      "knoxVersion": null,
+      "frpState": "Active",
+      "adbState": "Unauthorized",
+      "deviceMode": "Normal",
+      "hasSim": true,
+      "hasWifi": true
+    },
+    {
+      "id": "infinix-hot50",
+      "band": "chipset_hardware",
+      "brand": "infinix",
+      "brandRaw": "Infinix",
+      "modelCode": "X6882",
+      "marketingName": "Hot 50",
+      "chipsetFamily": "Spreadtrum",
+      "chipsetName": "ums9230",
+      "androidMajor": 15,
+      "androidVersionRaw": "15",
+      "sdkVersion": "35",
+      "securityPatch": "2025-11-01",
+      "binaryVersion": null,
+      "bootloaderVersion": null,
+      "buildFingerprint": null,
+      "knoxVersion": null,
+      "frpState": "Active",
+      "adbState": "Unauthorized",
+      "deviceMode": "Normal",
+      "hasSim": true,
+      "hasWifi": true
+    },
+    {
+      "id": "itel-a80",
+      "band": "chipset_hardware",
+      "brand": "itel",
+      "brandRaw": "itel",
+      "modelCode": "A661L",
+      "marketingName": "A80",
+      "chipsetFamily": "Spreadtrum",
+      "chipsetName": "ums9230e",
+      "androidMajor": 14,
+      "androidVersionRaw": "14",
+      "sdkVersion": "34",
+      "securityPatch": "2025-06-01",
+      "binaryVersion": null,
+      "bootloaderVersion": null,
+      "buildFingerprint": null,
+      "knoxVersion": null,
+      "frpState": "Active",
+      "adbState": "Unauthorized",
+      "deviceMode": "Normal",
+      "hasSim": true,
+      "hasWifi": true
+    },
+    {
+      "id": "xiaomi-redmi14c",
+      "band": "chipset_hardware",
+      "brand": "xiaomi",
+      "brandRaw": "Xiaomi",
+      "modelCode": "2409BRN2CG",
+      "marketingName": "Redmi 14C",
+      "chipsetFamily": "MediaTek",
+      "chipsetName": "mt6769",
+      "androidMajor": 15,
+      "androidVersionRaw": "15",
+      "sdkVersion": "35",
+      "securityPatch": "2025-10-01",
+      "binaryVersion": null,
+      "bootloaderVersion": null,
+      "buildFingerprint": null,
+      "knoxVersion": null,
+      "frpState": "Active",
+      "adbState": "Unauthorized",
+      "deviceMode": "Normal",
+      "hasSim": true,
+      "hasWifi": true
+    },
+    {
+      "id": "oppo-a3x",
+      "band": "chipset_hardware",
+      "brand": "oppo",
+      "brandRaw": "OPPO",
+      "modelCode": "CPH2641",
+      "marketingName": "A3x",
+      "chipsetFamily": "Qualcomm",
+      "chipsetName": "sm4450",
+      "androidMajor": 14,
+      "androidVersionRaw": "14",
+      "sdkVersion": "34",
+      "securityPatch": "2024-12-01",
+      "binaryVersion": null,
+      "bootloaderVersion": null,
+      "buildFingerprint": null,
+      "knoxVersion": null,
+      "frpState": "Active",
+      "adbState": "Unauthorized",
+      "deviceMode": "Normal",
+      "hasSim": true,
+      "hasWifi": true
+    },
+    {
+      "id": "moto-g24",
+      "band": "chipset_hardware",
+      "brand": "motorola",
+      "brandRaw": "motorola",
+      "modelCode": "XT2423-1",
+      "marketingName": "Moto G24",
+      "chipsetFamily": "MediaTek",
+      "chipsetName": "mt6769",
+      "androidMajor": 14,
+      "androidVersionRaw": "14",
+      "sdkVersion": "34",
+      "securityPatch": "2024-11-01",
+      "binaryVersion": null,
+      "bootloaderVersion": null,
+      "buildFingerprint": null,
+      "knoxVersion": null,
+      "frpState": "Active",
+      "adbState": "Unauthorized",
+      "deviceMode": "Normal",
+      "hasSim": true,
+      "hasWifi": true
+    }
+  ],
+  "tools": [
+    {
+      "id": "samfw",
+      "name": "SamFw FRP Tool",
+      "klasse": "free",
+      "decisionCoverage": 45,
+      "safety": 40,
+      "honesty": 45,
+      "access": 100,
+      "openness": 30
+    },
+    {
+      "id": "fourukey",
+      "name": "Tenorshare 4uKey",
+      "klasse": "commercial",
+      "decisionCoverage": 75,
+      "safety": 60,
+      "honesty": 40,
+      "access": 30,
+      "openness": 5
+    },
+    {
+      "id": "drfone",
+      "name": "Dr.Fone Screen Unlock",
+      "klasse": "commercial",
+      "decisionCoverage": 80,
+      "safety": 55,
+      "honesty": 35,
+      "access": 30,
+      "openness": 5
+    },
+    {
+      "id": "imobie",
+      "name": "DroidKit (iMobie — name-collision)",
+      "klasse": "commercial",
+      "decisionCoverage": 75,
+      "safety": 55,
+      "honesty": 35,
+      "access": 30,
+      "openness": 5
+    },
+    {
+      "id": "tsm",
+      "name": "TSM Tool (bench-grade)",
+      "klasse": "commercial",
+      "decisionCoverage": 85,
+      "safety": 70,
+      "honesty": 45,
+      "access": 20,
+      "openness": 10
+    },
+    {
+      "id": "unlockgo",
+      "name": "iToolab UnlockGo",
+      "klasse": "commercial",
+      "decisionCoverage": 70,
+      "safety": 50,
+      "honesty": 35,
+      "access": 30,
+      "openness": 5
+    },
+    {
+      "id": "griffin",
+      "name": "Griffin/TFM-class (community)",
+      "klasse": "community",
+      "decisionCoverage": 40,
+      "safety": 30,
+      "honesty": 25,
+      "access": 60,
+      "openness": 5
+    },
+    {
+      "id": "lockwiper",
+      "name": "iMyFone LockWiper (Android)",
+      "klasse": "commercial",
+      "decisionCoverage": 65,
+      "safety": 45,
+      "honesty": 35,
+      "access": 30,
+      "openness": 5
+    },
+    {
+      "id": "ours",
+      "name": "DroidKit v1 (AISACTECH — this repo)",
+      "klasse": "free",
+      "decisionCoverage": 100,
+      "safety": 100,
+      "honesty": 100,
+      "access": 100,
+      "openness": 100
+    }
+  ],
+  "perDeviceRaw": [
+    {
+      "device": "samsung-a05s",
+      "samfw": 70,
+      "fourukey": 80,
+      "drfone": 78,
+      "imobie": 75,
+      "tsm": 75,
+      "unlockgo": 70,
+      "griffin": 65,
+      "lockwiper": 70,
+      "ours": 88
+    },
+    {
+      "device": "samsung-a13",
+      "samfw": 55,
+      "fourukey": 50,
+      "drfone": 45,
+      "imobie": 45,
+      "tsm": 55,
+      "unlockgo": 40,
+      "griffin": 50,
+      "lockwiper": 40,
+      "ours": 70
+    },
+    {
+      "device": "samsung-a15",
+      "samfw": 72,
+      "fourukey": 74.8,
+      "drfone": 68,
+      "imobie": 65.60000000000001,
+      "tsm": 60,
+      "unlockgo": 64,
+      "griffin": 90,
+      "lockwiper": 49,
+      "ours": 80
+    },
+    {
+      "device": "samsung-a16",
+      "samfw": 80,
+      "fourukey": 76.5,
+      "drfone": 70.4,
+      "imobie": 68,
+      "tsm": 33.75,
+      "unlockgo": 62.400000000000006,
+      "griffin": 90,
+      "lockwiper": 45.5,
+      "ours": 70
+    },
+    {
+      "device": "samsung-s25",
+      "samfw": 62,
+      "fourukey": 68,
+      "drfone": 62.400000000000006,
+      "imobie": 57.6,
+      "tsm": 33.75,
+      "unlockgo": 52,
+      "griffin": 90,
+      "lockwiper": 38.5,
+      "ours": 65
+    },
+    {
+      "device": "google-pixel9",
+      "samfw": 0,
+      "fourukey": 0,
+      "drfone": 0,
+      "imobie": 0,
+      "tsm": 0,
+      "unlockgo": 0,
+      "griffin": 0,
+      "lockwiper": 0,
+      "ours": 0
+    },
+    {
+      "device": "tecno-spark30",
+      "samfw": 0,
+      "fourukey": 74.8,
+      "drfone": 68,
+      "imobie": 65.60000000000001,
+      "tsm": 60,
+      "unlockgo": 64,
+      "griffin": 0,
+      "lockwiper": 49,
+      "ours": 80
+    },
+    {
+      "device": "infinix-hot50",
+      "samfw": 0,
+      "fourukey": 59.5,
+      "drfone": 52,
+      "imobie": 48,
+      "tsm": 60,
+      "unlockgo": 44,
+      "griffin": 0,
+      "lockwiper": 31.499999999999996,
+      "ours": 75
+    },
+    {
+      "device": "itel-a80",
+      "samfw": 0,
+      "fourukey": 59.5,
+      "drfone": 52,
+      "imobie": 48,
+      "tsm": 80,
+      "unlockgo": 44,
+      "griffin": 0,
+      "lockwiper": 31.499999999999996,
+      "ours": 75
+    },
+    {
+      "device": "xiaomi-redmi14c",
+      "samfw": 0,
+      "fourukey": 74.8,
+      "drfone": 68,
+      "imobie": 65.60000000000001,
+      "tsm": 60,
+      "unlockgo": 64,
+      "griffin": 0,
+      "lockwiper": 49,
+      "ours": 80
+    },
+    {
+      "device": "oppo-a3x",
+      "samfw": 0,
+      "fourukey": 68,
+      "drfone": 62.400000000000006,
+      "imobie": 57.6,
+      "tsm": 85,
+      "unlockgo": 52,
+      "griffin": 0,
+      "lockwiper": 38.5,
+      "ours": 65
+    },
+    {
+      "device": "moto-g24",
+      "samfw": 0,
+      "fourukey": 74.8,
+      "drfone": 68,
+      "imobie": 65.60000000000001,
+      "tsm": 85,
+      "unlockgo": 64,
+      "griffin": 0,
+      "lockwiper": 49,
+      "ours": 80
+    }
+  ],
+  "overall": {
+    "composite": [
+      {
+        "tool": "ours",
+        "name": "DroidKit v1 (AISACTECH — this repo)",
+        "composite": 87.6,
+        "raw": 69
+      },
+      {
+        "tool": "tsm",
+        "name": "TSM Tool (bench-grade)",
+        "composite": 55.4,
+        "raw": 57.3
+      },
+      {
+        "tool": "fourukey",
+        "name": "Tenorshare 4uKey",
+        "composite": 54.9,
+        "raw": 63.4
+      },
+      {
+        "tool": "drfone",
+        "name": "Dr.Fone Screen Unlock",
+        "composite": 51.9,
+        "raw": 57.9
+      },
+      {
+        "tool": "imobie",
+        "name": "DroidKit (iMobie — name-collision)",
+        "composite": 50.1,
+        "raw": 55.1
+      },
+      {
+        "tool": "unlockgo",
+        "name": "iToolab UnlockGo",
+        "composite": 47.2,
+        "raw": 51.7
+      },
+      {
+        "tool": "samfw",
+        "name": "SamFw FRP Tool",
+        "composite": 42.3,
+        "raw": 28.3
+      },
+      {
+        "tool": "lockwiper",
+        "name": "iMyFone LockWiper (Android)",
+        "composite": 41.4,
+        "raw": 41
+      },
+      {
+        "tool": "griffin",
+        "name": "Griffin/TFM-class (community)",
+        "composite": 33.3,
+        "raw": 32.1
+      }
+    ],
+    "raw": [
+      {
+        "tool": "ours",
+        "name": "DroidKit v1 (AISACTECH — this repo)",
+        "raw": 69
+      },
+      {
+        "tool": "fourukey",
+        "name": "Tenorshare 4uKey",
+        "raw": 63.4
+      },
+      {
+        "tool": "drfone",
+        "name": "Dr.Fone Screen Unlock",
+        "raw": 57.9
+      },
+      {
+        "tool": "tsm",
+        "name": "TSM Tool (bench-grade)",
+        "raw": 57.3
+      },
+      {
+        "tool": "imobie",
+        "name": "DroidKit (iMobie — name-collision)",
+        "raw": 55.1
+      },
+      {
+        "tool": "unlockgo",
+        "name": "iToolab UnlockGo",
+        "raw": 51.7
+      },
+      {
+        "tool": "lockwiper",
+        "name": "iMyFone LockWiper (Android)",
+        "raw": 41
+      },
+      {
+        "tool": "griffin",
+        "name": "Griffin/TFM-class (community)",
+        "raw": 32.1
+      },
+      {
+        "tool": "samfw",
+        "name": "SamFw FRP Tool",
+        "raw": 28.3
+      }
+    ]
+  },
+  "segments": {
+    "android1516": [
+      {
+        "id": "samfw",
+        "raw": 30.6,
+        "composite": 43.2
+      },
+      {
+        "id": "fourukey",
+        "raw": 61.2,
+        "composite": 54
+      },
+      {
+        "id": "drfone",
+        "raw": 55.5,
+        "composite": 51
+      },
+      {
+        "id": "imobie",
+        "raw": 52.9,
+        "composite": 49.2
+      },
+      {
+        "id": "tsm",
+        "raw": 43.9,
+        "composite": 50.1
+      },
+      {
+        "id": "unlockgo",
+        "raw": 50.1,
+        "composite": 46.5
+      },
+      {
+        "id": "griffin",
+        "raw": 38.6,
+        "composite": 35.9
+      },
+      {
+        "id": "lockwiper",
+        "raw": 37.5,
+        "composite": 40
+      },
+      {
+        "id": "ours",
+        "raw": 64.3,
+        "composite": 85.7
+      }
+    ],
+    "android14andBelow": [
+      {
+        "id": "samfw",
+        "raw": 25,
+        "composite": 41
+      },
+      {
+        "id": "fourukey",
+        "raw": 66.5,
+        "composite": 56.1
+      },
+      {
+        "id": "drfone",
+        "raw": 61.1,
+        "composite": 53.2
+      },
+      {
+        "id": "imobie",
+        "raw": 58.2,
+        "composite": 51.3
+      },
+      {
+        "id": "tsm",
+        "raw": 76,
+        "composite": 62.9
+      },
+      {
+        "id": "unlockgo",
+        "raw": 54,
+        "composite": 48.1
+      },
+      {
+        "id": "griffin",
+        "raw": 23,
+        "composite": 29.7
+      },
+      {
+        "id": "lockwiper",
+        "raw": 45.8,
+        "composite": 43.3
+      },
+      {
+        "id": "ours",
+        "raw": 75.6,
+        "composite": 90.2
+      }
+    ]
+  }
+}

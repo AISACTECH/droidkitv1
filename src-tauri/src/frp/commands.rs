@@ -538,3 +538,16 @@ pub struct HandshakeVerification {
     pub usb_config: String,
     pub message: String,
 }
+
+// ==================== Adaptive Engine — Partition Survey (read-only) ====================
+
+/// Run the read-only partition/boot survey for the Adaptive Engine.
+/// Contract: getprop + `ls /dev/block/by-name` only — no writes, ever.
+#[tauri::command]
+pub async fn frp_partition_survey(
+    device_serial: String,
+) -> Result<crate::frp::partition::PartitionSurveyRaw, String> {
+    let mut device =
+        reconnect_device(&device_serial).ok_or_else(|| "Failed to connect to device".to_string())?;
+    Ok(crate::frp::partition::run_partition_survey(&mut device))
+}

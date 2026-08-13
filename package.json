@@ -29,11 +29,12 @@
     "url": "https://github.com/AISACTECH/droidkitv1/issues"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "node": ">=22.6.0",
+    "npm": ">=10.0.0"
   },
   "packageManager": "npm@10.9.0",
   "scripts": {
+    "doctor": "node --experimental-strip-types scripts/doctor.mts",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
@@ -49,6 +50,12 @@
     "test:nck": "node --experimental-strip-types scripts/verify-nck.mts",
     "test:lab": "node --experimental-strip-types scripts/verify-rescue-lab.mts",
     "test:core": "node --experimental-strip-types scripts/verify-core-lib.mts",
+    "test:adaptive": "node --experimental-strip-types scripts/verify-adaptive-engine.mts",
+    "test:research": "node --experimental-strip-types scripts/verify-parallel-research.mts",
+    "benchmark:frp": "node --experimental-strip-types scripts/benchmark-frp-tools.mts",
+    "benchmark:sheet": "node --experimental-strip-types scripts/benchmark-comparison-sheet.mts",
+    "refine:ui-flows": "node --experimental-strip-types scripts/refine-ui-flows.mts",
+    "update:validate": "node --experimental-strip-types scripts/validate-update-pack.mts",
     "test:brands": "node --experimental-strip-types scripts/verify-brand-db.mts",
     "test:matrix": "node --experimental-strip-types scripts/verify-protocol-matrix.mts",
     "build:help-pdf": "node --experimental-strip-types scripts/build-help-pdf.mts",
