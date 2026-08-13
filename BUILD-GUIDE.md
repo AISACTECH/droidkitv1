@@ -53,7 +53,7 @@ DroidKit uses a hybrid architecture designed for both native desktop execution a
 
 | Component | Minimum Version | Required For |
 | :--- | :--- | :--- |
-| **Node.js** | `v18.0.0+` | TypeScript, Vite frontend build |
+| **Node.js** | `v22 LTS (>= 22.6)` | TypeScript, Vite 7 frontend build + type-stripped test scripts |
 | **Rust / Cargo** | `v1.75.0+` | Tauri desktop backend compilation |
 | **Visual Studio C++ Build Tools** | `2019+` | MSVC Linker (`cl.exe`) on Windows |
 | **Windows 10/11 SDK** | `10.0.19041+` | Win32 API header files on Windows |

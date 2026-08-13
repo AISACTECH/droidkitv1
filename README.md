@@ -99,7 +99,7 @@ Appearance (light/dark/system), Android SDK path, device polling, download paths
 ### Prerequisites
 | Tool | Min Version | Notes |
 |------|-------------|-------|
-| Node.js | 18+ | npm 9+ bundled |
+| Node.js | **22 LTS (≥ 22.6)** — Vite 7 and the type-stripped test scripts require it | npm 10+ bundled |
 | Rust stable | 1.75+ | only for the desktop app: `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh` |
 | Android SDK | latest | `ANDROID_HOME` set, `adb` on PATH |
 | Linux only | webkit deps | `sudo apt install libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf` |
@@ -110,6 +110,7 @@ Appearance (light/dark/system), Android SDK path, device polling, download paths
 ```bash
 git clone https://github.com/AISACTECH/droidkitv1.git
 cd droidkitv1
+npm run doctor              # 10-second environment diagnosis — tells you EXACTLY why a launch/build would fail
 npm ci                      # reproducible install from lockfile
 
 # Option A — Browser mock mode (no Rust needed): full UI + 260-model mock catalogue

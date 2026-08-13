@@ -1,7 +1,7 @@
 # 📊 Full Comparison Sheet 2026 — DroidKit (this repo) vs FRP tools vs Network-unlock tools
 
 > **Test-generated.** Run `npm run benchmark:frp` then `npm run benchmark:sheet` to regenerate.
-> Generated: `2026-08-13T11:33:11.958Z` · input hash: `5d1a804002b6cb17` · FRP half source: `docs/benchmarks/frp-tools-benchmark-2026.json`
+> Generated: `2026-08-13T11:53:19.712Z` · input hash: `5d1a804002b6cb17` · FRP half source: `docs/benchmarks/frp-tools-benchmark-2026.json`
 > (input hash `026c2d236d0b8819`) · twin: `docs/benchmarks/comparison-sheet-2026.json`.
 
 ---

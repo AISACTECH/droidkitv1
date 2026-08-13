@@ -9,12 +9,12 @@ on:
 
 # Fast, cheap gates that turn every push/PR green-or-red in minutes,
 # BEFORE the heavyweight publish matrix ever runs. This is the
-# "installs-from-git-without-friction" guarantee: nothing unbuildable
-# reaches main unnoticed.
+# "installs-from-git-and-builds-without-friction" guarantee: nothing
+# unbuildable reaches main unnoticed.
 
 jobs:
   frontend-gates:
-    name: Frontend gates (typecheck, build, tests)
+    name: Frontend gates (doctor, typecheck, build, tests, benchmarks)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -28,14 +28,26 @@ jobs:
       - name: install frontend dependencies (frozen lockfile = one truth)
         run: npm ci
 
+      - name: environment doctor (launch/build diagnosis)
+        run: npm run doctor
+
       - name: typecheck
         run: npm run lint
 
       - name: production build
         run: npm run build
 
-      - name: verified engines + lab gate (111+ checks)
-        run: npm run test:lab && npm run test:nck && npm run test:rescue
+      - name: regression suite (61+ checks)
+        run: node scripts/test-all.js
+
+      - name: adaptive engine + research layer gates
+        run: npm run test:adaptive && npm run test:research
+
+      - name: rescue lab + NCK + core lib gates
+        run: npm run test:lab && npm run test:nck && npm run test:rescue && npm run test:core
+
+      - name: test-generated benchmarks (documents stay honest)
+        run: npm run benchmark:frp && npm run benchmark:sheet
 
       - name: production audit
         run: npm run audit:prod

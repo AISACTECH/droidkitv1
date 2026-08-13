@@ -55,7 +55,7 @@ if (Get-Command bun -ErrorAction SilentlyContinue) {
         $pkgCmd = "bun"
         $runCmd = "bun run"
     } catch {
-        Write-Err "Failed to install Bun automatically. Please install Node.js 18+ LTS via: winget install --id OpenJS.NodeJS.LTS -e"
+        Write-Err "Failed to install Bun automatically. Please install Node.js 22 LTS via: winget install --id OpenJS.NodeJS.LTS -e"
         exit 1
     }
 }

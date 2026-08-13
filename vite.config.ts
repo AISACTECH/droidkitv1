@@ -18,7 +18,11 @@ export default defineConfig(async ({ mode }) => ({
   clearScreen: false,
   server: {
     port: 1420,
-    strictPort: false,
+    // Hard-fail on a busy port instead of silently shifting to 1421:
+    // `tauri dev` pins devUrl to http://localhost:1420, so a silent
+    // port shift = a white/blank Tauri window with no error. A loud
+    // error here tells the developer exactly what holds the port.
+    strictPort: true,
     host: host || "0.0.0.0",
     allowedHosts: true,
     hmr: host
