@@ -44,6 +44,9 @@
     "windows": {
       "certificateThumbprint": null,
       "digestAlgorithm": "sha256",
+      "webviewInstallMode": {
+        "type": "offlineInstaller"
+      },
       "nsis": {
         "installMode": "both"
       }

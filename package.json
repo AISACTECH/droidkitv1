@@ -45,11 +45,21 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" || echo 'prettier not installed, skipping'",
     "analyze": "vite build --mode analyze",
     "audit:prod": "node scripts/production-audit.js",
+    "test:rescue": "node --experimental-strip-types scripts/verify-gesture-crack.mts",
+    "test:nck": "node --experimental-strip-types scripts/verify-nck.mts",
+    "test:lab": "node --experimental-strip-types scripts/verify-rescue-lab.mts",
+    "test:core": "node --experimental-strip-types scripts/verify-core-lib.mts",
+    "test:brands": "node --experimental-strip-types scripts/verify-brand-db.mts",
+    "test:matrix": "node --experimental-strip-types scripts/verify-protocol-matrix.mts",
+    "build:help-pdf": "node --experimental-strip-types scripts/build-help-pdf.mts",
     "simulate": "node scripts/simulate-large-scale.js",
+    "simulate:market": "node scripts/simulate-market-comparison.js",
+    "perf:report": "node scripts/perf-report.js",
     "simulate:devs": "node scripts/simulate-large-scale.js --devs=20000",
     "simulate:users": "node scripts/simulate-large-scale.js --users=20000",
     "simulate:full": "node scripts/simulate-large-scale.js --devs=20000 --users=20000",
-    "postinstall": "echo 'DroidKit v1.1.0 installed. Run npm run tauri:dev for desktop or npm run dev for browser mock mode.'"
+    "postinstall": "echo 'DroidKit v1.1.0 installed. Run npm run tauri:dev for desktop or npm run dev for browser mock mode.'",
+    "simulate:frp-mock": "node scripts/sim-harness.mjs"
   },
   "dependencies": {
     "@fontsource-variable/jost": "^5.1.1",
@@ -87,6 +97,7 @@
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.2",
     "@vitejs/plugin-react": "^5.0.0",
+    "pdfkit": "^0.15.2",
     "tw-animate-css": "^1.3.6",
     "typescript": "~5.9.2",
     "vite": "^7.1.2"

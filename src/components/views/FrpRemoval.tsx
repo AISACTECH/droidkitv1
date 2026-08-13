@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useRef } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -94,6 +94,17 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
   const [operationTab, setOperationTab] = useState<"security" | "brom" | "function" | "repair" | "adb" | "knox">("security")
   const [preloaderAuth, setPreloaderAuth] = useState<string>("Samsung (A10S)")
   const [progress, setProgress] = useState(0)
+  // audit fix (2026-08-12): trailing progress-reset timers were orphaned —
+  // a new run left the old timer alive to wipe the new run's bar, and an
+  // unmount fired setProgress after teardown. Track + gate + clear all.
+  const progressResetRef = useRef<number | null>(null)
+  const resetProgressSoon = (ms: number) => {
+    if (progressResetRef.current !== null) window.clearTimeout(progressResetRef.current)
+    progressResetRef.current = window.setTimeout(() => { progressResetRef.current = null; setProgress(0) }, ms)
+  }
+  useEffect(() => () => {
+    if (progressResetRef.current !== null) window.clearTimeout(progressResetRef.current)
+  }, [])
 
   // === Confirmed Features States ===
   const [handshake, setHandshake] = useState<HandshakeVerification | null>(null)
@@ -167,7 +178,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
       logger.error("Scan failed", e)
     } finally {
       setIsDetecting(false)
-      setTimeout(() => setProgress(0), 2000)
+      resetProgressSoon(2000)
     }
   }
 
@@ -209,7 +220,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
     } finally {
       if (interval) clearInterval(interval)
       setIsRunning(false)
-      setTimeout(() => setProgress(0), 2500)
+      resetProgressSoon(2500)
     }
   }
 
@@ -270,7 +281,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
     } finally {
       if (interval) clearInterval(interval)
       setIsRunningReset(false)
-      setTimeout(() => setProgress(0), 3000)
+      resetProgressSoon(3000)
     }
   }
 
@@ -291,7 +302,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
     } finally {
       if (interval) clearInterval(interval)
       setIsRemovingKnox(false)
-      setTimeout(() => setProgress(0), 2500)
+      resetProgressSoon(2500)
     }
   }
 

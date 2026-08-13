@@ -31,12 +31,25 @@ export function ScreenControl({ selectedDevice }: ScreenControlProps) {
   const [fastbootInfo, setFastbootInfo] = useState<any>(null)
   const imgRef = useRef<HTMLImageElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  // audit fix (2026-08-12): the poll interval was cleaned up on unmount, but
+  // the action-follow-up setTimeout(captureFrame, …) timers were not — they
+  // could fire IPC at a disconnected device after the view closed.
+  const mountedRef = useRef(true)
+  const pendingTimers = useRef<number[]>([])
+  useEffect(() => {
+    mountedRef.current = true
+    const pending = pendingTimers.current
+    return () => {
+      mountedRef.current = false
+      pending.forEach(t => window.clearTimeout(t))
+    }
+  }, [])
 
   const pushLog = (msg: string) => setLog(prev => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 100))
 
   // Screen mirroring loop
   const captureFrame = useCallback(async () => {
-    if (!mirrorActive) return
+    if (!mirrorActive || !mountedRef.current) return
     setIsCapturing(true)
     try {
       const result = await captureScreenFrame(selectedDevice.serial_no)
@@ -57,6 +70,16 @@ export function ScreenControl({ selectedDevice }: ScreenControlProps) {
     captureFrame() // immediate first frame
     return () => clearInterval(id)
   }, [mirrorActive, refreshInterval, captureFrame])
+
+  // All follow-up captures go through ONE tracked scheduler so unmount
+  // clears every pending timer (and none can outlive the view).
+  const scheduleCapture = (ms: number) => {
+    const id = window.setTimeout(() => {
+      pendingTimers.current = pendingTimers.current.filter(t => t !== id)
+      if (mountedRef.current) captureFrame()
+    }, ms)
+    pendingTimers.current.push(id)
+  }
 
   const handleStartMirror = async () => {
     try {
@@ -95,7 +118,7 @@ export function ScreenControl({ selectedDevice }: ScreenControlProps) {
         // visual feedback could be added
       }
       // auto refresh after action
-      setTimeout(captureFrame, 300)
+      scheduleCapture(300)
     } catch (err: any) {
       pushLog(`Tap failed: ${err}`)
     }
@@ -121,7 +144,7 @@ export function ScreenControl({ selectedDevice }: ScreenControlProps) {
     try {
       const res = await sendSwipeViaCursor(selectedDevice.serial_no, dragStart.x, dragStart.y, coords.deviceX, coords.deviceY, 300)
       pushLog(res)
-      setTimeout(captureFrame, 400)
+      scheduleCapture(400)
     } catch (err: any) {
       pushLog(`Swipe failed: ${err}`)
     }
@@ -134,7 +157,7 @@ export function ScreenControl({ selectedDevice }: ScreenControlProps) {
       const res = await sendTextViaAdb(selectedDevice.serial_no, inputText)
       pushLog(res)
       setInputText("")
-      setTimeout(captureFrame, 300)
+      scheduleCapture(300)
     } catch (e: any) {
       pushLog(`Text send failed: ${e}`)
     }
@@ -144,7 +167,7 @@ export function ScreenControl({ selectedDevice }: ScreenControlProps) {
     try {
       const res = await sendKeyeventViaCursor(selectedDevice.serial_no, keycode)
       pushLog(`${label} (${keycode}): ${res}`)
-      setTimeout(captureFrame, 300)
+      scheduleCapture(300)
     } catch (e: any) {
       pushLog(`${label} failed: ${e}`)
     }

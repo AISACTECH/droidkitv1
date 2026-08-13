@@ -37,7 +37,8 @@ We publish our evidence, not just our claims. Independent 2026 research (see [`R
   - **Phase Runbook** — chipset hardware paths (EDL/Brom/Odin/SPD) driven by real `algorithm.rs` phase weights as an interactive checklist
   - **Session journal + JSON export** for developer artifacts
 - 📊 **Research Reality Check panel** in FRP Removal — computes a feasibility band per scanned device from Android version + security patch + chipset, and routes to the method class the 2026 evidence supports (ADB window / test-mode / Odin / Brom / EDL / official recovery)
-- 🔗 **Evidence dossiers committed** — `RESEARCH-2026-FRP.md`, `DEBATE-AI-VS-GOOGLE.md`
+- 🔗 **Evidence dossiers committed** — `RESEARCH-2026-FRP.md`, `DEBATE-AI-VS-GOOGLE.md`, `docs/PHYSICS-LAYER-RESEARCH.md`, `docs/RESCUE-LAB-RESEARCH.md`, `docs/COMPARISON-2026-FINAL.md` (experimental lanes: FRP Lab 🧪 Patch Oracle 🔮 + Rescue Lab 🛠️ multi-device repair bench — both under the bands-not-promises honesty law; user-runnable verification: `npm run test:lab` 111 checks + `test:nck` + `test:rescue`)
+- ❓ **Help & Info view + full-colour PDF guide** — searchable in-app Help Center (policies, setup, every tool, FAQ, glossary; works with no device connected) rendered from one shared content module, plus the printable 16-page `docs/DROIDKIT-HELP-GUIDE.pdf` (`npm run build:help-pdf` regenerates it; a bundled copy ships in-app as `/help-guide.pdf`)
 - 🧹 **Fresh-clone polish** — removed noisy `husky` prepare hook, synced lockfile, replaced unverified third-party APK mirror URLs with neutral web-search launches, corrected research-outdated instruction text (browser-APK/TalkBack patch era, combination firmware reframed as legacy Android 6–9)
 
 ---

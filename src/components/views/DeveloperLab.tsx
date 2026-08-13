@@ -21,6 +21,7 @@ import {
 } from "@/lib/frp-commands"
 import { type DeviceInfo } from "@/tauri-commands"
 import { assessDevice } from "@/components/views/FrpRemoval/RealityCheck"
+import { PatchOracle } from "@/components/views/DeveloperLab/PatchOracle"
 import {
   FlaskConical, Play, RefreshCw, CheckCircle2, XCircle, AlertTriangle,
   Download, Cpu, ClipboardList, Braces, ShieldCheck, Activity,
@@ -563,6 +564,11 @@ export function DeveloperLab({ selectedDevice }: DeveloperLabProps) {
               </CardContent>
             </Card>
           )}
+
+          <Separator />
+
+          {/* Patch Oracle — physics-layer forecaster (additive, offline, no device commands) */}
+          <PatchOracle profile={profile} />
         </div>
       </ScrollArea>
     </div>

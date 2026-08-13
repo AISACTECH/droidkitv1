@@ -26,7 +26,9 @@ import {
   Activity,
   Settings,
   ShieldAlert,
-  FlaskConical
+  FlaskConical,
+  LifeBuoy,
+  HelpCircle
 } from "lucide-react"
 
 interface SidebarProps {
@@ -42,6 +44,8 @@ const navigationItems = [
   { id: 'system-info', label: 'System Info', icon: Info },
   { id: 'frp', label: 'FRP Removal', icon: ShieldAlert },
   { id: 'frp-lab', label: 'FRP Lab 🧪', icon: FlaskConical },
+  { id: 'rescue-lab', label: 'Rescue Lab 🛠️', icon: LifeBuoy },
+  { id: 'help', label: 'Help & Info ❓', icon: HelpCircle },
   { id: 'files', label: 'Files', icon: FileText },
   { id: 'logcat', label: 'Logcat', icon: Terminal },
   { id: 'apps', label: 'Apps', icon: Package },
