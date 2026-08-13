@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * DroidKit — Comprehensive Test Suite
+ * Paralock — Comprehensive Test Suite
  * Tests everything to pass, ready to clone/install on GitHub,
  * accuracy peak, speed efficiency, reliability, Windows support,
  * ADB/USB/WiFi/Fastboot, Screen Mirror reflection window
@@ -35,7 +35,7 @@ function exec(cmd, opts = {}) {
   }
 }
 
-console.log("\n🧪 DroidKit Comprehensive Test Suite");
+console.log("\n🧪 Paralock Comprehensive Test Suite");
 console.log("==============================================\n");
 
 // 1. Clone / Install Ready
@@ -278,10 +278,10 @@ const criteria = [
     })(), msg: 'Version aligned across manifests (package.json + tauri.conf.json + Cargo.toml)' },
   { check: tauriConf.app.security.csp && !tauriConf.app.security.csp.includes('null'), msg: 'Security CSP hardened not null' },
   { check: fs.existsSync(path.join(root, 'LICENSE')), msg: 'License MIT exists' },
-  { check: fs.existsSync(path.join(root, 'README.md')) && fs.readFileSync(path.join(root, 'README.md'), 'utf8').includes('DroidKit'), msg: 'README exists with DroidKit' },
+  { check: fs.existsSync(path.join(root, 'README.md')) && fs.readFileSync(path.join(root, 'README.md'), 'utf8').includes('Paralock'), msg: 'README exists with Paralock' },
   { check: fs.existsSync(path.join(root, 'docs/FEATURE_CONFIRMATION_USB_KNOX_RESET.md')), msg: 'Feature confirmation doc exists' },
   { check: fs.existsSync(path.join(root, 'docs/COMPARISON_2026_TOP_FRP_APPS.md')), msg: 'Comparison with top 2026 apps exists — outperforms' },
-  { check: fs.existsSync(path.join(root, 'docs/screenshots/droidkit-enhanced-frp-main.png')), msg: 'Screenshots exist for UI' },
+  { check: fs.existsSync(path.join(root, 'docs/screenshots/paralock-enhanced-frp-main.png')), msg: 'Screenshots exist for UI' },
   { check: fs.readFileSync(path.join(root, 'src/components/views/ScreenControl.tsx'), 'utf8').includes('Reflection Window') && fs.readFileSync(path.join(root, 'src/components/views/ScreenControl.tsx'), 'utf8').includes('broken touch sensor'), msg: 'Best preview reflection window for broken sensor repair' },
 ];
 

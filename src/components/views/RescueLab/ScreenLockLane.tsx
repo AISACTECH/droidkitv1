@@ -117,7 +117,7 @@ export function ScreenLockLane() {
         when: "The complete path when the data-preserving window is closed.",
         steps: [
           { text: "Say the truth to the customer FIRST: on this Android, saving the data without the code is not possible for anyone; the choice is data or access." },
-          { text: "Choice A (access): boot recovery (key combos in the Black Screen lane table) → Wipe data/factory reset. After reboot FRP appears → continue in DroidKit's FRP Removal + FRP Lab views. One app, whole journey." },
+          { text: "Choice A (access): boot recovery (key combos in the Black Screen lane table) → Wipe data/factory reset. After reboot FRP appears → continue in Paralock's FRP Removal + FRP Lab views. One app, whole journey." },
           { text: "Choice B (data, Samsung only): if 'Remote unlock' was ever enabled — findmymobile.samsung.com with the owner's Samsung account → Unlock. Data preserved." },
           { text: "Choice C (data, any brand): owner remembers nothing helps — last resort is the panel data staying encrypted; be the shop that said so honestly, not the shop that wiped silently." },
         ],

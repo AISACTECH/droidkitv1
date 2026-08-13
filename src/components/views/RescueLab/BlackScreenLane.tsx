@@ -70,7 +70,7 @@ export function BlackScreenLane() {
           ))}
         </div>
         <p className="text-[10px] text-muted-foreground">
-          DroidKit cross-links: a phone the PC can see (Devices view) can be mirrored + controlled from the Screen view even with a dead panel, backed up via Files, and reflashed from the FRP Lab Phase Runbook — one app, whole rescue journey.
+          Paralock cross-links: a phone the PC can see (Devices view) can be mirrored + controlled from the Screen view even with a dead panel, backed up via Files, and reflashed from the FRP Lab Phase Runbook — one app, whole rescue journey.
         </p>
       </div>
     </div>

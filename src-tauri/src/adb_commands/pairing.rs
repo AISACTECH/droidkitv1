@@ -32,7 +32,7 @@ pub(crate) fn generate_pairing_data() -> Result<PairingData, String> {
         })
         .collect();
 
-    let device_name = "droidkit";
+    let device_name = "paralock";
 
     let qr_data = format!("WIFI:T:ADB;S:{};P:{};;", device_name, pairing_code);
 

@@ -84,7 +84,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
                 <div>
                   <CardTitle className="text-lg">Something went wrong</CardTitle>
                   <CardDescription className="mt-1">
-                    DroidKit encountered an unexpected error. Error ID: <code className="text-xs bg-muted px-1 py-0.5 rounded">{this.state.errorId}</code>
+                    Paralock encountered an unexpected error. Error ID: <code className="text-xs bg-muted px-1 py-0.5 rounded">{this.state.errorId}</code>
                   </CardDescription>
                 </div>
               </div>

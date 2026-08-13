@@ -370,7 +370,7 @@
     },
     {
       "id": "ours",
-      "name": "DroidKit v1 (AISACTECH — this repo)",
+      "name": "Paralock v1 (Isaac Real — this repo)",
       "klasse": "free",
       "decisionCoverage": 100,
       "safety": 100,
@@ -529,7 +529,7 @@
     "composite": [
       {
         "tool": "ours",
-        "name": "DroidKit v1 (AISACTECH — this repo)",
+        "name": "Paralock v1 (Isaac Real — this repo)",
         "composite": 87.6,
         "raw": 69
       },
@@ -585,7 +585,7 @@
     "raw": [
       {
         "tool": "ours",
-        "name": "DroidKit v1 (AISACTECH — this repo)",
+        "name": "Paralock v1 (Isaac Real — this repo)",
         "raw": 69
       },
       {

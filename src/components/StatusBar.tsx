@@ -130,7 +130,7 @@ export function StatusBar({ selectedDevice, isLoading, onToggleSidebar }: Status
           <span className="flex items-center gap-1 text-[11px]">
             <Heart className="h-3 w-3 text-red-400" /> Donate
           </span>
-          <span className="text-[10px]">DroidKit v1.0.0 • {time.toLocaleDateString()} {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • VIKAS Edition</span>
+          <span className="text-[10px]">Paralock v1.1.0 • {time.toLocaleDateString()} {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • Isaac Real</span>
           <Badge variant="outline" className="text-[10px]">Microsoft Windows 11 Home</Badge>
         </div>
         <div className="flex xl:hidden items-center gap-1 text-[10px]">

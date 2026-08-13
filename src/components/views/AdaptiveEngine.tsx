@@ -263,7 +263,7 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
     const url = URL.createObjectURL(new Blob([json], { type: "application/json" }))
     const a = document.createElement("a")
     a.href = url
-    a.download = `droidkit-adaptive-${selectedDevice.serial_no}-${Date.now()}.json`
+    a.download = `paralock-adaptive-${selectedDevice.serial_no}-${Date.now()}.json`
     a.click()
     URL.revokeObjectURL(url)
     setExported(true)

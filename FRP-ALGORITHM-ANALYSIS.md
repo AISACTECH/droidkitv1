@@ -1,16 +1,16 @@
-# 🔬 FRP Algorithm Comparison: Top Tools vs DroidKit v1
+# 🔬 FRP Algorithm Comparison: Top Tools vs Paralock v1
 
 ## Executive Summary
 
-After deep analysis of **DroidKit (iMobie)**, **MobiKin**, **Tenorshare 4uKey**, **Dr.Fone**, **SamFW Tool**, and **TSM Tool**, the core finding is:
+After deep analysis of **Paralock (iMobie)**, **MobiKin**, **Tenorshare 4uKey**, **Dr.Fone**, **SamFW Tool**, and **TSM Tool**, the core finding is:
 
-> **Our current DroidKit v1 FRP module is only ~30% accurate** because it relies on a single-path ADB-only approach. Top tools achieve 95-100% by using **chipset-branching multi-path algorithms** that automatically select the correct method based on processor type, Android version, binary/bit version, and security patch.
+> **Our current Paralock v1 FRP module is only ~30% accurate** because it relies on a single-path ADB-only approach. Top tools achieve 95-100% by using **chipset-branching multi-path algorithms** that automatically select the correct method based on processor type, Android version, binary/bit version, and security patch.
 
 ---
 
 ## 🏆 How Top Tools Actually Work (The Real Algorithms)
 
-### DroidKit (iMobie) — Algorithm Flow
+### Paralock (iMobie) — Algorithm Flow
 ```
 CONNECT DEVICE
   → Auto-detect brand, model, chipset, Android version
@@ -108,7 +108,7 @@ OPPO/Vivo/Realme/Xiaomi:
 
 ## 🆚 Comparison Table: What We're Missing
 
-| Feature | DroidKit (iMobie) | 4uKey | Dr.Fone | SamFW | TSM | **Our DroidKit v1** |
+| Feature | Paralock (iMobie) | 4uKey | Dr.Fone | SamFW | TSM | **Our Paralock v1** |
 |---------|:-:|:-:|:-:|:-:|:-:|:-:|
 | **Chipset Detection** | ✅ Auto | ✅ Auto | ✅ Auto | ✅ Auto | ✅ Auto | ❌ **None** |
 | **Exynos Path** | ✅ DL Mode | ✅ DL Mode | ✅ DL Mode | ✅ DL Mode | ✅ DL Mode | ❌ **None** |
@@ -188,7 +188,7 @@ IF chipset == SPD/Unisoc:
 
 ---
 
-## 📊 Why Current DroidKit v1 Only Achieves ~30%
+## 📊 Why Current Paralock v1 Only Achieves ~30%
 
 1. **Single-path ADB approach**: We only try ADB commands, which fail if USB debugging isn't authorized
 2. **No chipset branching**: We treat all Samsung devices the same, but Exynos/Qualcomm/MTK need completely different approaches

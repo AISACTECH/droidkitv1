@@ -1,5 +1,5 @@
 /**
- * DroidKit Production Logger
+ * Paralock Production Logger
  * Structured logging with levels, safe for production stripping
  * Supports: debug in dev, warn/error in prod, telemetry-ready
  */
@@ -16,7 +16,7 @@ interface LogEntry {
 
 const isDev = import.meta.env.DEV;
 
-const STORAGE_KEY = "droidkit:logs";
+const STORAGE_KEY = "paralock:logs";
 const MAX_ENTRIES = 500;
 
 class Logger {

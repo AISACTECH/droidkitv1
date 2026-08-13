@@ -439,7 +439,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
           <div>
             <h2 className="text-base font-semibold flex items-center gap-2">
               FRP Removal — Enhanced UX
-              <Badge variant="outline" className="text-[10px]">v1.0.0 • 268 Models</Badge>
+              <Badge variant="outline" className="text-[10px]">v1.1.0 • 268 Models</Badge>
             </h2>
             <p className="text-xs text-muted-foreground">Security • Flash • BROM/EDL • Function • Repair — same functions, superior UX (inspired by TFT, original design)</p>
           </div>
@@ -782,7 +782,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                       Chipset-Optimized — {deviceProfile?.chipset_family || "Universal"}
                       <Badge variant="outline" className={`${chipsetColors[deviceProfile?.chipset_family || "Unknown"]} text-[10px]`}>{deviceProfile?.chipset_family}</Badge>
                     </CardTitle>
-                    <CardDescription className="text-[11px]">TFT shows BROM/EDL as flat buttons — DroidKit groups Safe vs High-Risk with success rate and phase progress</CardDescription>
+                    <CardDescription className="text-[11px]">TFT shows BROM/EDL as flat buttons — Paralock groups Safe vs High-Risk with success rate and phase progress</CardDescription>
                   </CardHeader>
                   <CardContent className="p-2 space-y-2">
                     {algorithms.map((algo, idx) => (
@@ -959,7 +959,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                 <Card>
                   <CardHeader className="pb-2 pt-3 px-3">
                     <CardTitle className="text-xs flex items-center gap-2"><Terminal className="h-4 w-4" /> ADB — Read Pattern & Commands</CardTitle>
-                    <CardDescription className="text-[11px]">From TFT ADB Read Screen Pattern (Adb/Root) — maps to DroidKit ShellTerminal + ScreenControl</CardDescription>
+                    <CardDescription className="text-[11px]">From TFT ADB Read Screen Pattern (Adb/Root) — maps to Paralock ShellTerminal + ScreenControl</CardDescription>
                   </CardHeader>
                   <CardContent className="p-3 space-y-2 text-xs">
                     <div className="grid grid-cols-2 gap-2">
@@ -985,7 +985,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                         const data = { ts: new Date().toISOString(), device: selectedDevice, profile: deviceProfile, result: bypassResult }
                         const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
                         const url = URL.createObjectURL(blob)
-                        const a = document.createElement("a"); a.href = url; a.download = `droidkit-audit-${selectedDevice.serial_no}.json`; a.click()
+                        const a = document.createElement("a"); a.href = url; a.download = `paralock-audit-${selectedDevice.serial_no}.json`; a.click()
                       }}>Export JSON</Button>
                     </div>
                   </CardHeader>
@@ -1033,7 +1033,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
         <span className="hidden md:flex gap-2">
           <span>Microsoft Windows 11 Home • B450M PRO-VDH MAX</span>
           <span>•</span>
-          <span>DroidKit v1.0.0 • VIKAS • {new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}</span>
+          <span>Paralock v1.1.0 • Isaac Real • {new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}</span>
         </span>
       </div>
     </div>

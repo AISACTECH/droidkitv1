@@ -21,7 +21,7 @@ import type {
 } from "./types.ts";
 
 const CONSENT_HEADER = [
-  "# DroidKit Adaptive Engine — generated operator script",
+  "# Paralock Adaptive Engine — generated operator script",
   "# Preconditions (enforced): own-device consent confirmed, FRP state re-detected,",
   "# read-only partition survey completed, backups captured for any persistent step.",
 ];

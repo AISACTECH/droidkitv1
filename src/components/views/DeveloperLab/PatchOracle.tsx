@@ -106,7 +106,7 @@ export function PatchOracle({ profile }: PatchOracleProps) {
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = `droidkit-patch-oracle-${Date.now()}.json`
+    a.download = `paralock-patch-oracle-${Date.now()}.json`
     a.click()
     URL.revokeObjectURL(url)
   }

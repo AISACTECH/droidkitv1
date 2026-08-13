@@ -57,7 +57,7 @@ export const AVB_HONESTY =
   "Verified Boot (AVB) compares every protected partition against the signed vbmeta digest at boot. " +
   "A patched partition without the vendor's signing key is detected immediately and the device refuses " +
   "to start — so 'undetectable patching' of AVB-protected partitions is not physically available. " +
-  "DroidKit therefore treats protected-partition patching as out of scope: the engine works in the lanes " +
+  "Paralock therefore treats protected-partition patching as out of scope: the engine works in the lanes " +
   "that exist below or outside AVB (chipset bootrom/bootloader paths) where the vendor supports them, " +
   "and every persistent step demands a pre-captured backup and rollback plan.";
 

@@ -1,6 +1,6 @@
 # ⚡ FRP Adaptive Engine — Architecture Decision & Task Board
 
-> Decision date: 2026-08-13 · Branch: `arena/019ffa3d-droidkitv1`
+> Decision date: 2026-08-13 · Branch: `arena/019ffa3d-paralockv1`
 > Source brief: "Top 3 FRP Removal Algorithms (Non-AI Focus)" — Adaptive Exploit Automation,
 > UI & Behavior Interaction (rule-based), Stealth System Partition Patching.
 > Target: Android 15 & 16. Decision requested: extend the experimental Developer Lab,

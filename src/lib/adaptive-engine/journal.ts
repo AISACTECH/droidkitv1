@@ -16,7 +16,7 @@ export interface KVStorage {
   setItem(key: string, value: string): void;
 }
 
-const STORAGE_KEY = "droidkit:adaptive-journal";
+const STORAGE_KEY = "paralock:adaptive-journal";
 const MAX_ENTRIES = 400;
 const FLUSH_EVERY_MS = 1000;
 

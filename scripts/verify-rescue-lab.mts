@@ -133,7 +133,7 @@ for (const f of [
   "src/lib/help-content.ts",
   "src/components/views/HelpCenter.tsx",
   "scripts/build-help-pdf.mts",
-  "docs/DROIDKIT-HELP-GUIDE.pdf",
+  "docs/PARALOCK-HELP-GUIDE.pdf",
   "public/help-guide.pdf",
 ]) check(`help file exists: ${f}`, existsSync(f))
 check("help nav wired", readFileSync("src/components/AppSidebar.tsx", "utf8").includes("'help'"))
@@ -148,7 +148,7 @@ check("9 policies present", POLICIES.length >= 9)
 const policyText = POLICIES.map(p => p.title + p.paras.join(" ")).join(" ")
 check("lender-MDM refusal in policies", policyText.includes("Watu") && policyText.includes("refuse"))
 check("IMEI illegality in policies", policyText.includes("IMEI") && policyText.includes("illegal"))
-check("local-first privacy promise", policyText.includes("no DroidKit account") || policyText.includes("no DroidKit server"))
+check("local-first privacy promise", policyText.includes("no Paralock account") || policyText.includes("no Paralock server"))
 check("bands taught with 4 tones", BAND_LEGEND.length === 4 && BAND_LEGEND.every(b => b.example.length > 10))
 // help guides cover the app
 check("quick start teaches build-number 7 taps", QUICK_START.some(s => s.includes("Build number")))
@@ -169,8 +169,8 @@ check("glossary has APN Kenya carriers", ["safaricom", "airtelgprs.com", "telkom
 check("get-help has 5 route steps", GET_HELP_STEPS.length >= 5)
 // the shipped PDF is real and non-trivial
 import { statSync } from "node:fs"
-check("PDF guide is a real multi-page file (>40 kB)", statSync("docs/DROIDKIT-HELP-GUIDE.pdf").size > 40 * 1024)
-check("bundled copy matches repo copy byte-for-byte", readFileSync("docs/DROIDKIT-HELP-GUIDE.pdf").equals(readFileSync("public/help-guide.pdf")))
+check("PDF guide is a real multi-page file (>40 kB)", statSync("docs/PARALOCK-HELP-GUIDE.pdf").size > 40 * 1024)
+check("bundled copy matches repo copy byte-for-byte", readFileSync("docs/PARALOCK-HELP-GUIDE.pdf").equals(readFileSync("public/help-guide.pdf")))
 
 console.log(`\n${passed} passed, ${failed} failed`)
 console.log(failed === 0 ? "ALL CHECKS GREEN" : `${failed} CHECK(S) FAILED`)

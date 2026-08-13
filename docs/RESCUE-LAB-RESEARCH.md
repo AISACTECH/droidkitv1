@@ -31,7 +31,7 @@ The in-app honesty law, applied lane by lane. Bands: **DOABLE** (verified/reliab
 ## 🔓 Phone screen locks
 
 - **The star: legacy pattern cracker.** Android ≤8 `gesture.key` = raw SHA-1 over dot bytes. Our implementation is **unit-verified** (`scripts/verify-gesture-crack.mts`): SHA-1 against RFC/node-crypto vectors incl. binary inputs; pattern space enumerates to exactly the published forensic counts (1624/7152/26016/72912/140704/140704 = **389,112**); end-to-end crack round-trips pass. Offline → zero attempt-counter risk. Data preserved — the honest "keep everything" window.
-- Android 9+: Gatekeeper/Weaver + FBE — NOT-BY-SOFTWARE (with data). Honest routes: Samsung SmartThings Find Remote Unlock (DOABLE, official, data kept), else recovery reset (data erased — declared to customer FIRST), then FRP journey continues inside DroidKit.
+- Android 9+: Gatekeeper/Weaver + FBE — NOT-BY-SOFTWARE (with data). Honest routes: Samsung SmartThings Find Remote Unlock (DOABLE, official, data kept), else recovery reset (data erased — declared to customer FIRST), then FRP journey continues inside Paralock.
 - Lender/finance locks: out of scope, permanently.
 
 ## 🖥️ Black screens

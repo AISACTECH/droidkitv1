@@ -1,4 +1,4 @@
-# DroidKit Simulation Feedback Report
+# Paralock Simulation Feedback Report
 
 Generated: 2026-08-10T11:27:01.673Z
 Agents: 20,000 developers + 20,000 users = 40,000 total

@@ -1,9 +1,10 @@
-# DroidKit v1.1.0 🧑‍💻📱
+# Paralock v1.1.0 🧑‍💻📱
 
 <div align="center">
-  <img src="public/droidkit-icon-128.png" alt="DroidKit" width="128" height="128" />
-  <h3>Enterprise-grade Cross-Platform Android Toolkit</h3>
-  <p><strong>DroidKit</strong> is a production-ready desktop application for Android developers, technicians, and power users — ADB file/app/logcat management, system diagnostics, wireless pairing, screen control, and an evidence-based FRP (Factory Reset Protection) toolkit covering 260+ models across Samsung, Tecno, Infinix, Itel, Xiaomi, Redmi, POCO, OPPO, Realme, Vivo, Honor, Nokia, Motorola, Huawei, Sony, Pixel and finance-locked devices.</p>
+  <img src="public/paralock-icon-128.png" alt="Paralock" width="128" height="128" />
+  <h3>Paralock — by Isaac Real</h3>
+  <p><a href="mailto:isaacreal2026@gmail.com">isaacreal2026@gmail.com</a></p>
+  <p><strong>Paralock</strong> is a production-ready desktop application for Android developers, technicians, and power users — ADB file/app/logcat management, system diagnostics, wireless pairing, screen control, and an evidence-based FRP (Factory Reset Protection) toolkit covering 260+ models across Samsung, Tecno, Infinix, Itel, Xiaomi, Redmi, POCO, OPPO, Realme, Vivo, Honor, Nokia, Motorola, Huawei, Sony, Pixel and finance-locked devices.</p>
 
   <p>
     <img src="https://img.shields.io/badge/version-1.1.0-blue" />
@@ -22,9 +23,9 @@ We publish our evidence, not just our claims. Independent 2026 research (see [`R
 
 - ✅ **ADB-based methods genuinely work** when USB debugging was enabled & authorized before reset, or when a live authorization route exists (Samsung test-mode `*#0*#` where unpatched, SPD auto-ADB, MTK Brom erase via open-source protocols like MTKClient).
 - ⚠️ **Android ≤13 / pre-2023 patches**: broad software-method coverage. **Android 14–16 recent patches**: software-only routes are mostly closed industry-wide — chipset hardware paths (EDL/Brom/Odin) or official recovery apply. No vendor, commercial or otherwise, escapes this wall.
-- 🎯 DroidKit's in-app **Research Reality Check** tells each user which band their device is actually in before they spend an attempt — measured, not marketed.
+- 🎯 Paralock's in-app **Research Reality Check** tells each user which band their device is actually in before they spend an attempt — measured, not marketed.
 
-> **Legal**: FRP removal is lawful on devices you own (e.g. second-hand purchases, forgotten credentials). Bypassing locks on stolen devices is illegal. DroidKit is built for legitimate recovery — own devices only, backup first.
+> **Legal**: FRP removal is lawful on devices you own (e.g. second-hand purchases, forgotten credentials). Bypassing locks on stolen devices is illegal. Paralock is built for legitimate recovery — own devices only, backup first.
 
 ---
 
@@ -41,7 +42,7 @@ The three-algorithm brief (Adaptive Exploit Automation · UI & Behavior Interact
 - **Round 3 — isolated A15/16 patch research**: `docs/ANDROID-15-16-PATCH-RESEARCH.md` digests patches P1–P10 (system-core FRP, ownership install gate, OEM-unlock≠FRP-off, Play Integrity hardware attestation, A16 USB-before-setup block, Samsung Binary-18 KG-Prenormal USB gate) with sources; `parallel.ts` applies them in a **parallel three-lane evaluator** ("quantum" honestly reframed: superposition→collapse + measurement-only verification) with a read-only Google-protection map (seek), footprint/budget policy (hide), and an evidence-banded lab ledger. Hard line enforced by tests: no attestation spoofing / keybox injection / evasion primitives. `npm run test:research` — 37 checks incl. regression snapshots proving the existing engine is untouched. Success honesty: 100% decision coverage; unlock rates stay lab-gated evidence bands.
 - **⚡ Round 5 — gap-to-100 advance layer (test-generated, additive-only)** — `src/lib/adaptive-engine/advance.ts` (new file; engine untouched — official composite 87.6 self-check-locked): FRP_STRETCH per-device target rows (each sourced + statused: engine-verified / vendor-documented / documented / bench-pending), NETWORK_PLAN plan-coverage table with the NEW **phones/cellphones corner** (legacy Huawei V1/V2 = 100 engine-verified), vendor-documented router (85) + own-Wi-Fi (70) recovery lanes, `unionCoverage` + `ceilingAchievement` math, and `frpGapRows`/`networkGapRows` — an itemized ledger where every missing point to 100 names its blocker. Benchmarks now print the honest near-100 framing: **FRP = 95.8% of the market-best evidence ceiling** (raw target 72.3 → composite 88.9, bench-gated) · **combined sheet 78.9 vs ceiling 82.7 = 95.4% achievement** · **target 82.8 = 100% of the ceiling** (equals/extends it, becomes official only after bench confirmation). DC-Unlocker remains the declared network-breadth winner (71.1 vs our 65.6 official / 72.8 target). Network corpus now 15 devices across modem · phones · MiFi · router · Wi-Fi; every number carries an evidence status column.
 - **🛠 Three-gate solutions (installers / CI / bench)** — `bun.lock` removed so `tauri-action` stops picking bun; `npm run ci` / `ci:fast` / `release:prepare` run the GitHub gates locally; Adaptive Engine **Bench desk** tab + `npm run test:bench` replay 12 virtual A15/16 donors and ingest bench logs without ever auto-flipping official labels. See [`docs/THREE-GATES-SOLUTIONS.md`](./docs/THREE-GATES-SOLUTIONS.md).
-- **📊 Full comparison sheet (test-generated)** — `npm run benchmark:frp` + `npm run benchmark:sheet` produce `docs/COMPARISON-SHEET-2026.md`: three domains, one percentage judgment — **FRP** (9 tools × 12 devices; ours 87.6 composite), **network unlock** for modem/MiFi/router/Wi-Fi (9 tools × 12 devices; ours scored by RUNNING the real NCK engine — 100% on the published V1/V2 vectors, free and offline; DC-Unlocker declared the breadth winner), and **finance-lock honesty** (M-KOPA/Watu/PayJoy: 0% software removal for every tool, lender-release = the only 100% path; revised mechanics in `docs/FINANCE-LOCK-REVISION-2026.md`). Combined: **DroidKit v1 74.2** vs Z3X 48.5 · Chimera 46.8 · NCK Dongle 45.9 · TFT 39.5 · DC-Unlocker 31.3 · OpenWrt 10.6 · WiFi-app class 3.1.
+- **📊 Full comparison sheet (test-generated)** — `npm run benchmark:frp` + `npm run benchmark:sheet` produce `docs/COMPARISON-SHEET-2026.md`: three domains, one percentage judgment — **FRP** (9 tools × 12 devices; ours 87.6 composite), **network unlock** for modem/MiFi/router/Wi-Fi (9 tools × 12 devices; ours scored by RUNNING the real NCK engine — 100% on the published V1/V2 vectors, free and offline; DC-Unlocker declared the breadth winner), and **finance-lock honesty** (M-KOPA/Watu/PayJoy: 0% software removal for every tool, lender-release = the only 100% path; revised mechanics in `docs/FINANCE-LOCK-REVISION-2026.md`). Combined: **Paralock v1 74.2** vs Z3X 48.5 · Chimera 46.8 · NCK Dongle 45.9 · TFT 39.5 · DC-Unlocker 31.3 · OpenWrt 10.6 · WiFi-app class 3.1.
 - **🏁 FRP tools benchmark (test-generated)** — `npm run benchmark:frp` runs `scripts/benchmark-frp-tools.mts`: a deterministic, self-auditing head-to-head of 9 tools (SamFw, 4uKey, Dr.Fone, iMobie-DroidKit, TSM, UnlockGo, **iMyFone LockWiper**, Griffin/TFM-class + this repo) across a 12-device corpus (8 brands, Android 12→16, 5 chipsets). Ours is scored by **running the real engine**; competitors by a documented-capability model (binaries not executed here — stated on every page). Output: `docs/FRP-TOOLS-BENCHMARK-2026.md` + `docs/benchmarks/frp-tools-benchmark-2026.json`. Headline: composite winner this repo (87.6 vs 55.4 best-competitor) and raw A15/16 leader (64.3 vs 61.2) via below-OS lanes — plus the revised **§7.0 "automated software success" table: 0% for every tool on patched A15/16, including this repo (printed, not buried)**, with the per-tool "what actually works instead" lanes.
 - Full decision rationale + WBS task-by-task mapping: [`docs/FRP-ADAPTIVE-ENGINE-PLAN.md`](./docs/FRP-ADAPTIVE-ENGINE-PLAN.md)
 
@@ -59,7 +60,7 @@ The three-algorithm brief (Adaptive Exploit Automation · UI & Behavior Interact
   - **Session journal + JSON export** for developer artifacts
 - 📊 **Research Reality Check panel** in FRP Removal — computes a feasibility band per scanned device from Android version + security patch + chipset, and routes to the method class the 2026 evidence supports (ADB window / test-mode / Odin / Brom / EDL / official recovery)
 - 🔗 **Evidence dossiers committed** — `RESEARCH-2026-FRP.md`, `DEBATE-AI-VS-GOOGLE.md`, `docs/PHYSICS-LAYER-RESEARCH.md`, `docs/RESCUE-LAB-RESEARCH.md`, `docs/COMPARISON-2026-FINAL.md` (experimental lanes: FRP Lab 🧪 Patch Oracle 🔮 + Rescue Lab 🛠️ multi-device repair bench — both under the bands-not-promises honesty law; user-runnable verification: `npm run test:lab` 111 checks + `test:nck` + `test:rescue`)
-- ❓ **Help & Info view + full-colour PDF guide** — searchable in-app Help Center (policies, setup, every tool, FAQ, glossary; works with no device connected) rendered from one shared content module, plus the printable 16-page `docs/DROIDKIT-HELP-GUIDE.pdf` (`npm run build:help-pdf` regenerates it; a bundled copy ships in-app as `/help-guide.pdf`)
+- ❓ **Help & Info view + full-colour PDF guide** — searchable in-app Help Center (policies, setup, every tool, FAQ, glossary; works with no device connected) rendered from one shared content module, plus the printable 16-page `docs/PARALOCK-HELP-GUIDE.pdf` (`npm run build:help-pdf` regenerates it; a bundled copy ships in-app as `/help-guide.pdf`)
 - 🧹 **Fresh-clone polish** — removed noisy `husky` prepare hook, synced lockfile, replaced unverified third-party APK mirror URLs with neutral web-search launches, corrected research-outdated instruction text (browser-APK/TalkBack patch era, combination firmware reframed as legacy Android 6–9)
 
 ---
@@ -107,7 +108,7 @@ Appearance (light/dark/system), Android SDK path, device polling, download paths
 
 ```bash
 git clone https://github.com/AISACTECH/droidkitv1.git
-cd droidkitv1
+cd paralockv1
 npm run doctor              # 10-second environment diagnosis — tells you EXACTLY why a launch/build would fail
 npm ci                      # reproducible install from lockfile
 
@@ -158,7 +159,7 @@ npm run simulate:full       # full 20k devs + 20k users simulation
 ## 🏗️ Project Structure (1.1.0)
 
 ```
-droidkitv1/
+paralockv1/
 ├── src/
 │   ├── components/
 │   │   ├── ErrorBoundary.tsx · AppSidebar.tsx · MainContent.tsx
@@ -215,6 +216,6 @@ Fork → branch `feature/x` → `npm run audit:prod` must stay green → PR.
 
 ## 📄 License
 
-MIT © 2025–2026 AISACTECH — see [LICENSE](./LICENSE).
+MIT © 2025–2026 Isaac Real — see [LICENSE](./LICENSE).
 
 Built with ❤️ for the Android developer community.

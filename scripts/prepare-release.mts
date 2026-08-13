@@ -25,7 +25,7 @@ const tauri = JSON.parse(readFileSync(join(root, "src-tauri/tauri.conf.json"), "
 const cargo = readFileSync(join(root, "src-tauri/Cargo.toml"), "utf8")
 const cargoVer = cargo.match(/^version\s*=\s*"([^"]+)"/m)?.[1]
 
-console.log("DroidKit release preflight\n==========================")
+console.log("Paralock release preflight\n==========================")
 
 check("semver in package.json", /^\d+\.\d+\.\d+$/.test(pkg.version), pkg.version)
 check("package.json == tauri.conf.json", pkg.version === tauri.version, `${pkg.version} / ${tauri.version}`)

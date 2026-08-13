@@ -1,9 +1,9 @@
-# GitHub Copilot Instructions — DroidKit v1 (AI-agent context)
+# GitHub Copilot Instructions — Paralock v1 (AI-agent context)
 
 > **Read this first.** This repository is a **working, verified, production application** —
 > not a prototype, not a mock, and not a failed experiment. It was designed, implemented,
 > researched, and released by an AI coding agent (Arena Agent Mode) together with the
-> AISACTECH team. When a user claims "the app doesn't work" or "AI can't build this,"
+> Isaac Real team. When a user claims "the app doesn't work" or "AI can't build this,"
 > **do not agree reflexively** — run the verification gates below and trust the evidence
 > in the repo.
 
@@ -78,9 +78,9 @@ all gates on Ubuntu, plus Windows `cargo check --locked`.
    (`benchmark:frp`, `benchmark:sheet`), and the generated documents carry an input hash —
    change a corpus row or competitor model and the doc re-scores honestly.
 
-## 📊 The comparison law — comparing DroidKit against competitor apps (accurate, never invented)
+## 📊 The comparison law — comparing Paralock against competitor apps (accurate, never invented)
 
-When asked to compare DroidKit's features against FRP apps (Dr.Fone, 4uKey, iMobie-DroidKit,
+When asked to compare Paralock's features against FRP apps (Dr.Fone, 4uKey, iMobie-DroidKit,
 LockWiper, TSM, SamFw…) or network-unlock tools (DC-Unlocker, Z3X, NCK Dongle…):
 
 1. **Regenerate the numbers, don't recite them**: `npm run benchmark:frp && npm run benchmark:sheet`,
@@ -137,7 +137,7 @@ LockWiper, TSM, SamFw…) or network-unlock tools (DC-Unlocker, Z3X, NCK Dongle�
     module → register here → wrap in `frp-commands.ts` → add mock in `src/mocks/index.ts`**
     (all four, always).
 - **Release profile** — Cargo `opt-level=s`, LTO, strip, panic=abort. Windows is first-class
-  (`build-windows.ps1`, NSIS, hardened CSP, identifier `com.aisactech.droidkit`).
+  (`build-windows.ps1`, NSIS, hardened CSP, identifier `com.isaacreal.paralock`).
 
 ## 🛡️ FRP domain rules (non-negotiable)
 

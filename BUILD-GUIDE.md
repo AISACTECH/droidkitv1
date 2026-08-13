@@ -1,6 +1,6 @@
-# DroidKit v1 — Comprehensive Build & Architecture Guide
+# Paralock v1 — Comprehensive Build & Architecture Guide
 
-Welcome to **DroidKit v1**, the cross-platform Android device management and FRP (Factory Reset Protection) removal suite built with **Tauri v2 (Rust)** and **React 19 + TypeScript + Vite + Tailwind CSS**.
+Welcome to **Paralock v1**, the cross-platform Android device management and FRP (Factory Reset Protection) removal suite built with **Tauri v2 (Rust)** and **React 19 + TypeScript + Vite + Tailwind CSS**.
 
 ---
 
@@ -18,7 +18,7 @@ Welcome to **DroidKit v1**, the cross-platform Android device management and FRP
 
 ## 1. Architecture Overview
 
-DroidKit uses a hybrid architecture designed for both native desktop execution and web-based live preview:
+Paralock uses a hybrid architecture designed for both native desktop execution and web-based live preview:
 
 ```
 +-----------------------------------------------------------------------------+
@@ -91,7 +91,7 @@ npx tsc --noEmit
 npm run tauri build
 ```
 The compiled NSIS installer will be saved to:
-`src-tauri/target/release/bundle/nsis/DroidKit_0.1.0_x64-setup.exe`
+`src-tauri/target/release/bundle/nsis/Paralock_0.1.0_x64-setup.exe`
 
 ---
 
@@ -102,14 +102,14 @@ The compiled NSIS installer will be saved to:
    xcode-select --install
    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
    ```
-2. Build DroidKit:
+2. Build Paralock:
    ```bash
    npm install
    npx tsc --noEmit
    npm run tauri build
    ```
 3. Output DMG bundle:
-   `src-tauri/target/release/bundle/dmg/DroidKit_0.1.0_x64.dmg` (or arm64 on Apple Silicon)
+   `src-tauri/target/release/bundle/dmg/Paralock_0.1.0_x64.dmg` (or arm64 on Apple Silicon)
 
 ---
 
@@ -127,14 +127,14 @@ The compiled NSIS installer will be saved to:
    npm run tauri build
    ```
 3. Output AppImage and Deb:
-   - `src-tauri/target/release/bundle/appimage/DroidKit_0.1.0_amd64.AppImage`
-   - `src-tauri/target/release/bundle/deb/droidkit_0.1.0_amd64.deb`
+   - `src-tauri/target/release/bundle/appimage/Paralock_0.1.0_amd64.AppImage`
+   - `src-tauri/target/release/bundle/deb/paralock_0.1.0_amd64.deb`
 
 ---
 
 ## 6. Browser-Only Mock Mode
 
-DroidKit includes an integrated browser mock engine in `src/mocks/index.ts`.
+Paralock includes an integrated browser mock engine in `src/mocks/index.ts`.
 When you start the development server (`npm run dev`) or preview (`npm run preview`) without the Tauri desktop container:
 - `window.__TAURI_INTERNALS__` is detected as undefined.
 - `@tauri-apps/api/mocks` intercepts all `invoke(...)` calls.
@@ -144,7 +144,7 @@ When you start the development server (`npm run dev`) or preview (`npm run previ
 
 ## 7. FRP Database & Architecture
 
-DroidKit's FRP Removal Module is structured around quarter-based market releases in Kenya and Sub-Saharan Africa:
+Paralock's FRP Removal Module is structured around quarter-based market releases in Kenya and Sub-Saharan Africa:
 - **Samsung Database (`src-tauri/src/frp/database.rs`)**: 35 Galaxy models with 15 bypass methods (TalkBack, Combination Firmware, Settings Access, Download Mode).
 - **Tecno Database (`src-tauri/src/frp/database.rs`)**: 70 Tecno models across Pop, Spark, Camon, Pova, and Phantom series with Brom/Preloader and SPD Bootloader erase support.
 - **Q4 Database (`src-tauri/src/frp/q4_database.rs`)**: 33 models covering Nokia, Moto, Huawei, Sony, Pixel, and Asset Finance locked devices (M-Kopa, Watu Credit, PayJoy).

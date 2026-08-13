@@ -40,7 +40,7 @@ const FULL: [string, string[]][] = [
 ]
 
 const jobs = fast ? FAST : FULL
-console.log(`DroidKit local CI (${fast ? "fast" : "full"}) — ${jobs.length} gates\n`)
+console.log(`Paralock local CI (${fast ? "fast" : "full"}) — ${jobs.length} gates\n`)
 
 let failed = 0
 for (const [name, [cmd, ...args]] of jobs) {

@@ -198,7 +198,7 @@ export function RealityCheckPanel({ profile, detection }: RealityCheckProps) {
 
         <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground pt-1 border-t">
           <ShieldCheck className="h-3 w-3" />
-          Honest-scope promise: DroidKit claims success only inside the envelope above — the same envelope that governs every commercial tool (SamFw, Dr.Fone, 4uKey).
+          Honest-scope promise: Paralock claims success only inside the envelope above — the same envelope that governs every commercial tool (SamFw, Dr.Fone, 4uKey).
         </div>
       </CardContent>
     </Card>

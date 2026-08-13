@@ -13,7 +13,7 @@ import { ingestBenchLog } from "../src/lib/bench/index.ts"
 const path = process.argv[2]
 if (!path || path === "--help" || path === "-h") {
   console.log("Usage: npm run bench:ingest -- <file.json|file.txt>")
-  console.log("Accepts droidkit-bench-evidence packs, Patch Oracle exports, or calibration sentences.")
+  console.log("Accepts paralock-bench-evidence packs, Patch Oracle exports, or calibration sentences.")
   process.exit(path ? 0 : 2)
 }
 

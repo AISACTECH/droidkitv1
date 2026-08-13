@@ -150,7 +150,7 @@ export function BenchDesk() {
           <textarea
             value={logText}
             onChange={(e) => setLogText(e.target.value)}
-            placeholder='{ "kind": "droidkit-bench-evidence", "version": 1, "exportedAt": "…", "records": [ … ] }'
+            placeholder='{ "kind": "paralock-bench-evidence", "version": 1, "exportedAt": "…", "records": [ … ] }'
             className="min-h-[90px] w-full rounded-md border border-zinc-700 bg-zinc-900 p-2 font-mono text-[11px]"
           />
           <Button size="sm" variant="outline" onClick={handleIngest}>Ingest + propose</Button>

@@ -11,7 +11,7 @@
 
 import type { BrandId, ChipsetFamily, FeasibilityBand, Fingerprint } from "../adaptive-engine/types.ts"
 
-export const BENCH_KIND = "droidkit-bench-evidence" as const
+export const BENCH_KIND = "paralock-bench-evidence" as const
 export const BENCH_VERSION = 1 as const
 
 export type BenchResult = "accepted" | "rejected" | "aborted" | "not-attempted"

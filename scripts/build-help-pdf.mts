@@ -1,7 +1,7 @@
 // =====================================================================
 // Full-colour PDF guide builder — node --experimental-strip-types scripts/build-help-pdf.mts
 // Renders src/lib/help-content.ts (the SAME data the in-app Help Center
-// shows) into docs/DROIDKIT-HELP-GUIDE.pdf, and copies it to
+// shows) into docs/PARALOCK-HELP-GUIDE.pdf, and copies it to
 // public/help-guide.pdf so the app ships it offline.
 // No browser needed (pure pdfkit). ASCII-safe text per WinAnsi fonts.
 // =====================================================================
@@ -37,7 +37,7 @@ const safe = (s: string) => s.replace(/[^\x00-\xFF]/g, ch => REPL[ch] ?? "-").re
 
 const OUT_DOC = process.env.PDF_DEBUG_NOCOMPRESS
   ? path.join("/tmp", "guide-debug.pdf")
-  : path.join("docs", "DROIDKIT-HELP-GUIDE.pdf")
+  : path.join("docs", "PARALOCK-HELP-GUIDE.pdf")
 const OUT_PUBLIC = path.join("public", "help-guide.pdf")
 
 const doc = new PDFDocument({
@@ -46,10 +46,10 @@ const doc = new PDFDocument({
   bufferPages: true,
   compress: !process.env.PDF_DEBUG_NOCOMPRESS, // debug: PDF_DEBUG_NOCOMPRESS=1 -> greppable output
   info: {
-    Title: `DroidKit v${pkg.version} - Help, Setup & Policies Guide`,
-    Author: "AISACTECH",
+    Title: `Paralock v${pkg.version} - Help, Setup & Policies Guide`,
+    Author: "Isaac Real <isaacreal2026@gmail.com>",
     Subject: HELP_META.edition,
-    Keywords: "DroidKit, help, policies, setup, FRP, rescue, Android, MiFi, honesty",
+    Keywords: "Paralock, Isaac Real, help, policies, setup, FRP, rescue, Android, MiFi, honesty",
   },
 })
 const stream = fs.createWriteStream(OUT_DOC)
@@ -186,7 +186,7 @@ doc.save().opacity(0.14).circle(70, PH - 120, 160).fill(TEAL).restore()
 doc.save().opacity(0.10).circle(PW / 2, PH / 2 - 60, 240).fill("#6366F1").restore()
 // icon
 try {
-  doc.image("public/droidkit-icon-128.png", PW / 2 - 44, 86, { width: 88 })
+  doc.image("public/paralock-icon-128.png", PW / 2 - 44, 78, { width: 88 })
 } catch { /* icon missing is not fatal */ }
 doc.font("Helvetica-Bold").fontSize(38).fillColor("#FFFFFF")
   .text(`${HELP_META.appName}`, 0, 198, { width: PW, align: "center" })
@@ -217,7 +217,7 @@ doc.save().roundedRect(PW / 2 - 170, 470, 340, 118, 10).fill("#111C33").restore(
 const plateX = PW / 2 - 150
 doc.font("Helvetica").fontSize(10).fillColor("#94A3B8")
   .text(`Version ${pkg.version}  |  ${HELP_META.edition}`, plateX, 490, { width: 300, align: "center" })
-doc.text(`Publisher: ${HELP_META.publisher}  |  Free & open source (MIT)`, plateX, doc.y + 4, { width: 300, align: "center" })
+doc.text(`Developer: ${HELP_META.developer}  |  ${HELP_META.email}`, plateX, doc.y + 4, { width: 300, align: "center" })
 doc.fillColor("#E2E8F0")
   .text("Install  |  Setup  |  Every tool  |  Policies  |  FAQ", plateX, doc.y + 10, { width: 300, align: "center" })
 doc.font("Helvetica").fontSize(9).fillColor("#64748B")
@@ -263,7 +263,7 @@ function tocPlaceholderHeight() { return (TOC_SLOTS + 1) * 24 + 10 }
 // =====================================================================
 doc.addPage(); y = 50
 sectionBar("1", "The policies - promises, rules, refusals", TEAL)
-para("Nine plain-word policies that every feature in DroidKit obeys. They are colour-coded: green is a promise we make to you, amber is a rule that keeps you safe or legal, red is a permanent refusal.", { color: MUTED })
+para("Nine plain-word policies that every feature in Paralock obeys. They are colour-coded: green is a promise we make to you, amber is a rule that keeps you safe or legal, red is a permanent refusal.", { color: MUTED })
 for (const p of POLICIES as HelpPolicy[]) {
   card({
     title: p.title,
@@ -362,7 +362,7 @@ table(
 )
 h3("Before you report - the 5 facts that make bugs die fast")
 numbered([
-  `Your DroidKit version (this guide covers v${pkg.version}).`,
+  `Your Paralock version (this guide covers v${pkg.version}).`,
   "The exact device model and Android version (System Info view).",
   "What you clicked, in order.",
   "What you expected vs what happened.",
@@ -373,7 +373,7 @@ doc.save().roundedRect(ML, y, CW, 62, 6).fill("#E9F6EE").restore()
 doc.save().rect(ML, y, 4, 62).fill(TONE.green.fg).restore()
 doc.font("Helvetica-Bold").fontSize(9.5).fillColor(TONE.green.fg).text("FINAL WORD", ML + 14, y + 9)
 doc.font("Helvetica").fontSize(9.2).fillColor(INK)
-  .text("DroidKit will never promise you a miracle. It promises you the truth, the exact steps physics allows, and the honest route for the rest - free, offline, and in the open.", ML + 14, y + 24, { width: CW - 28 })
+  .text("Paralock will never promise you a miracle. It promises you the truth, the exact steps physics allows, and the honest route for the rest - free, offline, and in the open.", ML + 14, y + 24, { width: CW - 28 })
 
 // =====================================================================
 // Fill TOC page numbers + footers

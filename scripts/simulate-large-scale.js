@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * DroidKit v1.0.0 — Large-Scale Simulation Engine
+ * Paralock v1.0.0 — Large-Scale Simulation Engine
  * Simulates 20,000 developers + 20,000 users to generate production feedback
  *
  * Usage:
@@ -26,7 +26,7 @@ const DEV_COUNT = parseInt(args.devs || '20000', 10);
 const USER_COUNT = parseInt(args.users || '20000', 10);
 const QUICK = !!args.quick;
 
-console.log(`\n🚀 DroidKit Large-Scale Simulation Starting`);
+console.log(`\n🚀 Paralock Large-Scale Simulation Starting`);
 console.log(`   Developers: ${DEV_COUNT.toLocaleString()}`);
 console.log(`   Users:      ${USER_COUNT.toLocaleString()}`);
 console.log(`   Mode:       ${QUICK ? 'QUICK (sampled)' : 'FULL'}`);
@@ -305,7 +305,7 @@ function runSimulation() {
   fs.writeFileSync(path.join(__dirname, '..', 'simulation-report.json'), JSON.stringify(report, null, 2));
   console.log("📊 Written simulation-report.json");
 
-  const md = `# DroidKit Simulation Feedback Report
+  const md = `# Paralock Simulation Feedback Report
 
 Generated: ${new Date().toISOString()}
 Agents: ${DEV_COUNT.toLocaleString()} developers + ${USER_COUNT.toLocaleString()} users = ${(DEV_COUNT+USER_COUNT).toLocaleString()} total

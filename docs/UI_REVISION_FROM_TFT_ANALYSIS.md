@@ -1,7 +1,7 @@
 # UI Revision — Inspired from TFT Unlock Screenshot (Without Copying)
 
 **Source Image:** `TFTUnlock-2024-6.2.1.1 64-Bit` screenshot provided by user.
-**Goal:** Enhance DroidKit UX to be more user-friendly with best UX, **without altering any app functions**, only UI enhanced, no direct copy.
+**Goal:** Enhance Paralock UX to be more user-friendly with best UX, **without altering any app functions**, only UI enhanced, no direct copy.
 
 ---
 
@@ -23,7 +23,7 @@
 - Filters: `Platform: Auto | BROM | EDL | Preloader`
 - List: `Samsung Galaxy A01`, `A02S`, `M02S`, `A11`, `M11`, `A20S(All Bit)`, `A70`, `A71`, `A52(819)`, `J7(819)`, `S10(819)`, etc.
 - Each row shows: model name, chipset (e.g., Snapdragon 439), tags `Beta`, `Edi`, `TP` (Test Point).
-- Footer: `Init: 123 Models | B450M PRO-VDH MAX | Microsoft Windows 11 Home | Donate to us | VIKAS | timestamp`
+- Footer: `Init: 123 Models | B450M PRO-VDH MAX | Microsoft Windows 11 Home | Donate to us | Isaac Real | timestamp`
 - **Purpose:** Rapid model selection with hardware hints.
 
 ### Center Pane — Action Workspace
@@ -55,11 +55,11 @@
 
 ---
 
-## 2. Mapping to DroidKit Existing Functions (Do Not Alter Functions)
+## 2. Mapping to Paralock Existing Functions (Do Not Alter Functions)
 
-DroidKit already has **all functional equivalents** of TFT, but organized differently:
+Paralock already has **all functional equivalents** of TFT, but organized differently:
 
-| TFT Concept | DroidKit Current Equivalent | Function Preserved? |
+| TFT Concept | Paralock Current Equivalent | Function Preserved? |
 |-------------|---------------------------|---------------------|
 | Brand Ribbon MI/SAMSUNG/etc | `dbBrand` state: samsung, tecno, infinix, itel, q3, q4 with counts | ✅ Keep, enhance UI only |
 | Platform BROM/EDL/Preloader | ChipsetFamily: Exynos/Qualcomm/MediaTek/Spreadtrum/Kirin + Algorithm phases BROM/EDL/DownloadMode | ✅ Keep |
@@ -76,10 +76,10 @@ DroidKit already has **all functional equivalents** of TFT, but organized differ
 
 ---
 
-## 3. UX Enhancement Plan — Original DroidKit Design (Not Copy)
+## 3. UX Enhancement Plan — Original Paralock Design (Not Copy)
 
 ### Design Principles (Best UX)
-1. **Hierarchy > Density:** TFT is dense but overwhelming. DroidKit will use 3-pane with breathing space, Shadcn cards, consistent spacing.
+1. **Hierarchy > Density:** TFT is dense but overwhelming. Paralock will use 3-pane with breathing space, Shadcn cards, consistent spacing.
 2. **Progressive Disclosure:** Brand ribbon collapsible, model filters collapsible, advanced operations behind "Advanced" toggle.
 3. **Context Preservation:** Selected device always visible top-right badge, not lost on tab switch.
 4. **Empty States & Safety:** Every pane has clear empty state ("Select model", "No device connected", "No results") vs TFT dead waiting text.
@@ -89,7 +89,7 @@ DroidKit already has **all functional equivalents** of TFT, but organized differ
 ### What We Will Implement (Enhanced UI, Same Functions)
 
 #### A) Enhanced Brand Ribbon (Original, Not Copy)
-- Instead of copying TFT's rainbow colored chips, DroidKit will have:
+- Instead of copying TFT's rainbow colored chips, Paralock will have:
   - Scrollable horizontal ribbon with **neutral outline badges** + brand icons (Smartphone generic, not logos to avoid IP) + model count.
   - **Chip states:** Selected = default variant + blue ring, hover = muted/50, with count sub.
   - **Chip content:** Samsung (35), Tecno (70), Infinix (35), Itel (35), Q3 Xiaomi/OPPO/Realme/Vivo/Honor (60), Q4 Nokia/Moto/Huawei/Sony/Pixel/Finance (33), plus chipset filter chips: MediaTek, Qualcomm, Spreadtrum, Exynos, Kirin, Universal.
@@ -98,7 +98,7 @@ DroidKit already has **all functional equivalents** of TFT, but organized differ
 
 #### B) Operation Mode Tabs (Inspired from TFT SECURITY/ODIN/BROM/EDL...)
 - **New Mode Bar:** Small pill tabs `Security | Flash | BROM/EDL | Function | Repair | ADB` with icons Shield, Zap, Cpu, Wrench, Terminal.
-- Maps to existing DroidKit tabs already ("Universal" = Security+Flash+BROM/EDL, "Methods" = Repair+Function, "Database" = Model list).
+- Maps to existing Paralock tabs already ("Universal" = Security+Flash+BROM/EDL, "Methods" = Repair+Function, "Database" = Model list).
 - **Enhanced:** Shows count of operations per tab, e.g., BROM/EDL (6 algorithms), Function (15 methods).
 - **No function change:** Just groups existing `frpGetChipsetAlgorithms`, `frpGetResetModes`, `frpGetAllMethods`.
 
@@ -143,7 +143,7 @@ DroidKit already has **all functional equivalents** of TFT, but organized differ
 - **Keyboard Shortcuts:** Ctrl+R refresh devices, Ctrl+F focus search.
 - **Empty States:** Illustrations for no device, no models.
 - **Tooltips:** Explain Beta = requires preauthorized ADB, TP = test point needed, Auth = MTK auth required.
-- **Responsive:** TFT is fixed 64-bit window; DroidKit 1280x800 responsive with collapsible sidebar.
+- **Responsive:** TFT is fixed 64-bit window; Paralock 1280x800 responsive with collapsible sidebar.
 
 ---
 
@@ -178,9 +178,9 @@ DroidKit already has **all functional equivalents** of TFT, but organized differ
 
 ## 5. Future Advancements Planned (Beyond Screenshot Inspiration)
 
-From screenshot analysis, we can plan DroidKit future without altering current functions:
+From screenshot analysis, we can plan Paralock future without altering current functions:
 
-| Idea from TFT | DroidKit Future Advancement (No Function Alter, Only Addition) |
+| Idea from TFT | Paralock Future Advancement (No Function Alter, Only Addition) |
 |---------------|---------------------------------------------------------------|
 | T.POINT button | Add Test Point image viewer modal per model (show physical board TP location) — new asset DB, not altering FRP logic |
 | BROM/EDL dual toggle | Add dual-protocol auto-switch: if BROM fails, auto-try EDL with same FRP erase |
@@ -199,7 +199,7 @@ From screenshot analysis, we can plan DroidKit future without altering current f
 ## 6. What NOT to Do (Per User Request)
 
 - ❌ Do NOT copy TFT colors (orange MI, blue Samsung etc) — use neutral Shadcn palette.
-- ❌ Do NOT copy exact button labels `[BROM] ERASE FRP` — use DroidKit naming `ERASE FRP (BROM)` or `Brom Mode — Erase FRP Partition`.
+- ❌ Do NOT copy exact button labels `[BROM] ERASE FRP` — use Paralock naming `ERASE FRP (BROM)` or `Brom Mode — Erase FRP Partition`.
 - ❌ Do NOT alter any function: keep same Rust commands, same TS wrappers.
 - ❌ Do NOT add new brand if not in DB (Apple, LG currently not supported) — future.
 
@@ -207,7 +207,7 @@ From screenshot analysis, we can plan DroidKit future without altering current f
 
 ## 7. Conclusion
 
-The TFT screenshot is a power-user dense tool. DroidKit will become more user-friendly by:
+The TFT screenshot is a power-user dense tool. Paralock will become more user-friendly by:
 
 - **Reducing density** via progressive disclosure, card grouping, empty states.
 - **Adding hierarchy** via brand ribbon with counts, platform filters, risk-level badges.

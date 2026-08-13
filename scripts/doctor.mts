@@ -1,5 +1,5 @@
 // =====================================================================
-// DroidKit environment doctor — `npm run doctor`
+// Paralock environment doctor — `npm run doctor`
 // ---------------------------------------------------------------------
 // One command that diagnoses EXACTLY why "the app won't launch/build"
 // on any machine, bot or human. Prints a verdict table and the precise
@@ -35,7 +35,7 @@ function sh(cmd: string): string | null {
 const REQ_NODE = [22, 6] // major.minor — matches package.json engines
 const REQ_NPM = 10
 
-console.log("🩺 DroidKit environment doctor\n==============================")
+console.log("🩺 Paralock environment doctor\n==============================")
 
 // ---- 1. Node ---------------------------------------------------------
 const nodeMajor = Number(process.versions.node.split(".")[0])

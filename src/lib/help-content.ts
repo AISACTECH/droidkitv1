@@ -2,7 +2,7 @@
 // Help Center + PDF Guide content — ONE source of truth.
 // src/components/views/HelpCenter.tsx renders this in-app;
 // scripts/build-help-pdf.mts renders the same data into
-// docs/DROIDKIT-HELP-GUIDE.pdf (full-colour printable edition).
+// docs/PARALOCK-HELP-GUIDE.pdf (full-colour printable edition).
 // RULES for this file:
 //   - ASCII-only text (the PDF engine uses WinAnsi fonts) — no emoji,
 //     no smart quotes, arrows written as "->".
@@ -11,13 +11,15 @@
 // =====================================================================
 
 export const HELP_META = {
-  appName: "DroidKit",
-  publisher: "AISACTECH",
+  appName: "Paralock",
+  publisher: "Isaac Real",
+  developer: "Isaac Real",
+  email: "isaacreal2026@gmail.com",
   tagline: "The free, honest Android + repair toolkit",
   repoUrl: "https://github.com/AISACTECH/droidkitv1",
   issuesUrl: "https://github.com/AISACTECH/droidkitv1/issues",
   pdfInApp: "/help-guide.pdf",
-  pdfInRepo: "docs/DROIDKIT-HELP-GUIDE.pdf",
+  pdfInRepo: "docs/PARALOCK-HELP-GUIDE.pdf",
   edition: "Full-colour edition, August 2026",
 }
 
@@ -67,7 +69,7 @@ export const POLICIES: HelpPolicy[] = [
     title: "1. The Honesty Law (our first and highest policy)",
     tone: "green",
     paras: [
-      "DroidKit never prints a success number it cannot prove. The famous advert line - 'total FRP bypass on Android 15/16, every model' - is false for every tool on Earth, because the decision lives on Google's server, not in any cable or app. Anyone selling you that promise is selling a scam; you will never find it in this app.",
+      "Paralock never prints a success number it cannot prove. The famous advert line - 'total FRP bypass on Android 15/16, every model' - is false for every tool on Earth, because the decision lives on Google's server, not in any cable or app. Anyone selling you that promise is selling a scam; you will never find it in this app.",
       "Instead: traffic-light bands (DOABLE / CONDITIONAL / NOT-BY-SOFTWARE), named limits, named risks, and a bench log where real measurements - not marketing - calibrate every claim. Where we have not measured something, it is labelled UNVERIFIED in plain sight.",
       "Where the math genuinely is deterministic (legacy Huawei modems), we say exactly that and show the real published examples the engine was verified against. Per-class truth is the product.",
     ],
@@ -77,7 +79,7 @@ export const POLICIES: HelpPolicy[] = [
     title: "2. Your devices only - the ownership policy",
     tone: "amber",
     paras: [
-      "Use DroidKit on devices YOU own, or a customer's device with their clear authorization. Every repair lane carries this consent rule on screen, and the in-app consent card (docs/kid-sheets/CONSENT-CARD.md) is free to print for shop counters.",
+      "Use Paralock on devices YOU own, or a customer's device with their clear authorization. Every repair lane carries this consent rule on screen, and the in-app consent card (docs/kid-sheets/CONSENT-CARD.md) is free to print for shop counters.",
       "FRP, screen locks, and passwords exist to protect owners from thieves. If you cannot sign in to the account that locked a device, our position is simple: the correct party is the account holder, the seller, or the platform's official recovery - not a bypass.",
     ],
   },
@@ -87,7 +89,7 @@ export const POLICIES: HelpPolicy[] = [
     tone: "red",
     paras: [
       "Lender/financed-phone MDM locks (Watu Simu, M-Kopa, Lipa Mdogo Mdogo and similar): a 'carrier-locked' phone bought on instalments in Kenya is almost always a LENDER lock, not a carrier lock. The phone belongs to the lender until the last payment. Defeating it is not unlock - it is taking property. The honest route: finish paying, or call the lender. We will not build this, ever.",
-      "IMEI rewriting: illegal in Kenya under Communications Authority rules and in most countries. No DroidKit feature touches the IMEI, by design.",
+      "IMEI rewriting: illegal in Kenya under Communications Authority rules and in most countries. No Paralock feature touches the IMEI, by design.",
       "Stolen or found devices: if ownership cannot be shown, the answer is the official-recovery page or the police - not a tool.",
     ],
   },
@@ -96,7 +98,7 @@ export const POLICIES: HelpPolicy[] = [
     title: "4. Privacy and your data",
     tone: "green",
     paras: [
-      "DroidKit runs on YOUR computer. There is no DroidKit account, no sign-up, and no DroidKit server that receives your device data. Device information, logs, and settings stay in local storage on your machine (the app's own store files).",
+      "Paralock runs on YOUR computer. There is no Paralock account, no sign-up, and no Paralock server that receives your device data. Device information, logs, and settings stay in local storage on your machine (the app's own store files).",
       "The one thing that CAN leave your machine is the bench log - and only when you personally export the JSON file and choose to share it. Nothing uploads itself.",
       "No adverts, no trackers, no bundled 'offers'. The codebase is open - the claim is falsifiable by reading it.",
     ],
@@ -106,7 +108,7 @@ export const POLICIES: HelpPolicy[] = [
     title: "5. Free - the pricing policy",
     tone: "green",
     paras: [
-      "DroidKit is free and open source (MIT licence). No subscription, no trial clock, no 'credits', no feature locked behind a payment page inside the app.",
+      "Paralock is free and open source (MIT licence). No subscription, no trial clock, no 'credits', no feature locked behind a payment page inside the app.",
       "Some jobs genuinely require third parties (for example a $3-8 NCK code service for ZTE/Alcatel MiFis, or an authorized Samsung/Google account recovery). We name them honestly, we take no cut, and we always show the free path first when one physically exists.",
     ],
   },
@@ -144,7 +146,7 @@ export const POLICIES: HelpPolicy[] = [
     title: "9. Support policy and fair expectations",
     tone: "slate",
     paras: [
-      "Support happens in the open via GitHub issues - so answers help the next person too. Include your DroidKit version, your device model, what you clicked, and what you expected vs what happened.",
+      "Support happens in the open via GitHub issues - so answers help the next person too. Include your Paralock version, your device model, what you clicked, and what you expected vs what happened.",
       "We will never ask for your passwords, your Google/Samsung account, your unlock codes, or remote access to your computer. Anyone doing so in our name is an impostor.",
       "Fixes land in the open repo. If a job is physically impossible, the honest answer will stay 'no' - with the best real route attached - rather than a pretend feature.",
     ],
@@ -154,11 +156,11 @@ export const POLICIES: HelpPolicy[] = [
 // --------------------------- quick start ---------------------------
 
 export const QUICK_START: string[] = [
-  "Install DroidKit on your computer (next page shows Windows, macOS and Linux).",
+  "Install Paralock on your computer (next page shows Windows, macOS and Linux).",
   "On the phone: Settings -> About phone -> tap 'Build number' 7 times to unlock Developer options.",
   "In Developer options, switch ON 'USB debugging'.",
   "Connect the phone with a good USB cable (a DATA cable - some cheap cables are charge-only) and tap 'Allow' on the phone's USB-debugging prompt.",
-  "In DroidKit, open Devices and wait for your phone to appear, then click it to select it.",
+  "In Paralock, open Devices and wait for your phone to appear, then click it to select it.",
   "Open Help (this view) any time, and read the band colours before trusting any job: green, amber, red.",
 ]
 
@@ -175,11 +177,11 @@ export interface SetupSection {
 export const SETUP_SECTIONS: SetupSection[] = [
   {
     id: "install",
-    title: "Install DroidKit",
+    title: "Install Paralock",
     intro: "Get the installer for your computer from the project's GitHub Releases page (link on the last page).",
     steps: [
       { text: "Windows: download the .msi (or .exe) installer, double-click it, and follow the prompts. If SmartScreen warns because the app is new, click 'More info' -> 'Run anyway' (the binary is built publicly by GitHub Actions from this repo)." },
-      { text: "macOS: download the .dmg, open it, and drag DroidKit into Applications. On first open, right-click -> Open if Gatekeeper hesitates." },
+      { text: "macOS: download the .dmg, open it, and drag Paralock into Applications. On first open, right-click -> Open if Gatekeeper hesitates." },
       { text: "Linux: download the .AppImage (chmod +x it, then run) or the .deb (sudo dpkg -i file.deb)." },
       { text: "Building from source instead: install Node 20+ and Rust, then run 'npm install' and 'npm run tauri:build'. The repo's docs/CI-GREEN-GUIDE.md explains the one-time automation setup for maintainers." },
     ],
@@ -201,7 +203,7 @@ export const SETUP_SECTIONS: SetupSection[] = [
       { text: "Settings -> About phone -> 'Build number': tap it 7 times until it says 'You are now a developer'. (Transsion phones: it can hide under About phone -> 'Build number' too; some show it after tapping 'Version'.)" },
       { text: "Back in Settings -> System -> Developer options -> turn ON 'USB debugging'." },
       { text: "Plug into the computer. A prompt 'Allow USB debugging?' appears on the phone: tick 'Always allow from this computer' and tap Allow. If no prompt appears, unplug, run 'revoke USB debugging authorizations' in Developer options, and retry." },
-      { text: "Wireless pairing (Android 11+): Developer options -> 'Wireless debugging' -> 'Pair device with pairing code', then use DroidKit's + button in the sidebar." },
+      { text: "Wireless pairing (Android 11+): Developer options -> 'Wireless debugging' -> 'Pair device with pairing code', then use Paralock's + button in the sidebar." },
     ],
   },
   {
@@ -337,8 +339,8 @@ export interface Faq { q: string; a: string; tag: string }
 export const FAQS: Faq[] = [
   {
     tag: "claims",
-    q: "Can DroidKit remove FRP on Android 15/16 completely, like some apps promise?",
-    a: "No - and neither can they, whatever their adverts say. That decision happens on Google's server after a reset. Any tool, cable or video claiming full removal on those versions is a scam. DroidKit shows the physics, the real options per version, and the honest route (the account owner, official recovery) instead of selling the lie.",
+    q: "Can Paralock remove FRP on Android 15/16 completely, like some apps promise?",
+    a: "No - and neither can they, whatever their adverts say. That decision happens on Google's server after a reset. Any tool, cable or video claiming full removal on those versions is a scam. Paralock shows the physics, the real options per version, and the honest route (the account owner, official recovery) instead of selling the lie.",
   },
   {
     tag: "claims",
@@ -353,7 +355,7 @@ export const FAQS: Faq[] = [
   {
     tag: "carrier",
     q: "A shop 'unlocked' my financed phone and it re-locked. Why?",
-    a: "Because it was never a carrier lock. Watu/M-Kopa/Lipa Mdogo Mdogo phones are lender-managed (MDM): the re-lock is the lender's server, and it will keep happening until the phone is fully paid. DroidKit refuses this job by policy - the honest route is the lender, not another shop.",
+    a: "Because it was never a carrier lock. Watu/M-Kopa/Lipa Mdogo Mdogo phones are lender-managed (MDM): the re-lock is the lender's server, and it will keep happening until the phone is fully paid. Paralock refuses this job by policy - the honest route is the lender, not another shop.",
   },
   {
     tag: "cable",
@@ -402,8 +404,8 @@ export const FAQS: Faq[] = [
   },
   {
     tag: "privacy",
-    q: "Does DroidKit send my device data anywhere?",
-    a: "No. It runs on your computer; there is no DroidKit account or cloud. The only file that can leave is the bench log you personally export and choose to share. The code is open if you want to verify the claim.",
+    q: "Does Paralock send my device data anywhere?",
+    a: "No. It runs on your computer; there is no Paralock account or cloud. The only file that can leave is the bench log you personally export and choose to share. The code is open if you want to verify the claim.",
   },
   {
     tag: "money",
@@ -412,13 +414,13 @@ export const FAQS: Faq[] = [
   },
   {
     tag: "setup",
-    q: "Do I need internet for DroidKit to work?",
+    q: "Do I need internet for Paralock to work?",
     a: "Only to install it and to read linked web resources. The core work - detection, guides, code generation, the cracker, help and the PDF guide - is offline. Nothing phones home.",
   },
   {
     tag: "setup",
     q: "Is unlocking my own phone or MiFi legal in Kenya?",
-    a: "Self-unlocking devices you own is legal. Rewriting IMEIs is illegal (Communications Authority rules) and DroidKit never touches the IMEI. Defeating lender MDM on financed phones is not unlocking - it is taking the lender's property, and this app refuses it by policy.",
+    a: "Self-unlocking devices you own is legal. Rewriting IMEIs is illegal (Communications Authority rules) and Paralock never touches the IMEI. Defeating lender MDM on financed phones is not unlocking - it is taking the lender's property, and this app refuses it by policy.",
   },
   {
     tag: "features",
@@ -432,7 +434,7 @@ export const FAQS: Faq[] = [
 export interface GlossaryTerm { term: string; meaning: string }
 
 export const GLOSSARY: GlossaryTerm[] = [
-  { term: "ADB", meaning: "Android Debug Bridge - the official cable/wireless channel between computer and phone that every DroidKit phone feature uses." },
+  { term: "ADB", meaning: "Android Debug Bridge - the official cable/wireless channel between computer and phone that every Paralock phone feature uses." },
   { term: "FRP", meaning: "Factory Reset Protection. After a reset, Android demands the previous Google account. Newer versions enforce it on Google's server." },
   { term: "NCK", meaning: "Network Control Key - the code that removes a carrier lock from a modem/MiFi. Typed once, counted forever." },
   { term: "Attempt counter", meaning: "How many wrong codes a lock accepts before it dies permanently. Read it before typing anything." },
@@ -454,11 +456,12 @@ export const GET_HELP_STEPS: string[] = [
   "Find your exact model and Android version (System Info view, or the sticker under a MiFi's battery).",
   "Search this Help view and the FAQ - most questions are already answered.",
   "Check the band colour for your exact model in the FRP Lab / Rescue Lab lane.",
-  "Still stuck? Open a GitHub issue (link below) with: DroidKit version, device model, what you clicked, expected vs actual, and log lines from Logcat. Never include passwords or unlock codes.",
+  "Still stuck? Open a GitHub issue (link below) with: Paralock version, device model, what you clicked, expected vs actual, and log lines from Logcat. Never include passwords or unlock codes.",
   "Urgent shop counter question? The printable kid-sheets in docs/kid-sheets/ are made for exactly that moment.",
 ]
 
 export const HELP_LINKS: { label: string; url: string }[] = [
+  { label: "Email Isaac Real", url: "mailto:isaacreal2026@gmail.com" },
   { label: "GitHub repository", url: "https://github.com/AISACTECH/droidkitv1" },
   { label: "Report a problem (issues)", url: "https://github.com/AISACTECH/droidkitv1/issues" },
   { label: "Coverage map (which brands/routes)", url: "https://github.com/AISACTECH/droidkitv1/tree/main/docs/COVERAGE-MAP.md" },

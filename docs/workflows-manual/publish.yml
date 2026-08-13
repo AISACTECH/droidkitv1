@@ -120,7 +120,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: droidkit-${{ matrix.os_name }}
+          name: paralock-${{ matrix.os_name }}
           path: |
             src-tauri/target/release/bundle
             src-tauri/target/*/release/bundle

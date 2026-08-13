@@ -1,4 +1,4 @@
-# DroidKit Capability Roadmap — Open-Closed Edition (2026-08-12)
+# Paralock Capability Roadmap — Open-Closed Edition (2026-08-12)
 
 **Architectural law for every item below:** existing core files, views, engines
 and gates are CLOSED for modification. New capability arrives as NEW modules

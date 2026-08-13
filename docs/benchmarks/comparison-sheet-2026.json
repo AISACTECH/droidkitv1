@@ -5,7 +5,7 @@
   "frpComposite": [
     {
       "tool": "ours",
-      "name": "DroidKit v1 (AISACTECH — this repo)",
+      "name": "Paralock v1 (Isaac Real — this repo)",
       "composite": 87.6,
       "raw": 69
     },
@@ -153,7 +153,7 @@
       },
       {
         "id": "ours",
-        "name": "DroidKit v1 (AISACTECH — this repo)",
+        "name": "Paralock v1 (Isaac Real — this repo)",
         "composite": 65.6,
         "honesty": 100
       },
@@ -212,7 +212,7 @@
   },
   "combined": [
     {
-      "name": "DroidKit v1 (AISACTECH — this repo)",
+      "name": "Paralock v1 (Isaac Real — this repo)",
       "frp": 87.6,
       "frpIsProxy": false,
       "net": 65.6,

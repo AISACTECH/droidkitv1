@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * DroidKit Production Audit
+ * Paralock Production Audit
  * Checks software completeness, storage, reliability, consistency without Rust required
  */
 
@@ -36,7 +36,7 @@ function formatBytes(bytes) {
   return (bytes/Math.pow(k,i)).toFixed(i===0?0:2)+' '+sizes[i];
 }
 
-console.log("\n🔍 DroidKit Production Audit v1.0.0");
+console.log("\n🔍 Paralock Production Audit v1.0.0");
 console.log("====================================\n");
 
 // 1. Check package.json & versions
@@ -46,7 +46,7 @@ console.log(`Name: ${pkg.name}, license: ${pkg.license}, author: ${pkg.author?.n
 
 // 2. Check tauri.conf
 const tauriConf = JSON.parse(fs.readFileSync(path.join(root, 'src-tauri/tauri.conf.json'), 'utf8'));
-console.log(`Tauri productName: ${tauriConf.productName} ${tauriConf.productName === 'DroidKit' ? '✅' : '❌'}`);
+console.log(`Tauri productName: ${tauriConf.productName} ${tauriConf.productName === 'Paralock' ? '✅' : '❌'}`);
 console.log(`Tauri version: ${tauriConf.version} ${tauriConf.version === pkg.version ? '✅ matches package' : '❌ mismatch'}`);
 console.log(`Tauri CSP: ${tauriConf.app.security.csp ? tauriConf.app.security.csp.slice(0,60)+'… ✅ not null' : '❌ null (security risk)'}`);
 console.log(`Window size: ${tauriConf.app.windows[0].width}x${tauriConf.app.windows[0].height} ${tauriConf.app.windows[0].width >=1100 ? '✅ production size' : '❌ too small'}`);

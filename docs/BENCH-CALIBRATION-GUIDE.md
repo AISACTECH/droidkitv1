@@ -54,7 +54,7 @@ loop you can run without a donor in the room:
    calibration sentence above:
 
    ```
-   npm run bench:ingest -- path/to/droidkit-patch-oracle-….json
+   npm run bench:ingest -- path/to/paralock-patch-oracle-….json
    ```
 
    Promotion output:

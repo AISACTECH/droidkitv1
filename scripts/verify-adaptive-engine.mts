@@ -482,7 +482,7 @@ console.log("\nK. Execution scripts")
 console.log("\nL. Patch planner")
 
 check("read-only dd forms accepted",
-  isReadOnlyDump("dd if=/dev/block/by-name/frp of=/sdcard/droidkit-backup/frp.img bs=4096"))
+  isReadOnlyDump("dd if=/dev/block/by-name/frp of=/sdcard/paralock-backup/frp.img bs=4096"))
 check("write dd forms rejected",
   !isReadOnlyDump("dd if=/sdcard/frp.img of=/dev/block/by-name/frp") &&
   !isReadOnlyDump("fastboot erase frp") &&

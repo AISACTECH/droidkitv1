@@ -207,7 +207,7 @@ export const SCREENLOCK_ERAS: { era: string; band: RescueBand; truth: string }[]
   { era: "Android ≤ 7 PIN/password (password.key era)", band: "conditional", truth: "Salted hashes + gatekeeper transition era — bench research per model; the data-preserving window is narrow but real on some legacy stock." },
   { era: "Samsung with 'Remote unlock' enabled", band: "doable", truth: "OFFICIAL: SmartThings Find (findmymobile.samsung.com) → 'Unlock' — resets the lock screen remotely, data untouched. Must have been enabled before lockout; needs the owner's Samsung account." },
   { era: "Android 9 – 16 pattern/PIN/password", band: "not-by-software", truth: "Gatekeeper/Weaver hardware + file-based encryption: the key IS the lock. Offline cracking is impossible by design — every tool claiming otherwise on modern Android is wiping (they just don't say it)." },
-  { era: "The honest modern route", band: "doable", truth: "Recovery factory reset (data erased — say it to the customer FIRST) or OEM account recovery. After reset, FRP appears — that's what the FRP views + FRP Lab in this same app are for. Full journey exists inside DroidKit." },
+  { era: "The honest modern route", band: "doable", truth: "Recovery factory reset (data erased — say it to the customer FIRST) or OEM account recovery. After reset, FRP appears — that's what the FRP views + FRP Lab in this same app are for. Full journey exists inside Paralock." },
 ]
 
 // ======================= 🖥️ BLACK SCREEN =======================
@@ -226,7 +226,7 @@ export const BLACKSCREEN_TRIAGE: {
       band: "doable",
       moves: [
         { text: "Force-restart first (fixes crashed display drivers): brand combos below." },
-        { text: "Still black? If USB debugging was EVER enabled & authorized on this PC: open DroidKit → Screen view — the reflection window mirrors & controls the phone even with a dead panel. BACK UP DATA NOW via Files view before any repair (screens get replaced; data doesn't)." },
+        { text: "Still black? If USB debugging was EVER enabled & authorized on this PC: open Paralock → Screen view — the reflection window mirrors & controls the phone even with a dead panel. BACK UP DATA NOW via Files view before any repair (screens get replaced; data doesn't)." },
         { text: "No ADB? USB-OTG + computer mouse: many phones show pointer support — plug an OTG adapter + mouse, click blindly using muscle memory is a myth — but with an HDMI/DP-capable phone (Samsung DeX, some flagships) plug a monitor: real second chance." },
         { text: "Then hardware: screen swap is a parts job — quote parts+labor after data is safe." },
       ],
@@ -237,7 +237,7 @@ export const BLACKSCREEN_TRIAGE: {
       moves: [
         { text: "Charge 30–60 min on a KNOWN-good cable+brick, then try power again (deep-discharged batteries fake death)." },
         { text: "Force-restart combo (below) a few times — hold long (some need 15–30s)." },
-        { text: "Plug into PC: any USB connect sound? Check DroidKit Devices view. A phone Windows sees in Brom/EDL/recovery is REVIVABLE — go to FRP Lab Phase Runbook / flash stock." },
+        { text: "Plug into PC: any USB connect sound? Check Paralock Devices view. A phone Windows sees in Brom/EDL/recovery is REVIVABLE — go to FRP Lab Phase Runbook / flash stock." },
         { text: "Truly nothing after all 3 (+water history? never charge a wet phone — corrosion clock is ticking; open & clean properly, the rice thing is a myth) → board-level diagnosis bench." },
       ],
     },

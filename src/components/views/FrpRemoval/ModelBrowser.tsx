@@ -131,7 +131,7 @@ export function ModelBrowser({ brand, filteredModels, searchQuery, onSearchChang
       <div className="p-2 border-t bg-muted/20 text-[10px] text-muted-foreground flex items-center justify-between">
         <span className="flex items-center gap-1"><Zap className="h-3 w-3" /> Init: {totalCount} Models</span>
         <span className="hidden md:flex items-center gap-1"><Bug className="h-3 w-3" /> {filteredModels.length} shown • v1.0.0</span>
-        <span className="font-mono text-[9px]">B450M PRO-VDH MAX • Windows 11 • VIKAS</span>
+        <span className="font-mono text-[9px]">B450M PRO-VDH MAX • Windows 11 • Isaac Real</span>
       </div>
     </div>
   )

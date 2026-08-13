@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "DroidKit",
+  "productName": "Paralock",
   "version": "1.1.0",
-  "identifier": "com.aisactech.droidkit",
+  "identifier": "com.isaacreal.paralock",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "DroidKit — Android Toolkit",
+        "title": "Paralock — Android Toolkit",
         "width": 1280,
         "height": 800,
         "minWidth": 1100,
@@ -38,9 +38,9 @@
     ],
     "category": "DeveloperTool",
     "shortDescription": "Android Toolkit for Developers — ADB, FRP, System Diagnostics",
-    "longDescription": "DroidKit is an enterprise-grade cross-platform Android toolkit providing ADB file management, app management, logcat streaming, system diagnostics, wireless pairing, emulator control, and advanced Android system utilities for developers and enterprises.",
-    "publisher": "AISACTECH",
-    "copyright": "Copyright © 2025 AISACTECH. All rights reserved.",
+    "longDescription": "Paralock is an enterprise-grade cross-platform Android toolkit providing ADB file management, app management, logcat streaming, system diagnostics, wireless pairing, emulator control, and advanced Android system utilities for developers and enterprises.",
+    "publisher": "Isaac Real",
+    "copyright": "Copyright © 2026 Isaac Real. All rights reserved.",
     "windows": {
       "certificateThumbprint": null,
       "digestAlgorithm": "sha256",

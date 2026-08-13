@@ -2,7 +2,7 @@
 // Bench-log ingest + promotion rules
 // --------------------------------------------------------------------
 // Accepts:
-//   1. structured packs  { kind: "droidkit-bench-evidence", version: 1 }
+//   1. structured packs  { kind: "paralock-bench-evidence", version: 1 }
 //   2. Patch Oracle exports { kind: "patch-oracle-bench-log", bench_notes }
 //   3. Calibration-guide sentences:
 //        MODEL — era=v201 — code 12345678 — attempts-before 10 — RESULT accepted/rejected — date
