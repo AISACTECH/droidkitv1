@@ -23,7 +23,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: https://asset.localhost blob: data:; font-src 'self' data:; connect-src 'self' https: wss: tauri://*"
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: https://asset.localhost blob: data:; font-src 'self' data:; connect-src 'self' https://* ws://* wss://*; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests"
     }
   },
   "bundle": {
@@ -38,10 +38,10 @@
     ],
     "category": "DeveloperTool",
     "shortDescription": "Android Toolkit for Developers — ADB, FRP, System Diagnostics",
-    "longDescription": "DroidKit is an enterprise-grade cross-platform Android toolkit providing ADB file management, app management, logcat streaming, system diagnostics, wireless pairing, emulator control, and advanced Android system utilities for developers and enterprises.",
-    "publisher": "AISACTECH",
+    "longDescription": "DroidKit is an enterprise-grade cross-platform Android toolkit providing ADB file management, app management, logcat streaming, system diagnostics, wireless pairing, emulator control, and FRP/Knox removal with evidence-based decision trees.",
     "copyright": "Copyright © 2025 AISACTECH. All rights reserved.",
     "windows": {
+      "publisher": "AISACTECH",
       "certificateThumbprint": null,
       "digestAlgorithm": "sha256",
       "webviewInstallMode": {
