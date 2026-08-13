@@ -176,3 +176,32 @@ Status legend: ✅ implemented · ♻️ already covered in round 1 · 🔬 benc
 `npm run test:adaptive` now runs **124 checks** (was 66): band matrix incl. Android 15/16, decision determinism, FSM reachability/classifier/probe budget, humanize bounds, read-only guarantees, rollback refusal, journal roundtrip, knowledge modules, validation-harness verdicts, analytics math + downward-only calibration, script determinism + write-freedom + refusal scripts, dump/patch/gates/recovery invariants, update-pack schemas (certainty-forbidden, vbmeta-write-forbidden, minimal-touch law), UI sample classification, refinement tool, WBS coverage.
 
 Declared NOT done here (by design, never faked): Rust compile gate (CI `cargo check`), firmware acquisition, decompilation of Google binaries, real-device/emulator hardware runs, and any claim of unsigned patch acceptance under AVB.
+
+---
+
+## 5. Round 3 — isolated Android 15/16 patch research layer
+
+Full research dossier: `docs/ANDROID-15-16-PATCH-RESEARCH.md` (patches P1–P10 with sources,
+hide/seek reframing, quantum reframing, lab expectations, bench to-dos). Application layer:
+`src/lib/adaptive-engine/parallel.ts` — **new file only**; every existing engine module is
+untouched (verified by `git diff` and by the regression-snapshot section F of
+`npm run test:research`, 37 checks).
+
+| Research finding | Applied as | Notes |
+|---|---|---|
+| A15 moved FRP enforcement into system core (P1); ownership-gated installs (P2); OEM-unlock ≠ FRP-off (P3) | Patch digest → lane impact scoring | Exploit/UI lanes close; below-OS lanes remain |
+| A16 USB/ADB restricted before setup (P6); APK routes blocked (P7); per-patch ratchet (P8) | Digest + band model cross-check | Band matrix unchanged — the digest *explains* it |
+| Samsung Binary-18 KG-Prenormal blocks USB DATA while OS is on (P9) | `buildProtectionMap` → `usbRisk` + behavior budget | Read-only "seek" — routes, never evades |
+| Play Integrity May-2025: all verdicts hardware-backed (P5) | `NO_EVASION_NOTE` hard line + test-enforced | Hiding = needing leaked keyboxes — declared, not faked |
+| "Hide & seek" | HIDE = footprint+budget+restore-to-stock (existing laws, now stated); SEEK = read-only protection map | No spoof/evade/obfuscate exports (tested) |
+| "Quantum juggling" | `evaluateParallelLanes`: three lanes in parallel → collapse to measured choice; union coverage 1−∏(1−rᵢ), capped 97 | Deterministic; scam note kept (PHYSICS-LAYER-RESEARCH) |
+| Lab test knowledge | `LAB_LEDGER` (10 evidence-banded expectations, per-lane, sourced) | Downward-only law; ≥50% bands exist ONLY where evidence supports them |
+
+Success-target honesty: **decision coverage 100%** (every fingerprint → measured plan, tested);
+expected unlock rates are lab-gated bands — ≥50% evidence exists for the pre-authorized ADB
+window and below-OS chipset lanes; patched A15/16 software-only lanes are 5–15% by all public
+evidence, and the parallel report SHOWS that gap instead of hiding it.
+
+Bench to-dos (declared): identify the real channel behind "MTP-mode" tool claims; measure
+Binary-18 KG-Prenormal timing budget; validate Brom/EDL on owned A15/16 units; re-run after the
+Feb-2026 root-certificate rotation.

@@ -68,6 +68,26 @@ export {
   validateUpdatePack,
 } from "./update-pack.ts";
 
+// Round-3 research layer (isolated — see docs/ANDROID-15-16-PATCH-RESEARCH.md)
+export {
+  A15_16_PATCH_DIGEST,
+  LAB_LEDGER,
+  buildProtectionMap,
+  parseBinaryNumber,
+  evaluateParallelLanes,
+  ledgerFor,
+  QUANTUM_NOTE,
+  NO_EVASION_NOTE,
+  HIDE_SEEK_POLICY,
+  type PatchRecord,
+  type ProtectionMap,
+  type ProtectionInput,
+  type LabExpectation,
+  type LaneEvaluation,
+  type LaneStatus,
+  type GapReport,
+} from "./parallel.ts";
+
 export type * from "./types.ts";
 
 /** Module → WBS task-id mapping (the digest of the full breakdown). */
@@ -88,6 +108,7 @@ export const WBS_MAP: { module: string; algorithm: string; tasks: string[] }[] =
   { module: "safety.ts", algorithm: "CA", tasks: ["A1-4.4", "CA5"] },
   { module: "update-pack.ts", algorithm: "CA", tasks: ["CA3", "A1-2.1"] },
   { module: "AdaptiveEngine.tsx (view)", algorithm: "CA", tasks: ["CA4"] },
+  { module: "parallel.ts (round-3 research layer)", algorithm: "ALL", tasks: ["R3-patches", "R3-hide-seek", "R3-parallel", "R3-lab-ledger"] },
 ];
 
 /**

@@ -40,6 +40,12 @@ import {
   generateRecoveryScript,
   evaluateSafety,
   validateUpdatePack,
+  A15_16_PATCH_DIGEST,
+  LAB_LEDGER,
+  evaluateParallelLanes,
+  QUANTUM_NOTE,
+  NO_EVASION_NOTE,
+  HIDE_SEEK_POLICY,
   RESEARCH_HONESTY,
   ANDROID_1516_NOTE,
   type Fingerprint,
@@ -339,6 +345,7 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
     { id: "analytics", algo: "all" as AlgoId },
     { id: "execution", algo: "all" as AlgoId },
     { id: "updates", algo: "all" as AlgoId },
+    { id: "research", algo: "all" as AlgoId },
     { id: "journal", algo: "all" as AlgoId },
   ]
   const visibleTabs = tabs.filter((t) => activeAlgo === "all" || t.algo === activeAlgo)
@@ -366,6 +373,24 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
     () => buildAnalyticsReport(journalRef.current!.recent(1000), CATALOG),
     [matrixRows, // eslint-disable-line react-hooks/exhaustive-deps
     ],
+  )
+
+  // Round-3 research layer: parallel three-lane evaluation + patch digest (isolated, read-only).
+  const [patchFilter, setPatchFilter] = useState<"all" | "15" | "16">("all")
+  const gapReport = useMemo(() => {
+    if (!fingerprint) return null
+    return evaluateParallelLanes(
+      fingerprint,
+      {
+        verifiedBootState: avb?.verifiedBootState,
+        vbmetaDeviceState: avb?.vbmetaDeviceState,
+        buildTags: avb?.buildTags,
+      },
+      fsmSeed,
+    )
+  }, [fingerprint, avb, fsmSeed])
+  const digestRows = A15_16_PATCH_DIGEST.filter(
+    (p) => patchFilter === "all" || p.android === patchFilter || p.android === "15+16",
   )
 
   return (
@@ -506,12 +531,13 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
               analytics: <BarChart3 className="mr-1 h-3.5 w-3.5" />,
               execution: <FileCode2 className="mr-1 h-3.5 w-3.5" />,
               updates: <PackageCheck className="mr-1 h-3.5 w-3.5" />,
+              research: <BarChart3 className="mr-1 h-3.5 w-3.5" />,
               journal: <ScrollText className="mr-1 h-3.5 w-3.5" />,
             }
             return (
               <TabsTrigger key={t.id} value={t.id}>
                 {icons[t.id] ?? null}
-                {t.id === "plan" ? "Exploit chain" : t.id === "fsm" ? "UI state machine" : t.id === "partition" ? "Partition survey" : t.id === "patch" ? "Patch planner" : t.id === "analytics" ? "Analytics" : t.id === "execution" ? "Scripts" : t.id === "updates" ? "Update packs" : "Journal"}
+                {t.id === "plan" ? "Exploit chain" : t.id === "fsm" ? "UI state machine" : t.id === "partition" ? "Partition survey" : t.id === "patch" ? "Patch planner" : t.id === "analytics" ? "Analytics" : t.id === "execution" ? "Scripts" : t.id === "updates" ? "Update packs" : t.id === "research" ? "Patch research" : "Journal"}
               </TabsTrigger>
             )
           })}
@@ -928,6 +954,136 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* ---------------- Patch research (round 3, isolated) ---------------- */}
+        <TabsContent value="research" className="space-y-4">
+          {!gapReport || !fingerprint ? (
+            <Card><CardContent className="pt-4 text-[12px] text-zinc-500">Scan the device to open the research layer.</CardContent></Card>
+          ) : (
+            <>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 text-sm"><BarChart3 className="h-4 w-4" /> Parallel lane evaluation — the gap, seen</CardTitle>
+                  <CardDescription>
+                    {QUANTUM_NOTE}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="grid gap-2 md:grid-cols-3">
+                    {gapReport.lanes.map((l) => (
+                      <div
+                        key={l.algorithm}
+                        className={`rounded-md border p-2 ${
+                          l.status === "viable" ? "border-green-500/30 bg-green-500/5"
+                          : l.status === "conditional" ? "border-yellow-500/30 bg-yellow-500/5"
+                          : l.status === "refused" ? "border-red-500/30 bg-red-500/5"
+                          : "border-zinc-500/30 bg-zinc-500/5"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-medium text-zinc-200">Algorithm {l.algorithm === "exploit" ? "#1 Exploit" : l.algorithm === "ui" ? "#2 UI" : "#3 Patch"}</span>
+                          <Badge variant="outline" className="text-[10px]">{l.status}</Badge>
+                        </div>
+                        <div className="mt-1 text-[10px] text-zinc-500">
+                          primary: {l.primaryMethod ?? "—"} · expected rate {l.expectedRate}/97 · score {l.score}
+                        </div>
+                        <div className="mt-1 text-[10px] text-zinc-400">{l.notes[0]}</div>
+                        <div className="mt-1 text-[10px] text-zinc-600">{l.labNote}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-2 text-[11px]">
+                    <span className="text-zinc-400">Union coverage {gapReport.unionCoverage}/97 · decision coverage {gapReport.decisionCoverage}%</span>
+                    <Progress value={gapReport.unionCoverage} className="h-1.5 flex-1" />
+                  </div>
+                  <div className="rounded-md border border-zinc-500/20 bg-zinc-500/5 p-2 text-[11px] text-zinc-300">
+                    <span className="text-zinc-500">Recommendation: </span>{gapReport.recommendation}
+                  </div>
+                  <div className="space-y-0.5 text-[10px] text-zinc-400">
+                    {gapReport.gaps.map((g, i) => <div key={i}>◼ {g}</div>)}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm">Google protection map (seek — read-only)</CardTitle>
+                  <CardDescription>{HIDE_SEEK_POLICY}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-1 text-[11px]">
+                  <div className="grid grid-cols-2 gap-y-1 md:grid-cols-3">
+                    <div><span className="text-zinc-500">AVB state</span><div className="text-zinc-200">{gapReport.protection.verifiedBootState ?? "?"}</div></div>
+                    <div><span className="text-zinc-500">vbmeta</span><div className="text-zinc-200">{gapReport.protection.vbmetaDeviceState ?? "?"}</div></div>
+                    <div><span className="text-zinc-500">security patch</span><div className="text-zinc-200">{gapReport.protection.securityPatch ?? "?"}</div></div>
+                  </div>
+                  <div className="mt-1"><span className="text-zinc-500">USB gate: </span>
+                    <Badge variant="outline" className={gapReport.protection.usbRisk === "high" ? "border-red-500/40 text-red-300" : gapReport.protection.usbRisk === "medium" ? "border-yellow-500/40 text-yellow-300" : ""}>{gapReport.protection.usbRisk}</Badge>
+                  </div>
+                  <div className="text-zinc-400">{gapReport.protection.usbRiskNote}</div>
+                  <div className="text-zinc-500">{gapReport.protection.attestationLayer} — {gapReport.protection.summary}</div>
+                  <div className="mt-1 rounded-md border border-orange-500/30 bg-orange-500/5 p-2 text-zinc-300">{NO_EVASION_NOTE}</div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm">Android 15/16 patch digest (P1–P10)</CardTitle>
+                  <CardDescription>
+                    What Google closed and what remains, per stack layer — full citations in
+                    <span className="font-mono"> docs/ANDROID-15-16-PATCH-RESEARCH.md</span>.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="flex gap-1">
+                    {(["all", "15", "16"] as const).map((f) => (
+                      <Badge
+                        key={f}
+                        variant="outline"
+                        className={`cursor-pointer ${patchFilter === f ? "border-green-500/50 text-green-300" : ""}`}
+                        onClick={() => setPatchFilter(f)}
+                      >
+                        {f === "all" ? "all" : `Android ${f}`}
+                      </Badge>
+                    ))}
+                  </div>
+                  <div className="max-h-72 space-y-1 overflow-auto">
+                    {digestRows.map((p) => (
+                      <div key={p.id} className="rounded-md border border-zinc-500/20 bg-zinc-500/5 p-2 text-[10px]">
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className="text-[9px]">{p.android}</Badge>
+                          <Badge variant="outline" className="text-[9px]">{p.layer}</Badge>
+                          <span className="font-medium text-zinc-200">{p.title}</span>
+                        </div>
+                        <div className="mt-1 text-red-400/80">✕ {p.whatClosed}</div>
+                        <div className="text-green-400/80">✓ {p.whatRemains}</div>
+                        <div className="mt-1 text-zinc-600">
+                          impact — exploit: {p.impact.exploit} · ui: {p.impact.ui} · patch: {p.impact.patch} · {p.source}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm">Lab expectations (evidence-banded, lab-gated)</CardTitle>
+                  <CardDescription>Downward-only law: bench sessions move these numbers down until hardware evidence supports an upward move.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-1 text-[10px]">
+                  {LAB_LEDGER.map((l, i) => (
+                    <div key={i} className="flex justify-between border-b border-zinc-800 py-1">
+                      <span className="text-zinc-300">[{l.lane}] {l.condition}</span>
+                      <span className={`${l.band === "high" ? "text-green-400" : l.band === "medium" ? "text-yellow-400" : "text-red-400"}`}>
+                        {l.expectedRate}/97 · {l.band} · {l.source}
+                      </span>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </>
+          )}
         </TabsContent>
 
         {/* ---------------- Journal ---------------- */}
