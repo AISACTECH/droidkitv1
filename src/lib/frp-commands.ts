@@ -302,3 +302,21 @@ export const frpExecuteResetMode = (deviceSerial: string, resetModeId: string): 
 // Confirms Knox remove feature exists and works 100%
 export const frpRemoveKnox = (deviceSerial: string): Promise<KnoxRemovalResult> =>
   invoke('frp_remove_knox', { deviceSerial });
+
+// ==================== Adaptive Engine — Partition Survey ====================
+
+export interface PropertySample {
+  name: string;
+  value: string | null;
+}
+
+/** Raw, read-only partition/boot survey (Rust: frp/partition.rs). */
+export interface PartitionSurveyRaw {
+  read_only: boolean;
+  properties: PropertySample[];
+  block_devices: string[];
+}
+
+/** Run the read-only partition survey (getprop + ls only — never writes). */
+export const frpPartitionSurvey = (deviceSerial: string): Promise<PartitionSurveyRaw> =>
+  invoke('frp_partition_survey', { deviceSerial });

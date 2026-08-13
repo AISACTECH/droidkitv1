@@ -49,6 +49,7 @@
     "test:nck": "node --experimental-strip-types scripts/verify-nck.mts",
     "test:lab": "node --experimental-strip-types scripts/verify-rescue-lab.mts",
     "test:core": "node --experimental-strip-types scripts/verify-core-lib.mts",
+    "test:adaptive": "node --experimental-strip-types scripts/verify-adaptive-engine.mts",
     "test:brands": "node --experimental-strip-types scripts/verify-brand-db.mts",
     "test:matrix": "node --experimental-strip-types scripts/verify-protocol-matrix.mts",
     "build:help-pdf": "node --experimental-strip-types scripts/build-help-pdf.mts",

@@ -28,6 +28,21 @@ We publish our evidence, not just our claims. Independent 2026 research (see [`R
 
 ---
 
+## ⚡ Unreleased — FRP Adaptive Engine (new feature)
+
+The three-algorithm brief (Adaptive Exploit Automation · UI & Behavior Interaction · System Partition Patching) lands as a first-class feature — not bolted onto the experimental Developer Lab, not scattered across views. One pipeline, one test surface, one honesty contract:
+
+- **Decision**: `src/lib/adaptive-engine/` — fingerprint → evidence feasibility band (Android 15/16-aware) → ranked exploit chain with fallbacks, escalation policy, refusal plans, warnings, verification loop
+- **Interaction**: rule-based FRP UI state machine (9 OEM flow tables, uiautomator-dump classifier, probe-budget fallback to manual guidance, seeded simulator) + humanization module (jittered timers, tap offsets, key pacing)
+- **Partition safety**: read-only survey (`frp_partition_survey`, getprop + `ls` only) + AVB honesty statement + rollback plans that refuse persistent steps without pre-captured backups
+- **Journal**: success AND failure cases logged per fingerprint, JSON export for the bench feedback loop
+- **Verify**: `npm run test:adaptive` — 66 checks covering the band matrix (Android 12→16), decision determinism, FSM reachability/classifier/fallback, humanize bounds, read-only guarantees, rollback refusal, journal roundtrip
+- Full decision rationale + task board: [`docs/FRP-ADAPTIVE-ENGINE-PLAN.md`](./docs/FRP-ADAPTIVE-ENGINE-PLAN.md)
+
+**What "100% solution" means here — honestly**: 100% *decision coverage* — every device fingerprint maps to a measured band, a ranked plan, verification and rollback. On fully-patched Android 15/16 the software window is closed for every vendor on Earth (see [`RESEARCH-2026-FRP.md`](./RESEARCH-2026-FRP.md)); the engine routes those devices to the chipset/hardware runbooks or official recovery, and refuses unsafe or impossible claims. "Undetectable partition patching" is not offered because Verified Boot makes it physically impossible without the vendor's signing keys — the engine says so, in the UI and in the tests.
+
+---
+
 ## ✨ What's New in 1.1.0
 
 - 🧪 **FRP Developer Lab (EXPERIMENTAL)** — opt-in developer view that closes gaps #6/#7/#8 from [`FRP-ALGORITHM-ANALYSIS.md`](./FRP-ALGORITHM-ANALYSIS.md):
