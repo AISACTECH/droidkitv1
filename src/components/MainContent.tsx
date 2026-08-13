@@ -8,6 +8,7 @@ import { PerformanceMonitor } from "@/components/views/PerformanceMonitor"
 import { ShellTerminal } from "@/components/views/ShellTerminal"
 import { FrpRemoval } from "@/components/views/FrpRemoval"
 import { DeveloperLab } from "@/components/views/DeveloperLab"
+import { AdaptiveEngine } from "@/components/views/AdaptiveEngine"
 import { RescueLab } from "@/components/views/RescueLab"
 import { HelpCenter } from "@/components/views/HelpCenter"
 import { DeviceInfo } from "@/tauri-commands"
@@ -77,6 +78,8 @@ export function MainContent({
         return <FrpRemoval selectedDevice={selectedDevice} />
       case 'frp-lab':
         return <DeveloperLab selectedDevice={selectedDevice} />
+      case 'adaptive-engine':
+        return <AdaptiveEngine selectedDevice={selectedDevice} />
       case 'rescue-lab':
         return <RescueLab selectedDevice={selectedDevice} />
       case 'files':
