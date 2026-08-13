@@ -217,6 +217,13 @@ if (fs.existsSync(path.join(root, 'src/lib/bench/index.ts')) && fs.existsSync(pa
   log('Bench desk module + verify-bench gate present', 'pass');
 } else log('Bench desk missing', 'fail');
 
+{
+  const icnsPath = path.join(root, 'src-tauri/icons/icon.icns');
+  if (fs.existsSync(icnsPath) && fs.readFileSync(icnsPath).subarray(0, 4).toString('ascii') === 'icns') {
+    log('icon.icns is a real Apple icon (not a renamed PNG)', 'pass');
+  } else log('icon.icns missing or is a PNG renamed to .icns — macOS tauri build will fail', 'fail');
+}
+
 const changelog = fs.readFileSync(path.join(root, 'CHANGELOG.md'), 'utf8');
 const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
 if (!changelog.includes('<<<<<<<') && !readme.includes('<<<<<<<')) {

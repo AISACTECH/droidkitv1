@@ -82,6 +82,19 @@ if (existsSync("bun.lock") || existsSync("bun.lockb")) {
   log("ok", "Lockfile", "no bun.lock — tauri-action will pick npm")
 }
 
+// ---- 5c. macOS icns must be a real icns (not a PNG renamed) ----------
+try {
+  const icns = execSync("node -e \"const fs=require('fs');process.stdout.write(fs.readFileSync('src-tauri/icons/icon.icns').subarray(0,4).toString('ascii'))\"", { encoding: "utf8" }).trim()
+  if (icns === "icns") log("ok", "icon.icns", "real Apple icon container — macOS tauri build can read it")
+  else {
+    log("fail", "icon.icns", `magic is '${icns}' (need 'icns') — macOS publish dies if this is a PNG renamed to .icns`)
+    fixes.push("npx tauri icon src-tauri/icons/icon.png    # regenerates a real icon.icns")
+  }
+} catch {
+  log("fail", "icon.icns", "missing or unreadable — macOS tauri build will fail")
+  fixes.push("npx tauri icon src-tauri/icons/icon.png")
+}
+
 // ---- 6. Android tools (device features) ------------------------------
 const adb = sh("adb version")
 if (adb) log("ok", "ADB", adb.split("\n")[0])
