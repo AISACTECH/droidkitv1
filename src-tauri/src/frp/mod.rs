@@ -7,4 +7,5 @@ pub mod q4_database;
 pub mod detector;
 pub mod bypass;
 pub mod reset;
+pub mod partition;
 pub mod commands;

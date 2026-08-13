@@ -349,6 +349,8 @@ pub fn run() {
             frp::commands::frp_execute_reset_mode,
             frp::commands::frp_remove_knox,
             frp::commands::frp_verify_handshake,
+            // Adaptive Engine — read-only partition survey
+            frp::commands::frp_partition_survey,
             // Fastboot support — for damaged charger port data system, supports phone via fastboot mode
             fastboot::fastboot_list_devices,
             fastboot::fastboot_reboot_to_bootloader,
