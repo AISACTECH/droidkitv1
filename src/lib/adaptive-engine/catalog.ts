@@ -80,8 +80,8 @@ export const CATALOG: MethodEntry[] = [
       "Broadly effective Android ≤12 / pre-2023 patches; on 13+ it only applies when the ADB window was pre-authorized — that precondition is the whole game.",
     fallbackTo: ["content_provider_injection"],
     steps: [
-      { kind: "adb_cmd", label: "Verify handshake", detail: "getprop ro.build.version.release + settings get global adb_enabled" },
-      { kind: "adb_cmd", label: "Set provisioning flags", detail: "settings put global device_provisioned 1; settings put secure user_setup_complete 1" },
+      { kind: "adb_cmd", label: "Verify handshake", detail: "getprop ro.build.version.release + settings get global adb_enabled", command: "getprop ro.build.version.release" },
+      { kind: "adb_cmd", label: "Set provisioning flags", detail: "settings put global device_provisioned 1; settings put secure user_setup_complete 1", command: "settings put global device_provisioned 1 && settings put secure user_setup_complete 1" },
       { kind: "verify", label: "Re-detect FRP state", detail: "frp_detect before/after comparison (flags_set vs removed_verified)" },
     ],
     evidence: [
@@ -104,7 +104,7 @@ export const CATALOG: MethodEntry[] = [
     decayNote: "Same window as the flags method; bypasses some Knox blocks on older Samsung builds.",
     fallbackTo: ["setup_wizard_disable"],
     steps: [
-      { kind: "adb_cmd", label: "Insert via content provider", detail: "content insert --uri content://settings/secure --bind name:s:user_setup_complete --bind value:s:1" },
+      { kind: "adb_cmd", label: "Insert via content provider", detail: "content insert --uri content://settings/secure --bind name:s:user_setup_complete --bind value:s:1", command: "content insert --uri content://settings/secure --bind name:s:user_setup_complete --bind value:s:1" },
       { kind: "verify", label: "Re-detect FRP state", detail: "frp_detect before/after comparison" },
     ],
     evidence: ["RESEARCH-2026-FRP.md §2 — content insert sequences verified against public references."],
@@ -124,7 +124,8 @@ export const CATALOG: MethodEntry[] = [
     decayNote: "Google + OEM setup wizards; Samsung package names included (com.samsung.android.app.setupwizard*).",
     fallbackTo: ["setup_wizard_uninstall"],
     steps: [
-      { kind: "adb_cmd", label: "Disable wizards", detail: "pm disable-user --user 0 com.google.android.setupwizard (+ Samsung variants)" },
+      { kind: "adb_cmd", label: "Disable wizards", detail: "pm disable-user --user 0 com.google.android.setupwizard (+ Samsung variants)", command: "pm disable-user --user 0 com.google.android.setupwizard" },
+      { kind: "adb_cmd", label: "Disable Samsung wizard variants", detail: "com.samsung.android.app.setupwizard + setupwizarddefault", command: "pm disable-user --user 0 com.samsung.android.app.setupwizard" },
       { kind: "verify", label: "Reboot observation", detail: "adb reboot then re-run detection — the honest final check" },
     ],
     evidence: ["frp/bypass.rs method 1 (SetupWizardDisable) — shipped and verified in v1."],
@@ -144,7 +145,7 @@ export const CATALOG: MethodEntry[] = [
     decayNote: "Same window; use only after disable fails.",
     fallbackTo: ["account_manager_launch"],
     steps: [
-      { kind: "adb_cmd", label: "Uninstall for user 0", detail: "pm uninstall -k --user 0 com.google.android.setupwizard" },
+      { kind: "adb_cmd", label: "Uninstall for user 0", detail: "pm uninstall -k --user 0 com.google.android.setupwizard", command: "pm uninstall -k --user 0 com.google.android.setupwizard" },
       { kind: "verify", label: "Re-detect FRP state", detail: "frp_detect before/after comparison" },
     ],
     evidence: ["Developer Lab AUTO_LADDER (setup_wizard_uninstall) — evidence-ranked escalation rung."],
@@ -164,7 +165,7 @@ export const CATALOG: MethodEntry[] = [
     decayNote: "Oldest ADB trick in the book; modern gsf.login refuses or loops. Legacy rung only.",
     fallbackTo: ["official_recovery"],
     steps: [
-      { kind: "adb_cmd", label: "Launch login activity", detail: "am start -n com.google.android.gsf.login/" },
+      { kind: "adb_cmd", label: "Launch login activity", detail: "am start -n com.google.android.gsf.login/", command: "am start -n com.google.android.gsf.login/" },
       { kind: "verify", label: "Observe UI state", detail: "dumpsys activity — check the wizard advanced" },
     ],
     evidence: ["frp/bypass.rs AccountManagerLaunch (legacy-rung, kept for old devices)."],

@@ -145,6 +145,8 @@ export interface MethodStep {
   kind: "adb_cmd" | "manual" | "boot_mode" | "flash" | "verify";
   label: string;
   detail: string;
+  /** The actual adb shell command (when kind === "adb_cmd"). */
+  command?: string;
 }
 
 export interface MethodEntry {
@@ -306,6 +308,8 @@ export interface JournalEntry {
   kind: JournalKind;
   fingerprintKey: string;
   text: string;
+  /** Structured metadata for analytics (method id, outcome, dump…). */
+  meta?: Record<string, string | number | boolean>;
 }
 
 export interface AdaptiveSession {
@@ -314,4 +318,150 @@ export interface AdaptiveSession {
   plan: ChainPlan;
   fsmStartState: FsmStateId;
   journalEntry: JournalEntry;
+}
+
+// ---------------------------------------------------------------------
+// Round-2 extensions: validation, analytics, execution, patch planner,
+// safety, update packs (full WBS breakdown tasks)
+// ---------------------------------------------------------------------
+
+// ---------- validation harness (WBS A1-2.3 / A1-3.3) ----------
+
+export interface DeviceExecutor {
+  /** Run one adb shell command (no `adb` prefix). */
+  runAdb(command: string): Promise<string>;
+  /** Snapshot of the system state keys used for verification. */
+  detectState(): Promise<Record<string, string>>;
+}
+
+export type MethodVerdict = "removed_verified" | "flags_set" | "failed";
+
+export interface ValidationStepResult {
+  command: string;
+  ok: boolean;
+  output: string;
+}
+
+export interface MethodValidationResult {
+  methodId: string;
+  methodName: string;
+  verdict: MethodVerdict;
+  stateBefore: Record<string, string>;
+  stateAfter: Record<string, string>;
+  steps: ValidationStepResult[];
+}
+
+// ---------- analytics (WBS A1-2.4 / A1-4.2 / CA2) ----------
+
+export interface MethodStats {
+  methodId: string;
+  attempts: number;
+  successes: number;
+  failures: number;
+  successRatio: number;
+}
+
+export interface CalibrationSuggestion {
+  methodId: string;
+  currentWeight: number;
+  suggestedWeight: number;
+  attempts: number;
+  successes: number;
+  reason: string;
+}
+
+export interface AnalyticsReport {
+  generatedAt: string;
+  totals: { attempts: number; successes: number; failures: number };
+  methods: MethodStats[];
+  calibration: CalibrationSuggestion[];
+}
+
+// ---------- execution scripts (WBS A1-3.1 / A1-4.3 / A2-2.3 / A2-4.3) ----------
+
+export type ScriptLineKind = "comment" | "adb" | "ui" | "manual" | "verify" | "refusal";
+
+export interface ScriptLine {
+  kind: ScriptLineKind;
+  line: string;
+  /** Humanized pause after this line (ms), when applicable. */
+  delayMs?: number;
+  /** Write access required? (recovery/restore lines). */
+  write: boolean;
+}
+
+export interface GeneratedScript {
+  title: string;
+  header: string[];
+  lines: ScriptLine[];
+  footer: string[];
+}
+
+// ---------- patch planner (WBS A3-*) ----------
+
+export interface DumpManifestItem {
+  partition: string;
+  role: string;
+  backupRecommended: "always" | "recommended" | "no";
+  /** Read-only dump commands (dd if=<block> of=/sdcard/... + pull + hash). */
+  commands: string[];
+}
+
+export interface DumpManifest {
+  chipset: string;
+  readOnly: boolean;
+  avbSafeNote: string;
+  items: DumpManifestItem[];
+}
+
+export interface PatchPlan {
+  lane: string;
+  /** Minimal-touch policy: touches ≤ 2 partitions. */
+  minimal: boolean;
+  touches: string[];
+  refusesVbmetaWrites: boolean;
+  preconditions: string[];
+  steps: string[];
+  warning: string | null;
+}
+
+export interface FlashGateCheck {
+  id: string;
+  label: string;
+  passed: boolean;
+  critical: boolean;
+  detail: string;
+}
+
+export interface RecoveryScript {
+  title: string;
+  /** Steps include write operations — always gated. */
+  steps: { line: string; write: boolean; note: string }[];
+}
+
+// ---------- safety coordinator (WBS A1-4.4 / CA5) ----------
+
+export interface SafetyState {
+  consentOwnership: boolean;
+  frpActive: boolean;
+  backupsReady: boolean;
+  bitVersionChecked: boolean;
+  hardwareLaneOk: boolean;
+}
+
+export interface SafetyVerdict {
+  allowed: boolean;
+  failures: string[];
+  warnings: string[];
+}
+
+// ---------- update packs (WBS CA3 / A1-2.1) ----------
+
+export type UpdatePackKind = "exploits" | "ui_flows" | "patches";
+
+export interface UpdatePackValidation {
+  ok: boolean;
+  kind: UpdatePackKind | null;
+  errors: string[];
+  summary: string;
 }

@@ -62,8 +62,14 @@ export class AdaptiveJournal {
   }
 
   /** Append an entry; persistence is throttled to once per second. */
-  append(kind: JournalKind, fingerprintKey: string, text: string): JournalEntry {
+  append(
+    kind: JournalKind,
+    fingerprintKey: string,
+    text: string,
+    meta?: Record<string, string | number | boolean>,
+  ): JournalEntry {
     const entry: JournalEntry = { ts: new Date().toISOString(), kind, fingerprintKey, text };
+    if (meta) entry.meta = meta;
     this.entries.push(entry);
     if (this.entries.length > MAX_ENTRIES) {
       this.entries = this.entries.slice(-MAX_ENTRIES);

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react"
+import { useMemo, useRef, useState, type ReactNode } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -27,8 +27,25 @@ import {
   flowForBrand,
   classifyFromDump,
   chainSummary,
+  CATALOG,
+  getMethod,
+  runValidationMatrix,
+  verdictLabel,
+  buildAnalyticsReport,
+  generateAdbScript,
+  generateUiAutomationScript,
+  buildDumpManifest,
+  buildPatchPlan,
+  evaluateFlashGates,
+  generateRecoveryScript,
+  evaluateSafety,
+  validateUpdatePack,
+  RESEARCH_HONESTY,
+  ANDROID_1516_NOTE,
   type Fingerprint,
   type FsmStateId,
+  type DeviceExecutor,
+  type ValidationMatrixRow,
 } from "@/lib/adaptive-engine"
 import { RealityCheckPanel } from "@/components/views/FrpRemoval/RealityCheck"
 import { type DeviceInfo } from "@/tauri-commands"
@@ -36,19 +53,24 @@ import { createLogger } from "@/lib/logger"
 import {
   ShieldCheck, Cpu, GitBranch, Workflow, Play, RefreshCw,
   ScrollText, AlertTriangle, CheckCircle2, Timer, FileJson, ScanSearch,
+  BarChart3, FileCode2, HardDrive, PackageCheck, ClipboardCopy, Layers, Gauge,
 } from "lucide-react"
 
 const logger = createLogger("AdaptiveEngine")
 
 // =====================================================================
-// FRP Adaptive Engine — new first-class feature (docs/FRP-ADAPTIVE-ENGINE-PLAN.md)
-// Decision tree + UI FSM + partition safety + journal. Honest bands:
-// feasibility is measured, never promised.
+// FRP Adaptive Engine — first-class feature (docs/FRP-ADAPTIVE-ENGINE-PLAN.md)
+// Round 2 (full WBS): algorithm selector + progress monitor (CA4),
+// analytics/calibration (CA2), execution scripts (A1-3.1, A2-2.3),
+// patch planner + gates + recovery (A3), update-pack pipeline (CA3).
+// Honest bands: feasibility is measured, never promised.
 // =====================================================================
 
 interface AdaptiveEngineProps {
   selectedDevice: DeviceInfo
 }
+
+type AlgoId = "all" | "exploit" | "ui" | "patch"
 
 const BAND_COLORS: Record<string, string> = {
   none_needed: "border-zinc-500/30 bg-zinc-500/5",
@@ -91,11 +113,30 @@ function toEngineFingerprint(profile: DeviceProfile, detection: FrpDetectionResu
   }
 }
 
+/** Deterministic offline validation executor (mock — labelled as such). */
+function mockMatrixExecutor(): DeviceExecutor {
+  let state = { frp_active: "1", device_provisioned: "0", user_setup_complete: "0" }
+  return {
+    async runAdb(cmd) {
+      if (cmd.includes("settings put") || cmd.includes("content insert") || cmd.includes("pm disable-user")) {
+        state.device_provisioned = "1"
+        state.user_setup_complete = "1"
+      }
+      if (cmd.includes("pm uninstall")) state.frp_active = "0"
+      return "ok (mock)"
+    },
+    async detectState() {
+      return { ...state }
+    },
+  }
+}
+
 export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
   const journalRef = useRef<AdaptiveJournal | null>(null)
   if (!journalRef.current) journalRef.current = new AdaptiveJournal()
 
   const [consentChecked, setConsentChecked] = useState(false)
+  const [activeAlgo, setActiveAlgo] = useState<AlgoId>("all")
   const [profile, setProfile] = useState<DeviceProfile | null>(null)
   const [detection, setDetection] = useState<FrpDetectionResult | null>(null)
   const [scanning, setScanning] = useState(false)
@@ -109,6 +150,16 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
   const [survey, setSurvey] = useState<PartitionSurveyRaw | null>(null)
   const [surveying, setSurveying] = useState(false)
   const [backupsReady, setBackupsReady] = useState(false)
+  const [bitVersionChecked, setBitVersionChecked] = useState(false)
+  const [firmwareArchived, setFirmwareArchived] = useState(false)
+  const [hashesVerified, setHashesVerified] = useState(false)
+  const [exported, setExported] = useState(false)
+
+  const [matrixRows, setMatrixRows] = useState<ValidationMatrixRow[] | null>(null)
+  const [copyNote, setCopyNote] = useState<string | null>(null)
+
+  const [packText, setPackText] = useState("")
+  const [packResult, setPackResult] = useState<string | null>(null)
 
   const fingerprint = useMemo(
     () => (profile ? toEngineFingerprint(profile, detection) : null),
@@ -171,6 +222,7 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
           fingerprint,
         )
       : null
+
   const rollback = useMemo(() => {
     if (!session) return null
     const persistent = session.plan.chain
@@ -206,9 +258,115 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
     a.download = `droidkit-adaptive-${selectedDevice.serial_no}-${Date.now()}.json`
     a.click()
     URL.revokeObjectURL(url)
+    setExported(true)
+  }
+
+  function handleValidationMatrix() {
+    const ladder = ["adb_provisioning_flags", "content_provider_injection", "setup_wizard_disable", "setup_wizard_uninstall"]
+      .map((id) => getMethod(id))
+      .filter((m): m is NonNullable<typeof m> => m !== undefined)
+    const executor = mockMatrixExecutor()
+    void runValidationMatrix(ladder, executor).then(({ rows }) => {
+      setMatrixRows(rows)
+      for (const row of rows) {
+        journalRef.current!.append("verify", "offline-matrix", `${row.note}: ${verdictLabel(row.verdict)}`, {
+          method: row.methodId,
+          outcome: row.verdict === "failed" ? "failure" : "success",
+        })
+      }
+      logger.info("offline validation matrix complete", { rows: rows.length })
+    })
+  }
+
+  function handleUpdatePackValidate() {
+    if (!packText.trim()) return
+    try {
+      const payload = JSON.parse(packText)
+      const result = validateUpdatePack(payload)
+      setPackResult(`${result.summary}${result.errors.length ? "\n" + result.errors.map((e) => `❌ ${e}`).join("\n") : ""}`)
+    } catch (e) {
+      setPackResult(`Not valid JSON: ${String(e)}`)
+    }
+  }
+
+  async function copyText(text: string) {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopyNote("Copied to clipboard ✓")
+    } catch {
+      setCopyNote("Copy failed — select the text manually")
+    }
+    window.setTimeout(() => setCopyNote(null), 2500)
   }
 
   const flow = fingerprint ? flowForBrand(fingerprint.brand) : null
+
+  // ---- CA4: deterministic decision-pipeline progress (never "unlock %") ----
+  const workItems = [
+    { label: "Ownership consent", weight: 10, done: consentChecked },
+    { label: "Device fingerprint scan", weight: 15, done: profile !== null },
+    { label: "Band + exploit plan", weight: 15, done: session !== null },
+    { label: "UI FSM simulation", weight: 20, done: simulated !== null },
+    { label: "Read-only partition survey", weight: 15, done: survey !== null },
+    { label: "Backup/rollback manifest", weight: 10, done: backupsReady },
+    { label: "Journal export", weight: 15, done: exported },
+  ]
+  const progressPct = workItems.reduce((s, w) => s + (w.done ? w.weight : 0), 0)
+
+  const safety = useMemo(() => {
+    if (!session) return null
+    return evaluateSafety(session.plan, {
+      consentOwnership: consentChecked,
+      frpActive: fingerprint?.frpState === "Active",
+      backupsReady,
+      bitVersionChecked,
+      hardwareLaneOk: true,
+    })
+  }, [session, consentChecked, fingerprint, backupsReady, bitVersionChecked])
+
+  // ---- CA4: algorithm selector ----
+  const algoCards: { id: AlgoId; label: string; desc: string }[] = [
+    { id: "all", label: "Coordinated", desc: "All three algorithms in one pipeline" },
+    { id: "exploit", label: "Algorithm #1 · Exploit Automation", desc: "Fingerprint → band → ranked chain → verification" },
+    { id: "ui", label: "Algorithm #2 · UI Interaction", desc: "Rule-based FSM, classifier, humanized input" },
+    { id: "patch", label: "Algorithm #3 · Partition Safety", desc: "Dump → minimal patch plan → gates → recovery" },
+  ]
+  const tabs = [
+    { id: "plan", algo: "exploit" as AlgoId },
+    { id: "fsm", algo: "ui" as AlgoId },
+    { id: "partition", algo: "patch" as AlgoId },
+    { id: "patch", algo: "patch" as AlgoId },
+    { id: "analytics", algo: "all" as AlgoId },
+    { id: "execution", algo: "all" as AlgoId },
+    { id: "updates", algo: "all" as AlgoId },
+    { id: "journal", algo: "all" as AlgoId },
+  ]
+  const visibleTabs = tabs.filter((t) => activeAlgo === "all" || t.algo === activeAlgo)
+
+  const adbScript = useMemo(
+    () => (session ? generateAdbScript(session.plan, fsmSeed) : null),
+    [session, fsmSeed],
+  )
+  const uiScript = useMemo(
+    () => (simulated ? generateUiAutomationScript(simulated.trace, fsmSeed) : null),
+    [simulated, fsmSeed],
+  )
+  const scriptText = useMemo(() => {
+    const all = adbScript ?? uiScript
+    if (!all) return ""
+    return [...all.header, ...all.lines.map((l) => l.line), ...all.footer].join("\n")
+  }, [adbScript, uiScript])
+
+  const dumpManifest = fingerprint ? buildDumpManifest(fingerprint.chipsetFamily) : null
+  const patchPlan = session ? buildPatchPlan(session.fingerprint.chipsetFamily, session.band.band) : null
+  const flashGates = evaluateFlashGates({ backupsReady, bitVersionChecked, firmwareArchived, hashesVerified })
+  const recovery = dumpManifest ? generateRecoveryScript(dumpManifest) : null
+
+  const report = useMemo(
+    () => buildAnalyticsReport(journalRef.current!.recent(1000), CATALOG),
+    [matrixRows, // eslint-disable-line react-hooks/exhaustive-deps
+    ],
+  )
 
   return (
     <div className="space-y-4 p-4">
@@ -229,6 +387,63 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
           <Label htmlFor="adaptive-consent">
             I own this device (or am authorized to service it), and I have a backup of its data.
           </Label>
+        </CardContent>
+      </Card>
+
+      {/* Algorithm selector + progress monitor (CA4) */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-sm">
+            <Layers className="h-4 w-4" /> Algorithm selector &amp; progress
+          </CardTitle>
+          <CardDescription>
+            Select the algorithm lane to focus, or run all three coordinated. Progress is the
+            decision-pipeline (scan → plan → simulate → survey → backups → export) — it is NOT an
+            unlock percentage, and it never will be.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="grid gap-2 md:grid-cols-4">
+            {algoCards.map((c) => (
+              <button
+                key={c.id}
+                onClick={() => setActiveAlgo(c.id)}
+                className={`rounded-md border p-2 text-left text-[11px] transition-colors ${
+                  activeAlgo === c.id ? "border-green-500/50 bg-green-500/10" : "border-zinc-500/30 bg-zinc-500/5 hover:border-zinc-400/40"
+                }`}
+              >
+                <div className="font-medium text-zinc-200">{c.label}</div>
+                <div className="text-zinc-500">{c.desc}</div>
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <Gauge className="h-4 w-4 text-zinc-500" />
+            <span className="text-[11px] text-zinc-400">Pipeline progress: {progressPct}%</span>
+            <Progress value={progressPct} className="h-1.5 flex-1" />
+          </div>
+          <div className="grid grid-cols-2 gap-1 md:grid-cols-4">
+            {workItems.map((w) => (
+              <div key={w.label} className="flex items-center gap-1.5 text-[10px] text-zinc-500">
+                {w.done ? <CheckCircle2 className="h-3 w-3 text-green-400" /> : <span className="text-zinc-700">○</span>}
+                {w.label} ({w.weight})
+              </div>
+            ))}
+          </div>
+          {safety && (
+            <div className={`rounded-md border p-2 text-[11px] ${safety.allowed ? "border-green-500/30 bg-green-500/5" : "border-red-500/30 bg-red-500/5"}`}>
+              <span className="font-medium text-zinc-200">Safety coordinator: </span>
+              <span className={safety.allowed ? "text-green-400" : "text-red-400"}>
+                {safety.allowed ? "allowed" : "REFUSED"}
+              </span>
+              {safety.failures.map((f, i) => (
+                <div key={i} className="text-red-400">⛔ {f}</div>
+              ))}
+              {safety.warnings.map((w, i) => (
+                <div key={i} className="text-yellow-400">⚠ {w}</div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -280,12 +495,26 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
         </CardContent>
       </Card>
 
-      <Tabs defaultValue="plan">
-        <TabsList>
-          <TabsTrigger value="plan"><GitBranch className="mr-1 h-3.5 w-3.5" /> Exploit chain</TabsTrigger>
-          <TabsTrigger value="fsm"><Workflow className="mr-1 h-3.5 w-3.5" /> UI state machine</TabsTrigger>
-          <TabsTrigger value="partition"><Cpu className="mr-1 h-3.5 w-3.5" /> Partition safety</TabsTrigger>
-          <TabsTrigger value="journal"><ScrollText className="mr-1 h-3.5 w-3.5" /> Journal</TabsTrigger>
+      <Tabs key={activeAlgo} defaultValue={visibleTabs[0].id}>
+        <TabsList className="flex-wrap">
+          {visibleTabs.map((t) => {
+            const icons: Record<string, ReactNode> = {
+              plan: <GitBranch className="mr-1 h-3.5 w-3.5" />,
+              fsm: <Workflow className="mr-1 h-3.5 w-3.5" />,
+              partition: <Cpu className="mr-1 h-3.5 w-3.5" />,
+              patch: <HardDrive className="mr-1 h-3.5 w-3.5" />,
+              analytics: <BarChart3 className="mr-1 h-3.5 w-3.5" />,
+              execution: <FileCode2 className="mr-1 h-3.5 w-3.5" />,
+              updates: <PackageCheck className="mr-1 h-3.5 w-3.5" />,
+              journal: <ScrollText className="mr-1 h-3.5 w-3.5" />,
+            }
+            return (
+              <TabsTrigger key={t.id} value={t.id}>
+                {icons[t.id] ?? null}
+                {t.id === "plan" ? "Exploit chain" : t.id === "fsm" ? "UI state machine" : t.id === "partition" ? "Partition survey" : t.id === "patch" ? "Patch planner" : t.id === "analytics" ? "Analytics" : t.id === "execution" ? "Scripts" : t.id === "updates" ? "Update packs" : "Journal"}
+              </TabsTrigger>
+            )
+          })}
         </TabsList>
 
         {/* ---------------- Exploit chain ---------------- */}
@@ -445,7 +674,7 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
           )}
         </TabsContent>
 
-        {/* ---------------- Partition safety ---------------- */}
+        {/* ---------------- Partition survey ---------------- */}
         <TabsContent value="partition" className="space-y-4">
           <Card>
             <CardHeader className="pb-2">
@@ -507,6 +736,200 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
           )}
         </TabsContent>
 
+        {/* ---------------- Patch planner (Algorithm #3) ---------------- */}
+        <TabsContent value="patch" className="space-y-4">
+          {!fingerprint || !session || !dumpManifest || !patchPlan || !recovery ? (
+            <Card><CardContent className="pt-4 text-[12px] text-zinc-500">Scan the device to open the patch planner.</CardContent></Card>
+          ) : (
+            <>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 text-sm"><HardDrive className="h-4 w-4" /> Patch plan — {patchPlan.lane}</CardTitle>
+                  <CardDescription>
+                    Minimal-touch policy: {patchPlan.touches.length === 0 ? "no partitions" : patchPlan.touches.join(", ")} ·{" "}
+                    vbmeta writes: {patchPlan.refusesVbmetaWrites ? "refused by design" : "???"}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-1 text-[11px]">
+                  {patchPlan.preconditions.map((p, i) => <div key={i} className="text-yellow-300">◇ {p}</div>)}
+                  {patchPlan.steps.map((s, i) => <div key={i} className="text-zinc-300">{s}</div>)}
+                  {patchPlan.warning && <div className="text-red-400">⛔ {patchPlan.warning}</div>}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm">Flash safety gates (refuse semantics)</CardTitle>
+                  <CardDescription>{ANDROID_1516_NOTE}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2 text-[11px]">
+                  <div className="flex items-center gap-2">
+                    <Switch id="gate-bit" checked={bitVersionChecked} onCheckedChange={setBitVersionChecked} />
+                    <Label htmlFor="gate-bit">Bit/version gate checked</Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Switch id="gate-fw" checked={firmwareArchived} onCheckedChange={setFirmwareArchived} />
+                    <Label htmlFor="gate-fw">Stock firmware archive ready</Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Switch id="gate-hash" checked={hashesVerified} onCheckedChange={setHashesVerified} />
+                    <Label htmlFor="gate-hash">Backup hashes re-verified</Label>
+                  </div>
+                  <div className="text-zinc-500">(Backups switch lives in the Partition survey tab.)</div>
+                  {flashGates.map((g) => (
+                    <div key={g.id} className={`flex gap-2 ${g.passed ? "text-green-400" : g.critical ? "text-red-400" : "text-yellow-400"}`}>
+                      {g.passed ? "✅" : g.critical ? "⛔" : "⚠"} {g.label} — {g.detail}
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm">Dump manifest (read-only, AVB-safe)</CardTitle>
+                  <CardDescription>{dumpManifest.avbSafeNote}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2 text-[11px]">
+                  {dumpManifest.items.map((it) => (
+                    <div key={it.partition} className="rounded-md border border-zinc-500/20 bg-zinc-500/5 p-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-zinc-200">{it.partition}</span>
+                        <Badge variant="outline" className="text-[10px]">{it.backupRecommended}</Badge>
+                      </div>
+                      <div className="text-zinc-500">{it.role}</div>
+                      <div className="mt-1 font-mono text-[10px] text-zinc-400">
+                        {it.commands.map((c, i) => <div key={i}>{c}</div>)}
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm">Automated recovery procedure (write steps, gated)</CardTitle>
+                  <CardDescription>
+                    Generated from the dump manifest — the only sanctioned write path is restore-from-backup.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-1 font-mono text-[10px]">
+                  {recovery.steps.map((s, i) => (
+                    <div key={i} className={s.write ? "text-red-400" : "text-zinc-400"}>{s.write ? "⛔" : "·"} {s.line}</div>
+                  ))}
+                </CardContent>
+              </Card>
+            </>
+          )}
+        </TabsContent>
+
+        {/* ---------------- Analytics (CA2) ---------------- */}
+        <TabsContent value="analytics" className="space-y-4">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-sm"><BarChart3 className="h-4 w-4" /> Success/failure analytics + calibration</CardTitle>
+              <CardDescription>
+                {RESEARCH_HONESTY} Downward-only rule: weights drop on measured failures, never rise without bench evidence.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-[11px]">
+              <Button size="sm" variant="outline" onClick={handleValidationMatrix}>
+                <Play className="h-4 w-4" /> Run offline validation matrix (mock executor)
+              </Button>
+              {matrixRows && (
+                <div className="space-y-1">
+                  {matrixRows.map((r) => (
+                    <div key={r.methodId} className="flex justify-between rounded-md border border-zinc-500/20 bg-zinc-500/5 p-1.5">
+                      <span className="text-zinc-300">{r.note}</span>
+                      <Badge variant="outline" className={r.verdict === "removed_verified" ? "border-green-500/40 text-green-300" : r.verdict === "flags_set" ? "border-yellow-500/40 text-yellow-300" : "border-red-500/40 text-red-300"}>
+                        {r.verdict}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="rounded-md border border-zinc-500/20 bg-zinc-500/5 p-2">
+                <div className="flex justify-between text-zinc-400">
+                  <span>Totals — attempts {report.totals.attempts} · successes {report.totals.successes} · failures {report.totals.failures}</span>
+                </div>
+                {report.methods.map((m) => (
+                  <div key={m.methodId} className="mt-1 flex justify-between border-t border-zinc-800 pt-1 text-zinc-300">
+                    <span className="font-mono">{m.methodId}</span>
+                    <span>{m.successes}/{m.attempts} ({m.successRatio}%)</span>
+                  </div>
+                ))}
+                {report.methods.length === 0 && <div className="text-zinc-600">No method outcomes recorded yet — run the matrix or a bench session.</div>}
+              </div>
+              {report.calibration.map((c) => (
+                <div key={c.methodId} className="rounded-md border border-red-500/30 bg-red-500/5 p-2 text-zinc-300">
+                  <span className="font-mono text-red-300">{c.methodId}:</span> evidence weight {c.currentWeight} → {c.suggestedWeight} ({c.successes}/{c.attempts})
+                  <div className="text-zinc-500">{c.reason}</div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* ---------------- Scripts (A1-3.1 / A2-2.3) ---------------- */}
+        <TabsContent value="execution" className="space-y-4">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-sm"><FileCode2 className="h-4 w-4" /> Generated operator scripts</CardTitle>
+              <CardDescription>
+                Deterministic, humanized scripts from the plan and the FSM trace — for the Shell view or a
+                bench. Refusal plans generate a refusal script, never commands.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Button size="sm" variant="outline" disabled={!adbScript} onClick={() => copyText(scriptText)}>
+                  <ClipboardCopy className="h-4 w-4" /> Copy script
+                </Button>
+                {copyNote && <span className="text-[11px] text-green-400">{copyNote}</span>}
+                {adbScript && <Badge variant="outline">{adbScript.title}</Badge>}
+                {uiScript && <Badge variant="outline">{uiScript.title}</Badge>}
+              </div>
+              {scriptText ? (
+                <pre className="max-h-80 overflow-auto rounded-md border border-zinc-800 bg-zinc-950 p-2 font-mono text-[10px] leading-4 text-zinc-300">
+                  {scriptText}
+                </pre>
+              ) : (
+                <div className="text-[12px] text-zinc-500">
+                  Scan the device (ADB script) and/or simulate the FSM path (UI automation script) to generate output.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* ---------------- Update packs (CA3) ---------------- */}
+        <TabsContent value="updates" className="space-y-4">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-sm"><PackageCheck className="h-4 w-4" /> Update-pack pipeline</CardTitle>
+              <CardDescription>
+                The catalog, UI flows and patch lanes are DATA. Paste an update pack (exploits | ui_flows |
+                patches) to validate it against the zod schema — certainty-forbidden invariants included —
+                then merge → <code>npm run test:adaptive</code> → ship. CLI: <code>npm run update:validate -- path</code>;
+                refinement tool: <code>npm run refine:ui-flows -- journal.json</code>.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <textarea
+                value={packText}
+                onChange={(e) => setPackText(e.target.value)}
+                placeholder='{ "packVersion": 1, "kind": "exploits", "updatedAt": "2026-08-13", "entries": [ … ] }'
+                className="min-h-[120px] w-full rounded-md border border-zinc-700 bg-zinc-900 p-2 font-mono text-[11px]"
+              />
+              <Button size="sm" variant="outline" onClick={handleUpdatePackValidate}>Validate pack</Button>
+              {packResult && (
+                <pre className="max-h-60 overflow-auto rounded-md border border-zinc-800 bg-zinc-950 p-2 font-mono text-[10px] text-zinc-300">
+                  {packResult}
+                </pre>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         {/* ---------------- Journal ---------------- */}
         <TabsContent value="journal" className="space-y-4">
           <Card>
@@ -514,7 +937,7 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
               <CardTitle className="flex items-center gap-2 text-sm"><ScrollText className="h-4 w-4" /> Session journal</CardTitle>
               <CardDescription>
                 Success AND failure cases are logged — the catalog is calibrated from both.
-                JSON export is the feedback format for bench/QA analysis.
+                JSON export is the feedback format for bench/QA analysis and the refinement tool.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">

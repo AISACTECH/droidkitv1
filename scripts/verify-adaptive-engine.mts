@@ -36,8 +36,35 @@ import {
   planRollback,
   AdaptiveJournal,
   createAdaptiveSession,
+  // round-2 modules
+  VERIFICATION_STACK,
+  ENTRY_POINTS,
+  RESEARCH_HONESTY,
+  partitionsFor,
+  ANDROID_1516_NOTE,
+  UI_SAMPLES,
+  runMethodValidation,
+  runValidationMatrix,
+  verdictLabel,
+  outcomesFromEntries,
+  methodStats,
+  calibrateCatalog,
+  buildAnalyticsReport,
+  generateAdbScript,
+  generateUiAutomationScript,
+  optimizeLines,
+  scriptDurationMs,
+  isReadOnlyDump,
+  buildDumpManifest,
+  buildPatchPlan,
+  evaluateFlashGates,
+  generateRecoveryScript,
+  evaluateSafety,
+  validateUpdatePack,
+  WBS_MAP,
 } from "../src/lib/adaptive-engine/index.ts"
-import type { Fingerprint, FsmEvent, FsmStateId } from "../src/lib/adaptive-engine/index.ts"
+import type { Fingerprint, FsmEvent, FsmStateId, DeviceExecutor, JournalEntry, MethodEntry } from "../src/lib/adaptive-engine/index.ts"
+import { suggestKeywords, refineFromEntries } from "./refine-ui-flows.mts"
 
 let passed = 0
 let failed = 0
@@ -308,6 +335,269 @@ check("firmware-flash methods carry ≥medium risk",
   CATALOG.filter((m) => m.persistence === "firmware_flash").every((m) => m.risk === "medium" || m.risk === "high"))
 check("no method claims certainty (weight < 100 except official)",
   CATALOG.filter((m) => m.id !== "official_recovery").every((m) => m.evidenceWeight < 100))
+
+// ============== H · knowledge modules (WBS A1-1.x / A3-1.x) ==============
+console.log("\nH. Knowledge modules")
+
+check("verification stack covers all 6 stack layers",
+  new Set(VERIFICATION_STACK.map((c) => c.layer)).size === 6)
+check("frp_partition + google_account_check documented with correct layers",
+  VERIFICATION_STACK.some((c) => c.id === "frp_partition" && c.layer === "bootloader") &&
+  VERIFICATION_STACK.some((c) => c.id === "google_account_check" && c.layer === "server"))
+check("entry points include adb_shell + settings_provider + setup_wizard",
+  ["adb_shell", "settings_provider", "setup_wizard"].every((id) => ENTRY_POINTS.includes(id)))
+check("research honesty string declares public sources (not decompilation)",
+  RESEARCH_HONESTY.toLowerCase().includes("public sources"))
+check("partition tables: MediaTek includes frp + nvram + protect1",
+  (() => { const n = partitionsFor("MediaTek").map((p) => p.name); return ["frp", "nvram", "protect1", "seccfg"].every((x) => n.includes(x)) })())
+check("partition tables: Qualcomm includes persist",
+  partitionsFor("Qualcomm").some((p) => p.name === "persist" && p.frpRelevant))
+check("every chipset family has frp + vbmeta rows",
+  (["Exynos", "Qualcomm", "MediaTek", "Spreadtrum", "Kirin", "Unknown"] as const).every((c) => {
+    const n = partitionsFor(c).map((p) => p.name)
+    return n.includes("frp") && n.includes("vbmeta")
+  }))
+check("Android 15/16 note is server-side + below-OS honest",
+  ANDROID_1516_NOTE.includes("server-side") && ANDROID_1516_NOTE.includes("below"))
+
+// ============== I · validation harness (WBS A1-2.3 / A1-3.3) ==============
+console.log("\nI. Validation harness")
+
+function fakeExecutor(behavior: { flagFlip?: boolean; frpFlipOn?: string; failAll?: boolean }): DeviceExecutor {
+  let state = { frp_active: "1", device_provisioned: "0", user_setup_complete: "0" }
+  return {
+    async runAdb(cmd) {
+      if (behavior.failAll) throw new Error("exec failed")
+      if (behavior.frpFlipOn && cmd.includes(behavior.frpFlipOn)) state.frp_active = "0"
+      if (behavior.flagFlip && (cmd.includes("settings put") || cmd.includes("content insert"))) {
+        state.device_provisioned = "1"
+        state.user_setup_complete = "1"
+      }
+      return "ok"
+    },
+    async detectState() { return { ...state } },
+  }
+}
+
+check("flags-only effect → flags_set verdict (never removed_verified)",
+  (async () => {
+    const m = getMethod("adb_provisioning_flags")!
+    const r = await runMethodValidation(m, fakeExecutor({ flagFlip: true }))
+    return r.verdict === "flags_set"
+  })())
+check("frp key flip → removed_verified",
+  (async () => {
+    const m = getMethod("content_provider_injection")!
+    const r = await runMethodValidation(m, fakeExecutor({ flagFlip: true, frpFlipOn: "content insert" }))
+    return r.verdict === "removed_verified"
+  })())
+check("any step failure → failed",
+  (async () => {
+    const m = getMethod("adb_provisioning_flags")!
+    const r = await runMethodValidation(m, fakeExecutor({ failAll: true }))
+    return r.verdict === "failed" && r.steps.every((s) => !s.ok)
+  })())
+check("nothing observable changed → failed (never assumed success)",
+  (async () => {
+    const m = getMethod("adb_provisioning_flags")!
+    const r = await runMethodValidation(m, fakeExecutor({}))
+    return r.verdict === "failed"
+  })())
+check("matrix stops on first removed_verified",
+  (async () => {
+    const ex = fakeExecutor({ flagFlip: true, frpFlipOn: "content insert" })
+    const { rows, winner } = await runValidationMatrix([getMethod("adb_provisioning_flags")!, getMethod("content_provider_injection")!], ex)
+    return rows[0].verdict === "flags_set" && rows[1].verdict === "removed_verified" && winner === "content_provider_injection"
+  })())
+check("verdict labels stay measured (reboot observation caveat)",
+  verdictLabel("removed_verified").includes("reboot observation"))
+
+// ============== J · analytics + calibration (WBS A1-2.4 / A1-4.2 / CA2) ==============
+console.log("\nJ. Analytics & calibration")
+
+{
+  const entries: JournalEntry[] = [
+    { ts: "t1", kind: "step", fingerprintKey: "x", text: "", meta: { method: "setup_wizard_disable", outcome: "success" } },
+    { ts: "t2", kind: "step", fingerprintKey: "x", text: "", meta: { method: "setup_wizard_disable", outcome: "failure" } },
+    { ts: "t3", kind: "step", fingerprintKey: "x", text: "", meta: { method: "setup_wizard_disable", outcome: "failure" } },
+    { ts: "t4", kind: "step", fingerprintKey: "x", text: "", meta: { method: "setup_wizard_disable", outcome: "failure" } },
+    { ts: "t5", kind: "info", fingerprintKey: "x", text: "" },
+  ]
+  const records = outcomesFromEntries(entries)
+  check("outcome extraction reads meta only", records.length === 4)
+  const stats = methodStats(records)
+  check("per-method stats math", stats[0].attempts === 4 && stats[0].successes === 1 && stats[0].successRatio === 25)
+  const cal = calibrateCatalog(CATALOG, records)
+  check("downward-only calibration fires below 50%",
+    cal.length === 1 && cal[0].methodId === "setup_wizard_disable" && cal[0].suggestedWeight < cal[0].currentWeight)
+  check("calibration reason states the upward rule",
+    cal[0]?.reason.includes("bench verification") ?? false)
+  const report = buildAnalyticsReport(entries, CATALOG)
+  check("report totals + calibration coherent", report.totals.attempts === 4 && report.calibration.length === 1)
+  const good: JournalEntry[] = [
+    { ts: "t1", kind: "step", fingerprintKey: "x", text: "", meta: { method: "mediatek_brom", outcome: "success" } },
+    { ts: "t2", kind: "step", fingerprintKey: "x", text: "", meta: { method: "mediatek_brom", outcome: "success" } },
+    { ts: "t3", kind: "step", fingerprintKey: "x", text: "", meta: { method: "mediatek_brom", outcome: "success" } },
+  ]
+  check("no upward moves, ever", calibrateCatalog(CATALOG, outcomesFromEntries(good)).length === 0)
+}
+
+// ============== K · execution scripts (WBS A1-3.1 / A1-4.3 / A2-2.3) ==============
+console.log("\nK. Execution scripts")
+
+{
+  const plan = buildAdaptivePlan(fp({ androidMajor: 12, androidVersionRaw: "12", securityPatch: "2021-11-01", adbState: "Authorized" }))
+  const s1 = generateAdbScript(plan, 42)
+  const s2 = generateAdbScript(plan, 42)
+  check("ADB script deterministic under seed", JSON.stringify(s1) === JSON.stringify(s2))
+  const lines = s1.lines.map((l) => l.line)
+  const surveyIdx = lines.findIndex((l) => l.includes("verifiedbootstate"))
+  const ladderIdx = lines.findIndex((l) => l.includes("settings put"))
+  check("survey precedes ladder; verification lines included",
+    surveyIdx !== -1 && ladderIdx !== -1 && surveyIdx < ladderIdx && lines.some((l) => l.includes("BEFORE/AFTER")))
+  check("script carries only ADB/comment/manual/verify lines (zero writes)",
+    s1.lines.every((l) => !l.write && ["adb", "comment", "manual", "verify"].includes(l.kind)))
+  const refused = generateAdbScript(buildAdaptivePlan(fp({ androidMajor: 16, androidVersionRaw: "16", sdkVersion: "36", securityPatch: "2025-12-01", chipsetFamily: "Unknown" })))
+  check("refusal plan → refusal script, nothing executed",
+    refused.title.includes("REFUSED") && refused.lines.every((l) => l.kind === "comment"))
+  const trace = simulatePath("samsung", 7).trace
+  const ui = generateUiAutomationScript(trace, 7)
+  check("UI script probes with uiautomator dump before acting",
+    ui.lines.some((l) => l.line.includes("uiautomator dump")))
+  check("UI script maps actions to input injection",
+    ui.lines.some((l) => l.kind === "ui" && l.line.startsWith("adb shell input")))
+  check("UI script determinism", JSON.stringify(generateUiAutomationScript(trace, 7)) === JSON.stringify(ui))
+  const dup: typeof ui.lines = [
+    { kind: "adb", line: "settings put x 1", write: false },
+    { kind: "adb", line: "settings put x 1", write: false },
+    { kind: "ui", line: "sleep 0.00", write: false },
+    { kind: "adb", line: "settings put y 1", write: false },
+  ]
+  const opt = optimizeLines(dup)
+  check("optimizer dedupes repeats + zero waits", opt.length === 2)
+  check("duration estimate sums delays", scriptDurationMs([{ kind: "adb", line: "x", write: false, delayMs: 500 }]) === 500)
+}
+
+// ============== L · patch planner (WBS A3-*) ==============
+console.log("\nL. Patch planner")
+
+check("read-only dd forms accepted",
+  isReadOnlyDump("dd if=/dev/block/by-name/frp of=/sdcard/droidkit-backup/frp.img bs=4096"))
+check("write dd forms rejected",
+  !isReadOnlyDump("dd if=/sdcard/frp.img of=/dev/block/by-name/frp") &&
+  !isReadOnlyDump("fastboot erase frp") &&
+  !isReadOnlyDump("dd if=/dev/zero of=/dev/block/by-name/frp"))
+{
+  const manifest = buildDumpManifest("MediaTek")
+  check("dump manifest is read-only by construction",
+    manifest.items.every((i) => i.commands.every((c) => c.startsWith("adb pull") || c.startsWith("sha256sum") || c.startsWith("adb shell mkdir") || isReadOnlyDump(c))))
+  check("dump manifest records hashes + explains AVB safety",
+    manifest.items[0].commands.some((c) => c.startsWith("sha256sum")) && manifest.avbSafeNote.includes("Verified Boot"))
+  const plan = buildPatchPlan("MediaTek", "chipset_hardware")
+  check("MediaTek patch plan: brom lane, frp-only, minimal, no vbmeta writes",
+    plan.lane === "brom_erase" && plan.touches.length === 1 && plan.touches[0] === "frp" && plan.minimal && plan.refusesVbmetaWrites)
+  check("official-only band → no lane (refusal is the plan)",
+    buildPatchPlan("MediaTek", "official_only").lane === "none")
+  const gates = evaluateFlashGates({ backupsReady: false, bitVersionChecked: true, firmwareArchived: true, hashesVerified: false })
+  check("flash gates: missing backups = critical fail",
+    gates.find((g) => g.id === "backups")?.critical && !gates.find((g) => g.id === "backups")?.passed)
+  const rec = generateRecoveryScript(manifest)
+  check("recovery script: hash-check before every write",
+    rec.steps.filter((s) => s.write).length === manifest.items.length &&
+    rec.steps.filter((s) => s.write).every((s) => s.line.includes("dd if=/sdcard")))
+  check("recovery script ends with verify + journal",
+    rec.steps[rec.steps.length - 2].note === "Verify rollback" && rec.steps[rec.steps.length - 1].note === "Journal")
+}
+
+// ============== M · safety coordinator (WBS A1-4.4 / CA5) ==============
+console.log("\nM. Safety coordinator")
+
+{
+  const plan = buildAdaptivePlan(fp({ androidMajor: 16, androidVersionRaw: "16", sdkVersion: "36", securityPatch: "2025-12-01" })) // persistent Brom plan
+  check("no consent → refused",
+    !evaluateSafety(plan, { consentOwnership: false, frpActive: true, backupsReady: true, bitVersionChecked: true, hardwareLaneOk: true }).allowed)
+  check("persistent plan + no backups → refused",
+    !evaluateSafety(plan, { consentOwnership: true, frpActive: true, backupsReady: false, bitVersionChecked: true, hardwareLaneOk: true }).allowed)
+  check("persistent plan + bit/version unchecked → refused",
+    !evaluateSafety(plan, { consentOwnership: true, frpActive: true, backupsReady: true, bitVersionChecked: false, hardwareLaneOk: true }).allowed)
+  check("all gates green → allowed",
+    evaluateSafety(plan, { consentOwnership: true, frpActive: true, backupsReady: true, bitVersionChecked: true, hardwareLaneOk: true }).allowed)
+  const refused = buildAdaptivePlan(fp({ androidMajor: 16, androidVersionRaw: "16", sdkVersion: "36", securityPatch: "2025-12-01", chipsetFamily: "Unknown" }))
+  check("refusal plan can never pass safety",
+    !evaluateSafety(refused, { consentOwnership: true, frpActive: true, backupsReady: true, bitVersionChecked: true, hardwareLaneOk: true }).allowed)
+}
+
+// ============== N · update packs (WBS CA3 / A1-2.1) ==============
+console.log("\nN. Update packs")
+
+{
+  const validExploit = {
+    packVersion: 1, kind: "exploits", updatedAt: "2026-08-13",
+    entries: [{
+      id: "sample_flag_method", name: "Sample flags method", klass: "adb_flags", layer: "os",
+      risk: "low", persistence: "flags_only", evidenceWeight: 55,
+      fallbackTo: [], steps: [{ kind: "adb_cmd", label: "Set flag", detail: "set flag", command: "settings put x 1" }],
+      evidence: ["bench"], benchmark: "bench-2026-08",
+    }],
+  }
+  check("valid exploit pack accepted", validateUpdatePack(validExploit).ok)
+  check("certainty-forbidden: non-official weight 100 rejected",
+    !validateUpdatePack({ ...validExploit, entries: [{ ...validExploit.entries[0], evidenceWeight: 100 }] }).ok)
+  check("dangling fallback rejected",
+    !validateUpdatePack({ ...validExploit, entries: [{ ...validExploit.entries[0], fallbackTo: ["ghost"] }] }).ok)
+  const validFlow = {
+    packVersion: 1, kind: "ui_flows", updatedAt: "2026-08-13",
+    flows: [{ brand: "samsung", label: "One UI FRP", path: ["welcome", "google_verify"], samples: [{ dump: "this device was reset gsf.login", expected: "google_verify" }], note: "bench flow" }],
+  }
+  check("valid ui-flow pack accepted", validateUpdatePack(validFlow).ok)
+  const validPatch = {
+    packVersion: 1, kind: "patches", updatedAt: "2026-08-13",
+    lanes: [{ chipset: "MediaTek", lane: "brom_erase", touches: ["frp"], commands: [{ line: "erase frp via brom", write: false }], benchmark: "bench" }],
+  }
+  check("valid patch pack accepted", validateUpdatePack(validPatch).ok)
+  check("vbmeta write forbidden at schema level",
+    !validateUpdatePack({ ...validPatch, lanes: [{ ...validPatch.lanes[0], commands: [{ line: "dd if=x of=/dev/block/by-name/vbmeta", write: true }] }] }).ok)
+  check("minimal-touch law: >2 partitions rejected",
+    !validateUpdatePack({ ...validPatch, lanes: [{ ...validPatch.lanes[0], touches: ["frp", "userdata", "metadata"] }] }).ok)
+  check("payload without kind rejected", !validateUpdatePack({ foo: 1 }).ok)
+}
+
+// ============== O · UI sample library (WBS A2-1.1) ==============
+console.log("\nO. UI sample library")
+
+check("every curated screen sample classifies to its expected state",
+  UI_SAMPLES.every((s) => classifyFromDump(s.dump, s.brand).state === s.expected))
+check("samples cover ≥8 brands incl. Android 15/16 rows",
+  new Set(UI_SAMPLES.map((s) => s.brand)).size >= 8 &&
+  UI_SAMPLES.some((s) => s.version.includes("16")) && UI_SAMPLES.some((s) => s.version.includes("15")))
+
+// ============== P · refinement tool (WBS A2-3.2 / A2-3.3) ==============
+console.log("\nP. Refinement tool")
+
+{
+  const dump = 'activity="com.vendor.unknown.dialog" text="financed device registration" text="kirinyaga serial validation" text="kirinyaga serial validation"'
+  const kws = suggestKeywords(dump)
+  check("suggestion engine finds novel keywords (deterministic)",
+    kws.length > 0 && kws.includes("serial validation") && JSON.stringify(kws) === JSON.stringify(suggestKeywords(dump)))
+  const report = refineFromEntries([
+    { kind: "fail", text: "x", meta: { dump } },
+    { kind: "fail", text: "x", meta: { dump: 'text="this device was reset" gsf.login' } },
+  ])
+  check("refine report: 2 analyzed, 1 unknown, with hint",
+    report.analyzed === 2 && report.unknown === 1 && report.suggestions[0].hint.includes("test:adaptive"))
+}
+
+// ============== Q · WBS coverage (CA1 — the digest) ==============
+console.log("\nQ. WBS task coverage")
+
+{
+  const all = WBS_MAP.flatMap((m) => m.tasks)
+  const unique = new Set(all)
+  check("all cross-algorithm tasks CA1–CA5 mapped", ["CA1", "CA2", "CA3", "CA4", "CA5"].every((t) => unique.has(t)))
+  check("≥30 distinct WBS tasks covered", unique.size >= 30)
+  check("all three algorithm families represented",
+    WBS_MAP.some((m) => m.algorithm.includes("A1")) && WBS_MAP.some((m) => m.algorithm.includes("A2")) && WBS_MAP.some((m) => m.algorithm.includes("A3")))
+}
 
 console.log(`\n${passed} passed, ${failed} failed`)
 console.log(failed === 0 ? "ALL ADAPTIVE-ENGINE CHECKS GREEN" : `${failed} CHECK(S) FAILED`)

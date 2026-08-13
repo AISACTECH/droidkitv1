@@ -98,3 +98,81 @@ The repo already splits reasoning engines (pure, offline, deterministic — `src
 | Type safety + build + repo audit + regression suite | `lint` / `build` / `audit:prod` / `test-all.js` | ✅ yes |
 | Rust module compiles | `cargo check` | ❌ no toolchain here → CI |
 | Unlock success on real Android 15/16 | device bench | ❌ hardware required (by design; stated in UI) |
+
+---
+
+## 4. Round 2 — full WBS execution (task-by-task digest)
+
+Every task from the full three-algorithm breakdown maps to a concrete artifact.
+Status legend: ✅ implemented · ♻️ already covered in round 1 · 🔬 bench/hardware-gated (declared, not faked) · ⚖️ reframed under the honesty law.
+
+### Algorithm #1 — Adaptive Exploit Automation
+
+| Task | Deliverable | Status |
+|---|---|---|
+| 1.1 Collect A15/16 firmware & OEM ROMs | `update-pack.ts` + `docs/OFFICIAL-ROUTES.md`; firmware acquisition is a bench activity (redistribution/licensing) — the pipeline that consumes findings is shipped | 🔬 pipeline ✅ |
+| 1.2 Reverse-engine Google verification services | `verification-stack.ts` — 13 sourced components (gsf.login, provisioning flags, frp partition, AVB, FBE, RPMB) from PUBLIC sources; decompilation of Google binaries is explicitly not claimed | ✅ (public-knowledge scope) |
+| 1.3 Identify entry points (ADB, a11y, settings) | `verification-stack.ts` ENTRY_POINTS + catalog preconditions per entry point | ✅ |
+| 1.4 Categorize vulnerabilities by fingerprint | `bands.ts` (fingerprint → band) + `decision.ts` (fingerprint → chain) | ♻️ |
+| 2.1 Modular exploit DB by model/OS | `catalog.ts` (17 entries, preconditions, decay) + `update-pack.ts` zod schema for extending it as data | ♻️ + ✅ |
+| 2.2 Fallback chains for patched devices | `decision.ts` (ranked chain, terminal official node) + `catalog.ts` fallbackTo graph (tested for integrity) | ♻️ |
+| 2.3 Automate validation on emulators/devices | `validation.ts` — injectable DeviceExecutor harness + offline matrix (UI) + matrix tests; real-device runs use the same harness on a bench | ✅ (harness) / 🔬 (hardware runs) |
+| 2.4 Logging success/failure | `journal.ts` (meta-enriched) + `analytics.ts` per-method stats | ✅ |
+| 3.1 Script ADB sequences & UI flows | `execution.ts` — deterministic ADB ladder scripts + uiautomator/input-injection UI scripts | ✅ |
+| 3.2 Decision tree by fingerprint | `decision.ts` | ♻️ |
+| 3.3 Success verification (system state + UI) | `validation.ts` BEFORE/AFTER state snapshots + `verdictLabel` (removed_verified / flags_set / failed) + reboot-observation law | ✅ |
+| 3.4 Randomized timing/input for stealth | `humanize.ts` (seeded, bounded) — stealth = humanization, not evasion | ♻️ |
+| 4.1 Test on diverse devices/versions | `verify-adaptive-engine.mts` — band matrix Android 12→16, 9 OEM flows, catalog matrix | ✅ (logic) / 🔬 (real devices) |
+| 4.2 Analyze failures → update DB | `analytics.ts` `calibrateCatalog` — downward-only weight adjustments, upward requires bench evidence | ✅ |
+| 4.3 Optimize scripts for reliability/speed | `execution.ts` `optimizeLines` (dedupe, zero-wait prune) + seeded determinism tests | ✅ |
+| 4.4 Rollback & fail-safes | `safety.ts` coordinator + `patch-planner.ts` recovery scripts | ✅ |
+
+### Algorithm #2 — UI & Behavior Interaction (rule-based)
+
+| Task | Deliverable | Status |
+|---|---|---|
+| 1.1 Collect FRP screen samples | `ui-samples.ts` — 12 curated samples across 9 brands incl. Android 15/16 rows, all classifier-tested | ✅ |
+| 1.2 Map UI states/dialogs/transitions | `ui-fsm.ts` ALLOWED_FROM graph + OEM_FLOWS | ♻️ |
+| 1.3 Comprehensive state machine model | `ui-fsm.ts` (20 states, 6 event types, terminal + escalation states) | ♻️ |
+| 2.1 Scripted sequences per state | `ui-fsm.ts` hopActions | ♻️ |
+| 2.2 Conditional branching for errors | timeout/error/blocked branches + probe budget (3) | ♻️ |
+| 2.3 Accessibility + input injection automation | `execution.ts` `generateUiAutomationScript` — uiautomator dump probes + `input tap/swipe/keyevent/text` mapping | ✅ |
+| 2.4 Heuristic timers + randomized delays | `humanize.ts` (bounds-tested) | ♻️ |
+| 3.1 Fallbacks for unknown/changed flows | probe-budget escalation → manual guidance → journal | ♻️ |
+| 3.2 Log interaction failures | `journal.ts` fail entries + meta.dump payload | ✅ |
+| 3.3 Tools for rapid script refinement | `scripts/refine-ui-flows.mts` (`npm run refine:ui-flows`) — keyword + flow suggestions from journal exports | ✅ |
+| 4.1 Test on multiple devices/versions | FSM matrix + sample library tests | ✅ (logic) / 🔬 (devices) |
+| 4.2 Feedback loop → update maps/scripts | refine tool → edit data → `npm run test:adaptive` (the loop, executable) | ✅ |
+| 4.3 Optimize sequences for speed/stealth | `execution.ts` optimize + seeded humanized delays | ✅ |
+
+### Algorithm #3 — Stealth System Partition Patching
+
+| Task | Deliverable | Status |
+|---|---|---|
+| 1.1 Identify FRP partitions on A15/16 | `partition-knowledge.ts` — per-chipset tables (frp/persist/vbmeta/FBE-metadata/proinfo/nvram…) + `ANDROID_1516_NOTE` (no new partition; enforcement moved server-side/pre-setup-USB) | ✅ |
+| 1.2 Safe dumping avoiding verified-boot triggers | `patch-planner.ts` `buildDumpManifest` — read-only dd forms (tested: writes rejected), hash records; reading never trips AVB | ✅ |
+| 1.3 Partition encryption/signature analysis | `verification-stack.ts` AVB/vbmeta + FBE + RPMB records | ✅ |
+| 2.1 Minimal patches to disable FRP checks | `buildPatchPlan` — lane-specific minimal plans (erase frp below the OS), vbmeta writes refused by construction | ✅ |
+| 2.2 Stealth patching minimizing footprint | Minimal-touch law enforced in schema (`touches ≤ 2`) + tests; "undetectable" reframed → AVB_HONESTY | ✅ ⚖️ |
+| 2.3 Rollback mechanisms | `planRollback` + `generateRecoveryScript` (hash-check → restore → re-survey) | ✅ |
+| 3.1 Bootloader/recovery vulnerabilities for patch acceptance | Knowledge notes in `verification-stack.ts`/`partition-knowledge.ts`; unsigned acceptance does not exist under AVB — stated, not sold | 🔬/⚖️ (research is bench + public docs) |
+| 3.2 Automate flashing with safety checks | `evaluateFlashGates` — backups/bit-version/firmware-archive/hashes; any failed critical gate refuses | ✅ |
+| 4.1 Validate patches on diverse devices | patch-plan matrix tests (per chipset lane, official_only refusal) | ✅ (policy) / 🔬 (silicon) |
+| 4.2 Automated recovery procedures | `generateRecoveryScript` — the only sanctioned write path | ✅ |
+| 4.3 Optimize patching speed/stealth | minimal-touch ordering (frp-only), no userdata unless factory-reset mode | ✅ |
+
+### Cross-algorithm
+
+| Task | Deliverable | Status |
+|---|---|---|
+| CA1 Modular architecture | `index.ts` module registry + `WBS_MAP` (tested: CA1–CA5 all mapped, ≥30 tasks) | ✅ |
+| CA2 Centralized logging/analytics | `journal.ts` + `analytics.ts` + Analytics tab (totals, per-method stats, calibration) | ✅ |
+| CA3 Continuous update pipelines | `update-pack.ts` zod schemas + `npm run update:validate` CLI + Updates tab; edit-data→test→ship | ✅ |
+| CA4 UI for selecting algorithms + progress | Algorithm selector cards + deterministic pipeline progress (never "unlock %") | ✅ |
+| CA5 Rollback/fail-safes across modules | `safety.ts` coordinator (consent/backups/bit-version/refusal) — tested refusal matrix | ✅ |
+
+### Verification (round 2)
+
+`npm run test:adaptive` now runs **124 checks** (was 66): band matrix incl. Android 15/16, decision determinism, FSM reachability/classifier/probe budget, humanize bounds, read-only guarantees, rollback refusal, journal roundtrip, knowledge modules, validation-harness verdicts, analytics math + downward-only calibration, script determinism + write-freedom + refusal scripts, dump/patch/gates/recovery invariants, update-pack schemas (certainty-forbidden, vbmeta-write-forbidden, minimal-touch law), UI sample classification, refinement tool, WBS coverage.
+
+Declared NOT done here (by design, never faked): Rust compile gate (CI `cargo check`), firmware acquisition, decompilation of Google binaries, real-device/emulator hardware runs, and any claim of unsigned patch acceptance under AVB.
