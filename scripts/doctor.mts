@@ -74,6 +74,14 @@ else {
   fixes.push("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh    # then: npm run tauri:dev")
 }
 
+// ---- 5b. lockfile truth (the publish-matrix bun detect) ---------------
+if (existsSync("bun.lock") || existsSync("bun.lockb")) {
+  log("fail", "Lockfile", "bun.lock present — tauri-action will run bun, not npm, and the publish matrix will go red")
+  fixes.push("rm -f bun.lock bun.lockb     # npm ci is the one truth (package-lock.json)")
+} else {
+  log("ok", "Lockfile", "no bun.lock — tauri-action will pick npm")
+}
+
 // ---- 6. Android tools (device features) ------------------------------
 const adb = sh("adb version")
 if (adb) log("ok", "ADB", adb.split("\n")[0])

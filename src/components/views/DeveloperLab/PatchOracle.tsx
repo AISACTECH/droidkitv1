@@ -99,6 +99,8 @@ export function PatchOracle({ profile }: PatchOracleProps) {
       calibration: cal,
       forecasts: FORECASTS,
       bench_notes: notes,
+      // Same notes, ready for `npm run bench:ingest` (calibration-guide sentences parse).
+      ingest_hint: "npm run bench:ingest -- <this-file.json>  ·  officialFlipAllowed is always false",
     }
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
     const url = URL.createObjectURL(blob)

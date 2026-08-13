@@ -41,7 +41,10 @@ out
 *.sw?
 Thumbs.db
 
-# Bun
+# Bun — npm is the one lockfile truth (package-lock.json).
+# A committed bun.lock makes tauri-action run `bun tauri build` and
+# that is how the 4-runner publish matrix went red.
+bun.lock
 bun.lockb
 
 # Coverage

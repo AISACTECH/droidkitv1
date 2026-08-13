@@ -198,6 +198,38 @@ if (viteConf.includes('manualChunks') && viteConf.includes('vendor-react') && vi
   log('Speed efficiency: Vite manualChunks code-split vendor-react, views, mocks — reduces load', 'pass');
 } else log('Vite manualChunks missing', 'warn');
 
+// 4b. Three-gate solutions (installers / CI / bench) — no Rust, no hardware
+console.log("\n--- 4b. Three-gate solutions ---");
+if (!fs.existsSync(path.join(root, 'bun.lock')) && !fs.existsSync(path.join(root, 'bun.lockb'))) {
+  log('No bun.lock — tauri-action will not pick bun over npm', 'pass');
+} else log('bun.lock present — publish matrix will run bun tauri build', 'fail');
+
+const stagedPublish = fs.readFileSync(path.join(root, 'docs/workflows-manual/publish.yml'), 'utf8');
+if (stagedPublish.includes('tauriScript: npm run tauri') && !stagedPublish.includes('setup-bun')) {
+  log('Staged publish.yml forces npm tauriScript (no setup-bun)', 'pass');
+} else log('Staged publish.yml missing npm tauriScript', 'fail');
+
+if (fs.existsSync(path.join(root, 'docs/workflows-manual/ci.yml'))) {
+  log('Staged ci.yml ready to paste into .github/workflows/', 'pass');
+} else log('Staged ci.yml missing', 'fail');
+
+if (fs.existsSync(path.join(root, 'src/lib/bench/index.ts')) && fs.existsSync(path.join(root, 'scripts/verify-bench.mts'))) {
+  log('Bench desk module + verify-bench gate present', 'pass');
+} else log('Bench desk missing', 'fail');
+
+const changelog = fs.readFileSync(path.join(root, 'CHANGELOG.md'), 'utf8');
+const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
+if (!changelog.includes('<<<<<<<') && !readme.includes('<<<<<<<')) {
+  log('README + CHANGELOG have no leftover merge-conflict markers', 'pass');
+} else log('Merge-conflict markers left in README or CHANGELOG', 'fail');
+
+{
+  const bundle = JSON.parse(fs.readFileSync(path.join(root, 'src-tauri/tauri.conf.json'), 'utf8')).bundle;
+  if (bundle && typeof bundle.publisher === 'string' && !(bundle.windows && 'publisher' in bundle.windows)) {
+    log('tauri.conf.json publisher at bundle root (schema-valid)', 'pass');
+  } else log('tauri.conf.json publisher misplaced under bundle.windows', 'fail');
+}
+
 // 5. Windows Support
 console.log("\n--- 5. Windows Support ---");
 const tauriConf = JSON.parse(fs.readFileSync(path.join(root, 'src-tauri/tauri.conf.json'), 'utf8'));

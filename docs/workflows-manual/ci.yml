@@ -7,6 +7,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 # Fast, cheap gates that turn every push/PR green-or-red in minutes,
 # BEFORE the heavyweight publish matrix ever runs. This is the
 # "installs-from-git-and-builds-without-friction" guarantee: nothing
@@ -16,20 +20,31 @@ jobs:
   frontend-gates:
     name: Frontend gates (doctor, typecheck, build, tests, benchmarks)
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: npm
           cache-dependency-path: package-lock.json
+
+      - name: refuse bun.lock (tauri-action lockfile detect)
+        run: |
+          if [ -f bun.lock ] || [ -f bun.lockb ]; then
+            echo "::error::bun.lock present — publish will pick bun over npm."
+            exit 1
+          fi
 
       - name: install frontend dependencies (frozen lockfile = one truth)
         run: npm ci
 
       - name: environment doctor (launch/build diagnosis)
         run: npm run doctor
+
+      - name: release preflight (schema + conflict markers)
+        run: npm run release:prepare
 
       - name: typecheck
         run: npm run lint
@@ -40,11 +55,14 @@ jobs:
       - name: regression suite (61+ checks)
         run: node scripts/test-all.js
 
-      - name: adaptive engine + research layer gates
-        run: npm run test:adaptive && npm run test:research
+      - name: adaptive engine + research layer + bench desk
+        run: npm run test:adaptive && npm run test:research && npm run test:bench
 
       - name: rescue lab + NCK + core lib gates
         run: npm run test:lab && npm run test:nck && npm run test:rescue && npm run test:core
+
+      - name: brand + protocol matrix gates
+        run: npm run test:brands && npm run test:matrix
 
       - name: test-generated benchmarks (documents stay honest)
         run: npm run benchmark:frp && npm run benchmark:sheet
@@ -55,6 +73,7 @@ jobs:
   rust-compile-check:
     name: Rust compile check (${{ matrix.os }}) — the historical blind spot
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -80,7 +99,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: npm
           cache-dependency-path: package-lock.json
 
       - name: build frontend (dist/ feeds tauri generate_context!)

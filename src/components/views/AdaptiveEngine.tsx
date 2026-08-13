@@ -54,12 +54,14 @@ import {
   type ValidationMatrixRow,
 } from "@/lib/adaptive-engine"
 import { RealityCheckPanel } from "@/components/views/FrpRemoval/RealityCheck"
+import { BenchDesk } from "@/components/views/AdaptiveEngine/BenchDesk"
 import { type DeviceInfo } from "@/tauri-commands"
 import { createLogger } from "@/lib/logger"
 import {
   ShieldCheck, Cpu, GitBranch, Workflow, Play, RefreshCw,
   ScrollText, AlertTriangle, CheckCircle2, Timer, FileJson, ScanSearch,
   BarChart3, FileCode2, HardDrive, PackageCheck, ClipboardCopy, Layers, Gauge,
+  FlaskConical,
 } from "lucide-react"
 
 const logger = createLogger("AdaptiveEngine")
@@ -346,6 +348,7 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
     { id: "execution", algo: "all" as AlgoId },
     { id: "updates", algo: "all" as AlgoId },
     { id: "research", algo: "all" as AlgoId },
+    { id: "bench", algo: "all" as AlgoId },
     { id: "journal", algo: "all" as AlgoId },
   ]
   const visibleTabs = tabs.filter((t) => activeAlgo === "all" || t.algo === activeAlgo)
@@ -532,6 +535,7 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
               execution: <FileCode2 className="mr-1 h-3.5 w-3.5" />,
               updates: <PackageCheck className="mr-1 h-3.5 w-3.5" />,
               research: <BarChart3 className="mr-1 h-3.5 w-3.5" />,
+              bench: <FlaskConical className="mr-1 h-3.5 w-3.5" />,
               journal: <ScrollText className="mr-1 h-3.5 w-3.5" />,
             }
             return (
@@ -1084,6 +1088,11 @@ export function AdaptiveEngine({ selectedDevice }: AdaptiveEngineProps) {
               </Card>
             </>
           )}
+        </TabsContent>
+
+        {/* ---------------- Bench desk (software half of hardware validation) ---------------- */}
+        <TabsContent value="bench" className="space-y-4">
+          <BenchDesk />
         </TabsContent>
 
         {/* ---------------- Journal ---------------- */}

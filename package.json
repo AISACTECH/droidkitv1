@@ -35,6 +35,11 @@
   "packageManager": "npm@10.9.0",
   "scripts": {
     "doctor": "node --experimental-strip-types scripts/doctor.mts",
+    "ci": "node --experimental-strip-types scripts/ci-local.mts",
+    "ci:fast": "node --experimental-strip-types scripts/ci-local.mts --fast",
+    "test:bench": "node --experimental-strip-types scripts/verify-bench.mts",
+    "release:prepare": "node --experimental-strip-types scripts/prepare-release.mts",
+    "bench:ingest": "node --experimental-strip-types scripts/ingest-bench-log.mts",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",

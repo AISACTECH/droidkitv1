@@ -109,6 +109,7 @@ export const WBS_MAP: { module: string; algorithm: string; tasks: string[] }[] =
   { module: "update-pack.ts", algorithm: "CA", tasks: ["CA3", "A1-2.1"] },
   { module: "AdaptiveEngine.tsx (view)", algorithm: "CA", tasks: ["CA4"] },
   { module: "parallel.ts (round-3 research layer)", algorithm: "ALL", tasks: ["R3-patches", "R3-hide-seek", "R3-parallel", "R3-lab-ledger"] },
+  { module: "bench/ (isolated hardware-validation desk)", algorithm: "CA+F18", tasks: ["F18-schema", "F18-virtual-donors", "F18-replay", "F18-ingest", "F18-promotion"] },
 ];
 
 /**
