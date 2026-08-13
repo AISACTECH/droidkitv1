@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-13T09:44:30.291Z",
-  "inputHash": "445a5e39a305368c",
+  "generatedAt": "2026-08-13T09:57:36.539Z",
+  "inputHash": "026c2d236d0b8819",
   "weights": {
     "raw": 0.4,
     "decision": 0.15,
@@ -359,6 +359,16 @@
       "openness": 5
     },
     {
+      "id": "lockwiper",
+      "name": "iMyFone LockWiper (Android)",
+      "klasse": "commercial",
+      "decisionCoverage": 65,
+      "safety": 45,
+      "honesty": 35,
+      "access": 30,
+      "openness": 5
+    },
+    {
       "id": "ours",
       "name": "DroidKit v1 (AISACTECH — this repo)",
       "klasse": "free",
@@ -379,6 +389,7 @@
       "tsm": 75,
       "unlockgo": 70,
       "griffin": 65,
+      "lockwiper": 70,
       "ours": 88
     },
     {
@@ -390,6 +401,7 @@
       "tsm": 55,
       "unlockgo": 40,
       "griffin": 50,
+      "lockwiper": 40,
       "ours": 70
     },
     {
@@ -401,6 +413,7 @@
       "tsm": 60,
       "unlockgo": 64,
       "griffin": 90,
+      "lockwiper": 49,
       "ours": 80
     },
     {
@@ -412,6 +425,7 @@
       "tsm": 33.75,
       "unlockgo": 62.400000000000006,
       "griffin": 90,
+      "lockwiper": 45.5,
       "ours": 70
     },
     {
@@ -423,6 +437,7 @@
       "tsm": 33.75,
       "unlockgo": 52,
       "griffin": 90,
+      "lockwiper": 38.5,
       "ours": 65
     },
     {
@@ -434,6 +449,7 @@
       "tsm": 0,
       "unlockgo": 0,
       "griffin": 0,
+      "lockwiper": 0,
       "ours": 0
     },
     {
@@ -445,6 +461,7 @@
       "tsm": 60,
       "unlockgo": 64,
       "griffin": 0,
+      "lockwiper": 49,
       "ours": 80
     },
     {
@@ -456,6 +473,7 @@
       "tsm": 60,
       "unlockgo": 44,
       "griffin": 0,
+      "lockwiper": 31.499999999999996,
       "ours": 75
     },
     {
@@ -467,6 +485,7 @@
       "tsm": 80,
       "unlockgo": 44,
       "griffin": 0,
+      "lockwiper": 31.499999999999996,
       "ours": 75
     },
     {
@@ -478,6 +497,7 @@
       "tsm": 60,
       "unlockgo": 64,
       "griffin": 0,
+      "lockwiper": 49,
       "ours": 80
     },
     {
@@ -489,6 +509,7 @@
       "tsm": 85,
       "unlockgo": 52,
       "griffin": 0,
+      "lockwiper": 38.5,
       "ours": 65
     },
     {
@@ -500,6 +521,7 @@
       "tsm": 85,
       "unlockgo": 64,
       "griffin": 0,
+      "lockwiper": 49,
       "ours": 80
     }
   ],
@@ -548,6 +570,12 @@
         "raw": 28.3
       },
       {
+        "tool": "lockwiper",
+        "name": "iMyFone LockWiper (Android)",
+        "composite": 41.4,
+        "raw": 41
+      },
+      {
         "tool": "griffin",
         "name": "Griffin/TFM-class (community)",
         "composite": 33.3,
@@ -584,6 +612,11 @@
         "tool": "unlockgo",
         "name": "iToolab UnlockGo",
         "raw": 51.7
+      },
+      {
+        "tool": "lockwiper",
+        "name": "iMyFone LockWiper (Android)",
+        "raw": 41
       },
       {
         "tool": "griffin",
@@ -635,6 +668,11 @@
         "composite": 35.9
       },
       {
+        "id": "lockwiper",
+        "raw": 37.5,
+        "composite": 40
+      },
+      {
         "id": "ours",
         "raw": 64.3,
         "composite": 85.7
@@ -675,6 +713,11 @@
         "id": "griffin",
         "raw": 23,
         "composite": 29.7
+      },
+      {
+        "id": "lockwiper",
+        "raw": 45.8,
+        "composite": 43.3
       },
       {
         "id": "ours",
