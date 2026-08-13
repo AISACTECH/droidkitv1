@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
   "generatedAt": "2026-08-13T11:30:05.371Z",
   "inputHash": "5d1a804002b6cb17",
+=======
+  "generatedAt": "2026-08-13T10:32:15.715Z",
+  "inputHash": "35016ab91239294c",
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
   "frpInputHash": "026c2d236d0b8819",
   "frpComposite": [
     {
@@ -60,11 +65,18 @@
   ],
   "network": {
     "weights": {
+<<<<<<< HEAD
       "modem": 0.3,
       "phone": 0.2,
       "mifi": 0.2,
       "router": 0.17,
       "wifi": 0.08,
+=======
+      "modem": 0.35,
+      "mifi": 0.3,
+      "router": 0.2,
+      "wifi": 0.1,
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
       "honesty": 0.05
     },
     "corpus": [
@@ -109,6 +121,7 @@
         "ours": 40
       },
       {
+<<<<<<< HEAD
         "id": "huawei-y5-legacy",
         "category": "phone",
         "ours": 100
@@ -127,27 +140,45 @@
         "id": "tp-link-mr6400",
         "category": "router",
         "ours": 85
+=======
+        "id": "tp-link-mr6400",
+        "category": "router",
+        "ours": 55
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
       },
       {
         "id": "tenda-f300",
         "category": "router",
+<<<<<<< HEAD
         "ours": 85
+=======
+        "ours": 50
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
       },
       {
         "id": "huawei-b315",
         "category": "router",
+<<<<<<< HEAD
         "ours": 80
+=======
+        "ours": 45
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
       },
       {
         "id": "own-wifi-recovery",
         "category": "wifi",
+<<<<<<< HEAD
         "ours": 70
+=======
+        "ours": 30
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
       }
     ],
     "tools": [
       {
         "id": "dcunlocker",
         "name": "DC-Unlocker",
+<<<<<<< HEAD
         "composite": 71.1,
         "honesty": 40
       },
@@ -161,17 +192,31 @@
         "id": "z3x",
         "name": "Z3X / SigmaKey (box)",
         "composite": 64.9,
+=======
+        "composite": 69.5,
+        "honesty": 40
+      },
+      {
+        "id": "z3x",
+        "name": "Z3X / SigmaKey (box)",
+        "composite": 62.8,
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
         "honesty": 30
       },
       {
         "id": "chimera",
         "name": "ChimeraTool",
+<<<<<<< HEAD
         "composite": 62,
+=======
+        "composite": 59,
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
         "honesty": 35
       },
       {
         "id": "nckdongle",
         "name": "NCK Dongle / Octopus",
+<<<<<<< HEAD
         "composite": 59.5,
         "honesty": 30
       },
@@ -179,6 +224,21 @@
         "id": "furiousgold",
         "name": "FuriousGold",
         "composite": 51.7,
+=======
+        "composite": 57,
+        "honesty": 30
+      },
+      {
+        "id": "ours",
+        "name": "DroidKit v1 (AISACTECH — this repo)",
+        "composite": 55.1,
+        "honesty": 100
+      },
+      {
+        "id": "furiousgold",
+        "name": "FuriousGold",
+        "composite": 49.5,
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
         "honesty": 30
       },
       {
@@ -190,13 +250,21 @@
       {
         "id": "openwrt",
         "name": "OpenWrt (open firmware)",
+<<<<<<< HEAD
         "composite": 20.5,
+=======
+        "composite": 23.5,
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
         "honesty": 90
       },
       {
         "id": "wifi-apps",
         "name": "\"WiFi password\" app class (WPSApp etc.)",
+<<<<<<< HEAD
         "composite": 5.6,
+=======
+        "composite": 6.8,
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
         "honesty": 5
       }
     ]
@@ -215,41 +283,71 @@
       "name": "DroidKit v1 (AISACTECH — this repo)",
       "frp": 87.6,
       "frpIsProxy": false,
+<<<<<<< HEAD
       "net": 65.6,
       "financeHonesty": 100,
       "combined": 78.9
+=======
+      "net": 55.1,
+      "financeHonesty": 100,
+      "combined": 74.2
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
     },
     {
       "name": "Z3X / SigmaKey (box)",
       "frp": 45,
       "frpIsProxy": true,
+<<<<<<< HEAD
       "net": 64.9,
       "financeHonesty": 0,
       "combined": 49.5
+=======
+      "net": 62.8,
+      "financeHonesty": 0,
+      "combined": 48.5
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
     },
     {
       "name": "ChimeraTool",
       "frp": 45,
       "frpIsProxy": true,
+<<<<<<< HEAD
       "net": 62,
       "financeHonesty": 0,
       "combined": 48.2
+=======
+      "net": 59,
+      "financeHonesty": 0,
+      "combined": 46.8
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
     },
     {
       "name": "NCK Dongle / Octopus",
       "frp": 45,
       "frpIsProxy": true,
+<<<<<<< HEAD
       "net": 59.5,
       "financeHonesty": 0,
       "combined": 47
+=======
+      "net": 57,
+      "financeHonesty": 0,
+      "combined": 45.9
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
     },
     {
       "name": "FuriousGold",
       "frp": 45,
       "frpIsProxy": true,
+<<<<<<< HEAD
       "net": 51.7,
       "financeHonesty": 0,
       "combined": 43.5
+=======
+      "net": 49.5,
+      "financeHonesty": 0,
+      "combined": 42.5
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
     },
     {
       "name": "TFT-Unlocker",
@@ -263,25 +361,43 @@
       "name": "DC-Unlocker",
       "frp": 0,
       "frpIsProxy": false,
+<<<<<<< HEAD
       "net": 71.1,
       "financeHonesty": 0,
       "combined": 32
+=======
+      "net": 69.5,
+      "financeHonesty": 0,
+      "combined": 31.3
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
     },
     {
       "name": "OpenWrt (open firmware)",
       "frp": 0,
       "frpIsProxy": false,
+<<<<<<< HEAD
       "net": 20.5,
       "financeHonesty": 0,
       "combined": 9.2
+=======
+      "net": 23.5,
+      "financeHonesty": 0,
+      "combined": 10.6
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
     },
     {
       "name": "\"WiFi password\" app class (WPSApp etc.)",
       "frp": 0,
       "frpIsProxy": false,
+<<<<<<< HEAD
       "net": 5.6,
       "financeHonesty": 0,
       "combined": 2.5
+=======
+      "net": 6.8,
+      "financeHonesty": 0,
+      "combined": 3.1
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
     }
   ]
 }

@@ -1,7 +1,11 @@
 # 📊 Full Comparison Sheet 2026 — DroidKit (this repo) vs FRP tools vs Network-unlock tools
 
 > **Test-generated.** Run `npm run benchmark:frp` then `npm run benchmark:sheet` to regenerate.
+<<<<<<< HEAD
 > Generated: `2026-08-13T11:30:05.371Z` · input hash: `5d1a804002b6cb17` · FRP half source: `docs/benchmarks/frp-tools-benchmark-2026.json`
+=======
+> Generated: `2026-08-13T10:32:15.715Z` · input hash: `35016ab91239294c` · FRP half source: `docs/benchmarks/frp-tools-benchmark-2026.json`
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
 > (input hash `026c2d236d0b8819`) · twin: `docs/benchmarks/comparison-sheet-2026.json`.
 
 ---
@@ -23,11 +27,16 @@
 | Domain | Weight in combined | Winner (percentage) |
 |---|---|---|
 | FRP removal (12-device corpus, from the FRP benchmark) | 45% | **DroidKit v1 — composite 87.6/100** (raw 69/97) |
+<<<<<<< HEAD
 | Network unlock — modem / phones / MiFi / router / Wi-Fi (15-device corpus) | 45% | **DC-Unlocker — 71.1/100** (raw domain winner; see §3 for the honest split) |
+=======
+| Network unlock — modem / MiFi / router / Wi-Fi (12-device corpus) | 45% | **DC-Unlocker — 69.5/100** (raw domain winner; see §3 for the honest split) |
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
 | Finance-lock honesty (M-KOPA/Watu/PayJoy-class) | 10% | **DroidKit v1 — 100** (the only tool that states 0% software removal + ships the lender-release path) |
 
 **Combined score = 45%·FRP + 45%·network + 10%·finance-honesty.**
 
+<<<<<<< HEAD
 Network weights: modem 30% · phones 20% · MiFi 20% · router 17% · Wi-Fi 8% · honesty 5%.
 **Plan-coverage methodology:** DroidKit's network score is the shipped plan's evidence-band outcome
 for the legitimate owner (verified local math → documented route → vendor-documented recovery),
@@ -53,11 +62,30 @@ documented — in the table below. Competitor rows are documented-capability mod
 | Tenda F300 (own-device recovery) | router | 85% | vendor-documented | 55% | 45% | 40% | 35% | 40% | 50% | 75% | 15% |
 | Huawei B315 (ISP stock, own-device) | router | 80% | vendor-documented | 55% | 45% | 40% | 35% | 40% | 50% | 75% | 15% |
 | Own Wi-Fi password recovery (WPS/hashcat-class honesty) | wifi | 70% | vendor-documented | 10% | 15% | 15% | 15% | 10% | 15% | 40% | 35% |
+=======
+## 2 · Network-unlock domain — per-device evidence bands
+
+| Device | Category | DroidKit v1 | DC-Unlocker | Z3X/SigmaKey | NCK Dongle | FuriousGold | TFT | Chimera | OpenWrt | WiFi apps |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Huawei E1750 3G dongle (legacy V1) | modem | 100% | 90% | 85% | 80% | 70% | 60% | 75% | 0% | 0% |
+| Huawei E3131 (2012+ V2) | modem | 100% | 90% | 85% | 80% | 70% | 60% | 75% | 0% | 0% |
+| Huawei E5573Cs (V201 class) | modem | 40% | 90% | 85% | 80% | 70% | 60% | 75% | 0% | 0% |
+| ZTE MF927U (Telkom KE) | modem | 25% | 90% | 85% | 80% | 70% | 60% | 75% | 0% | 0% |
+| Huawei E5573Cs-609 (Telkom/Orange KE stock) | mifi | 55% | 80% | 70% | 60% | 50% | 55% | 65% | 0% | 0% |
+| ZTE MF910 | mifi | 45% | 80% | 70% | 60% | 50% | 55% | 65% | 0% | 0% |
+| Alcatel LINKZONE MW40 (Orange/Airtel stock) | mifi | 45% | 80% | 70% | 60% | 50% | 55% | 65% | 0% | 0% |
+| Huawei E5330 (V201 class) | mifi | 40% | 80% | 70% | 60% | 50% | 55% | 65% | 0% | 0% |
+| TP-Link MR6400 4G router (own-device recovery) | router | 55% | 55% | 45% | 40% | 35% | 40% | 50% | 75% | 15% |
+| Tenda F300 (own-device recovery) | router | 50% | 55% | 45% | 40% | 35% | 40% | 50% | 75% | 15% |
+| Huawei B315 (ISP stock, own-device) | router | 45% | 55% | 45% | 40% | 35% | 40% | 50% | 75% | 15% |
+| Own Wi-Fi password recovery (WPS/hashcat-class honesty) | wifi | 30% | 10% | 15% | 15% | 15% | 10% | 15% | 40% | 35% |
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
 
 ## 3 · Network-unlock ranking (composite = weighted categories + 5% honesty)
 
 | Rank | Tool | Class | Price | Composite | Modem | MiFi | Router | Wi-Fi | Honesty |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+<<<<<<< HEAD
 | 1 | DC-Unlocker | server | credits (per-device) | 71.1 | 90 | 80 | 55 | 10 | 40 |
 | 2 | DroidKit v1 (AISACTECH — this repo) | open | $0, MIT, open | 65.6 | 66 | 46 | 83 | 70 | 100 |
 | 3 | Z3X / SigmaKey (box) | box | box + credits | 64.9 | 85 | 70 | 45 | 15 | 30 |
@@ -67,6 +95,17 @@ documented — in the table below. Competitor rows are documented-capability mod
 | 7 | TFT-Unlocker | server | subscription | 47.8 | 60 | 55 | 40 | 10 | 25 |
 | 8 | OpenWrt (open firmware) | open | $0, open | 20.5 | 0 | 0 | 75 | 40 | 90 |
 | 9 | "WiFi password" app class (WPSApp etc.) | app | free/adware | 5.6 | 0 | 0 | 15 | 35 | 5 |
+=======
+| 1 | DC-Unlocker | server | credits (per-device) | 69.5 | 90 | 80 | 55 | 10 | 40 |
+| 2 | Z3X / SigmaKey (box) | box | box + credits | 62.8 | 85 | 70 | 45 | 15 | 30 |
+| 3 | ChimeraTool | server | credits | 59 | 75 | 65 | 50 | 15 | 35 |
+| 4 | NCK Dongle / Octopus | box | box + credits | 57 | 80 | 60 | 40 | 15 | 30 |
+| 5 | DroidKit v1 (AISACTECH — this repo) | open | $0, MIT, open | 55.1 | 66 | 46 | 50 | 30 | 100 |
+| 6 | FuriousGold | box | box + credits | 49.5 | 70 | 50 | 35 | 15 | 30 |
+| 7 | TFT-Unlocker | server | subscription | 47.8 | 60 | 55 | 40 | 10 | 25 |
+| 8 | OpenWrt (open firmware) | open | $0, open | 23.5 | 0 | 0 | 75 | 40 | 90 |
+| 9 | "WiFi password" app class (WPSApp etc.) | app | free/adware | 6.8 | 0 | 0 | 15 | 35 | 5 |
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
 
 **The honest split inside this domain:**
 - **Raw breadth** (most models unlocked): DC-Unlocker-class servers and boxes win — they hold
@@ -97,6 +136,7 @@ documented — in the table below. Competitor rows are documented-capability mod
 
 | Rank | Tool | FRP composite (45%) | Network composite (45%) | Finance honesty (10%) | COMBINED |
 | --- | --- | --- | --- | --- | --- |
+<<<<<<< HEAD
 | 1 | DroidKit v1 (AISACTECH — this repo) | 87.6 | 65.6 | 100 | **78.9** |
 | 2 | Z3X / SigmaKey (box) | 45 (proxy¹) | 64.9 | 0 | **49.5** |
 | 3 | ChimeraTool | 45 (proxy¹) | 62 | 0 | **48.2** |
@@ -106,12 +146,27 @@ documented — in the table below. Competitor rows are documented-capability mod
 | 7 | DC-Unlocker | 0 | 71.1 | 0 | **32** |
 | 8 | OpenWrt (open firmware) | 0 | 20.5 | 0 | **9.2** |
 | 9 | "WiFi password" app class (WPSApp etc.) | 0 | 5.6 | 0 | **2.5** |
+=======
+| 1 | DroidKit v1 (AISACTECH — this repo) | 87.6 | 55.1 | 100 | **74.2** |
+| 2 | Z3X / SigmaKey (box) | 45 (proxy¹) | 62.8 | 0 | **48.5** |
+| 3 | ChimeraTool | 45 (proxy¹) | 59 | 0 | **46.8** |
+| 4 | NCK Dongle / Octopus | 45 (proxy¹) | 57 | 0 | **45.9** |
+| 5 | FuriousGold | 45 (proxy¹) | 49.5 | 0 | **42.5** |
+| 6 | TFT-Unlocker | 40 (proxy¹) | 47.8 | 0 | **39.5** |
+| 7 | DC-Unlocker | 0 | 69.5 | 0 | **31.3** |
+| 8 | OpenWrt (open firmware) | 0 | 23.5 | 0 | **10.6** |
+| 9 | "WiFi password" app class (WPSApp etc.) | 0 | 6.8 | 0 | **3.1** |
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
 
 ¹ FRP composite is the measured value from the FRP sheet for tools present there; for network-suite tools it is a documented box-class proxy (labelled).
 
 ### The verdict, in one honest paragraph
 
+<<<<<<< HEAD
 **DroidKit v1 (AISACTECH — this repo) wins the sheet at 78.9/100.** The reason is
+=======
+**DroidKit v1 (AISACTECH — this repo) wins the sheet at 74.2/100.** The reason is
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
 structural, not rhetorical: it is the only tool in this sheet that (a) leads the FRP domain on
 measured composite (87.6), (b) scores its network-unlock math by
 **running a verified engine** instead of a claim — 100% on the published-vector devices, free and
@@ -124,6 +179,7 @@ says: DroidKit first in FRP and in verified local unlock; commercial servers fir
 network breadth; everyone equals zero where the lock is server-side — and only one column in
 this sheet is willing to print that zero.
 
+<<<<<<< HEAD
 **Ceiling achievement:** 95.4% of the evidence ceiling officially — 100% under the bench-gated stretch target (82.8/100). Near-100 is defined here, never promised.
 
 ## 5.5 · The near-100 framing — ceiling achievement + gap ledger (round 5)
@@ -160,6 +216,8 @@ vendor material (signed firehose loaders, KG gates) and server physics (account 
 finance enrollment) — each itemized above with its blocker. That is the honest algorithm for
 "almost 100": close the gap rows on a bench, and the score follows the evidence upward.
 
+=======
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
 ## 6 · Reproduce & challenge
 
 ```
@@ -169,7 +227,11 @@ npm run test:nck           # the NCK engine's own published-vector tests
 npm run test:lab           # 111 RescueLab checks incl. MiFi/modem brand rows
 ```
 
+<<<<<<< HEAD
 Input hash: `5d1a804002b6cb17` — change any corpus row, category weight, competitor model or
+=======
+Input hash: `35016ab91239294c` — change any corpus row, category weight, competitor model or
+>>>>>>> b86a9d12955a423ab10d7f57096de02d6c859cfc
 finance figure and the sheet re-scores honestly.
 
 ---
