@@ -23,7 +23,7 @@ import { LifeBuoy, ShieldAlert, Scale, Laptop, RadioTower, Router, KeyRound, Mon
 // =====================================================================
 
 interface RescueLabProps {
-  selectedDevice: DeviceInfo
+  selectedDevice?: DeviceInfo
 }
 
 type LaneId = "pc" | "carrier" | "modem" | "buttonphone" | "screenlock" | "blackscreen"
@@ -47,7 +47,11 @@ export function RescueLab({ selectedDevice }: RescueLabProps) {
           <LifeBuoy className="h-5 w-5 text-teal-400" />
           Rescue Lab — multi-device repair bench
           <Badge variant="outline" className="text-[9px] border-teal-500/40 text-teal-300">EXPERIMENTAL</Badge>
-          <Badge variant="outline" className="text-[9px]">bench target: {selectedDevice.model}</Badge>
+          {selectedDevice ? (
+            <Badge variant="outline" className="text-[9px]">bench target: {selectedDevice.model}</Badge>
+          ) : (
+            <Badge variant="outline" className="text-[9px]">no phone needed for PC / MiFi / button-phone</Badge>
+          )}
         </h2>
         <p className="text-xs text-muted-foreground">
           Five lanes, one honesty law: DOABLE / CONDITIONAL / NOT-BY-SOFTWARE — never fake 100%.

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { LaneHeader, MethodCard, BandBadge } from "./shared"
@@ -32,12 +32,19 @@ export function ScreenLockLane() {
   const [hash, setHash] = useState("")
   const [busy, setBusy] = useState(false)
   const [result, setResult] = useState<CrackResult | null>(null)
+  const crackTimer = useRef<number | null>(null)
+
+  useEffect(() => () => {
+    if (crackTimer.current !== null) window.clearTimeout(crackTimer.current)
+  }, [])
 
   const crack = () => {
     setBusy(true)
     setResult(null)
+    if (crackTimer.current !== null) window.clearTimeout(crackTimer.current)
     // let the spinner paint before the ~0.2–2s synchronous search
-    setTimeout(() => {
+    crackTimer.current = window.setTimeout(() => {
+      crackTimer.current = null
       setResult(crackGestureKey(hash))
       setBusy(false)
     }, 30)

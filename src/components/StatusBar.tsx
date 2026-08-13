@@ -13,11 +13,10 @@ import {
   AlertCircle,
   PanelLeft,
   Battery,
-  Heart,
-  Cpu,
   Layers
 } from "lucide-react"
 import { useEffect, useState } from "react"
+import { BRAND } from "@/lib/brand"
 
 interface StatusBarProps {
   selectedDevice?: DeviceInfo
@@ -47,13 +46,9 @@ export function StatusBar({ selectedDevice, isLoading, onToggleSidebar }: Status
   const getConnectionQuality = () => {
     if (!selectedDevice) return null
     if (selectedDevice.transport === 'USB') {
-      return { level: 'excellent', strength: 100, icon: Usb, color: 'text-green-500' }
-    } else {
-      const strength = Math.floor(Math.random() * 40) + 60
-      const level = strength > 80 ? 'excellent' : strength > 60 ? 'good' : 'fair'
-      const color = strength > 80 ? 'text-green-500' : strength > 60 ? 'text-yellow-500' : 'text-orange-500'
-      return { level, strength, icon: Wifi, color }
+      return { icon: Usb, color: 'text-green-500', label: 'USB' }
     }
+    return { icon: Wifi, color: 'text-blue-500', label: 'Wi‑Fi' }
   }
 
   const connectionQuality = getConnectionQuality()
@@ -68,10 +63,7 @@ export function StatusBar({ selectedDevice, isLoading, onToggleSidebar }: Status
         {/* TFT-inspired Init Models count */}
         <div className="hidden lg:flex items-center gap-2 text-[11px]">
           <Badge variant="outline" className="text-[10px] px-1.5 py-0 gap-1">
-            <Layers className="h-3 w-3" /> Init: 268 Models
-          </Badge>
-          <Badge variant="outline" className="text-[10px] px-1.5 py-0 gap-1">
-            <Cpu className="h-3 w-3" /> B450M PRO-VDH MAX
+            <Layers className="h-3 w-3" /> 268 models
           </Badge>
         </div>
 
@@ -79,9 +71,7 @@ export function StatusBar({ selectedDevice, isLoading, onToggleSidebar }: Status
           <div className="flex items-center gap-1.5 min-w-0">
             <connectionQuality.icon className={`h-3.5 w-3.5 ${connectionQuality.color} flex-shrink-0`} />
             <span className="text-muted-foreground truncate max-w-[120px]">{selectedDevice.model}</span>
-            {selectedDevice.transport === 'TCP' && (
-              <Badge variant="outline" className="text-xs px-1 py-0">{connectionQuality.strength}%</Badge>
-            )}
+            <Badge variant="outline" className="text-xs px-1 py-0">{connectionQuality.label}</Badge>
           </div>
         )}
 
@@ -125,16 +115,11 @@ export function StatusBar({ selectedDevice, isLoading, onToggleSidebar }: Status
           </>
         )}
 
-        {/* TFT-inspired footer right side — original design not copy */}
         <div className="hidden xl:flex items-center gap-2 ml-2 pl-2 border-l">
-          <span className="flex items-center gap-1 text-[11px]">
-            <Heart className="h-3 w-3 text-red-400" /> Donate
-          </span>
-          <span className="text-[10px]">Paralock v1.1.0 • {time.toLocaleDateString()} {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • Isaac Real</span>
-          <Badge variant="outline" className="text-[10px]">Microsoft Windows 11 Home</Badge>
+          <span className="text-[10px]">{BRAND.name} v{BRAND.version} • {time.toLocaleDateString()} {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {BRAND.developer}</span>
         </div>
         <div className="flex xl:hidden items-center gap-1 text-[10px]">
-          <span>v1.0.0</span>
+          <span>v{BRAND.version}</span>
           <span>•</span>
           <span>{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
         </div>

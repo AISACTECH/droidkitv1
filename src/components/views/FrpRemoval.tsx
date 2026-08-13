@@ -1031,8 +1031,6 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
       <div className="shrink-0 flex items-center justify-between text-[10px] text-muted-foreground border-t pt-2 px-1">
         <span>Init: {totalModels} Models • {brandCounts.samsung} Samsung • {brandCounts.tecno} Tecno • Platform: Auto • FASTConnect</span>
         <span className="hidden md:flex gap-2">
-          <span>Microsoft Windows 11 Home • B450M PRO-VDH MAX</span>
-          <span>•</span>
           <span>Paralock v1.1.0 • Isaac Real • {new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}</span>
         </span>
       </div>

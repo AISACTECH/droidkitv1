@@ -143,6 +143,23 @@ function MainContentIncludesHelpBeforeGate() {
   const src = readFileSync("src/components/MainContent.tsx", "utf8")
   return src.indexOf("activeView === 'help'") !== -1 && src.indexOf("activeView === 'help'") < src.indexOf("!selectedDevice")
 }
+check("rescue lab works deviceless (own early block)", MainContentIncludesRescueBeforeGate())
+function MainContentIncludesRescueBeforeGate() {
+  const src = readFileSync("src/components/MainContent.tsx", "utf8")
+  return src.indexOf("activeView === 'rescue-lab'") !== -1 && src.indexOf("activeView === 'rescue-lab'") < src.indexOf("!selectedDevice")
+}
+const statusBarSrc = readFileSync("src/components/StatusBar.tsx", "utf8")
+check("status bar has no fake Donate chrome", !statusBarSrc.includes("Donate") && !statusBarSrc.includes("Heart"))
+check("status bar has no fake Windows chrome", !statusBarSrc.includes("Windows 11") && !statusBarSrc.includes("B450M"))
+const frpSrc = readFileSync("src/components/views/FrpRemoval.tsx", "utf8")
+check("FRP footer has no fake motherboard chrome", !frpSrc.includes("B450M") && !frpSrc.includes("Microsoft Windows"))
+const browserSrc = readFileSync("src/components/views/FrpRemoval/ModelBrowser.tsx", "utf8")
+check("model browser has no fake B450M chrome", !browserSrc.includes("B450M") && !browserSrc.includes("Windows 11"))
+check("visibility hook exists", existsSync("src/hooks/usePageVisible.ts"))
+check("device polling pauses when hidden", readFileSync("src/hooks/useDeviceQueries.ts", "utf8").includes("usePageVisible"))
+check("screen mirror pauses when hidden", readFileSync("src/components/views/ScreenControl.tsx", "utf8").includes("usePageVisible"))
+check("performance monitor pauses when hidden", readFileSync("src/components/views/PerformanceMonitor.tsx", "utf8").includes("usePageVisible"))
+check("performance monitor does not invent CPU", !readFileSync("src/components/views/PerformanceMonitor.tsx", "utf8").includes("Math.random()"))
 // policy content obeys the honesty law
 check("9 policies present", POLICIES.length >= 9)
 const policyText = POLICIES.map(p => p.title + p.paras.join(" ")).join(" ")

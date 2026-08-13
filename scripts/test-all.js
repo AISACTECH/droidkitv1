@@ -237,6 +237,30 @@ if (!changelog.includes('<<<<<<<') && !readme.includes('<<<<<<<')) {
   } else log('tauri.conf.json publisher misplaced under bundle.windows', 'fail');
 }
 
+// 4c. Honesty + no-friction chrome
+console.log("\n--- 4c. Honesty + background pause ---");
+{
+  const statusBar = fs.readFileSync(path.join(root, 'src/components/StatusBar.tsx'), 'utf8');
+  if (!statusBar.includes('Donate') && !statusBar.includes('Windows 11') && !statusBar.includes('B450M')) {
+    log('Status bar has no fake Donate / Windows / motherboard chrome', 'pass');
+  } else log('Status bar still has fake Donate/Windows/B450M chrome', 'fail');
+
+  const main = fs.readFileSync(path.join(root, 'src/components/MainContent.tsx'), 'utf8');
+  if (main.includes("activeView === 'rescue-lab'") && main.indexOf("activeView === 'rescue-lab'") < main.indexOf('!selectedDevice')) {
+    log('Rescue Lab is available without a selected phone', 'pass');
+  } else log('Rescue Lab still gated on selectedDevice', 'fail');
+
+  const queries = fs.readFileSync(path.join(root, 'src/hooks/useDeviceQueries.ts'), 'utf8');
+  const screen = fs.readFileSync(path.join(root, 'src/components/views/ScreenControl.tsx'), 'utf8');
+  const perf = fs.readFileSync(path.join(root, 'src/components/views/PerformanceMonitor.tsx'), 'utf8');
+  if (fs.existsSync(path.join(root, 'src/hooks/usePageVisible.ts')) && queries.includes('usePageVisible') && screen.includes('usePageVisible') && perf.includes('usePageVisible')) {
+    log('ADB polling / mirror / perf pause when the window is hidden', 'pass');
+  } else log('Background pause not wired — Windows may force-stop a hidden window', 'fail');
+
+  if (!perf.includes('Math.random()')) log('Performance monitor does not invent CPU numbers', 'pass');
+  else log('Performance monitor still uses Math.random() for CPU', 'fail');
+}
+
 // 5. Windows Support
 console.log("\n--- 5. Windows Support ---");
 const tauriConf = JSON.parse(fs.readFileSync(path.join(root, 'src-tauri/tauri.conf.json'), 'utf8'));
