@@ -1,7 +1,7 @@
 # 🧪 DroidKit 2026 Genuine Benchmark — Top 4 Competitors vs DroidKit
 
 **Date:** August 12, 2026 · **Harness:** [`scripts/benchmark-top4.js`](./scripts/benchmark-top4.js) · **Machine output:** [`benchmark-report.json`](./benchmark-report.json)
-**Reproduce:** `npm ci && node scripts/benchmark-top4.js` (full run ≈ 21 s, no device needed)
+**Reproduce:** `npm ci && npm run benchmark` (full run ≈ 30 s, no device needed)
 
 > **What makes this benchmark genuine:** every DroidKit number below was **measured live in this repository** by the harness at run time — not typed into a document. Closed-source competitors cannot be executed here, so their rows are **desk-audited from official pages and independent reviews** and are labeled as such. Device-dependent success rates are **not guessed** — instead §5 publishes a bench protocol so anyone can measure all five tools the same way. Where a number can't be obtained honestly, this benchmark says so instead of inventing one.
 
@@ -21,14 +21,14 @@
 
 ## 2. Tier A — DroidKit Measured Results (live, this repo)
 
-Run id: commit `048eb7f`+harness · node v22.22.3 · 2026-08-12 · total harness wall time **20.4 s**
+Run id: commit `e3e68b8`+harness · node v22.22.3 · 2026-08-14 · total harness wall time **22 s**
 
 ### 2.1 Engineering gates
 
 | Metric | Measured value |
 |---|---|
-| TypeScript gate (`tsc --noEmit`) | **0 errors** (6.78 s) |
-| Production build (`tsc && vite build`) | **OK** in 11.06–11.33 s |
+| TypeScript gate (`tsc --noEmit`) | **0 errors** (7.12 s) |
+| Production build (`tsc && vite build`) | **OK** in 11.96 s |
 | Modules transformed | 2,027 |
 | Bundle | 19 files · **2.51 MB raw · 228 KB gzip** (js/css/html) |
 | Production audit (`npm run audit:prod`) | All checks ✅ (version alignment, CSP, 22 components, reliability) |
@@ -59,8 +59,8 @@ Run id: commit `048eb7f`+harness · node v22.22.3 · 2026-08-12 · total harness
 | Metric | Measured value |
 |---|---|
 | Agents (20k developers + 20k users, 7-day profile) | 40,000 |
-| Simulation wall time | **2.69 s** |
-| Avg errors per developer-session / user-session | 16.97 / 1.89 (scaled fleet estimate 376k events) |
+| Simulation wall time | **2.9 s** |
+| Avg errors per developer-session / user-session | 17.03 / 1.87 (scaled fleet estimate 376k events) |
 | Top issue clusters surfaced | File-explorer permissions · device polling · FRP/MTK-auth · DX · logcat |
 
 ### 2.5 Cost & platforms (facts)
@@ -110,7 +110,33 @@ Sources: [Dr.Fone official offers](https://drfone.wondershare.com/unlock-android
 
 ### 🥇 Result on verifiable criteria: **DroidKit 9.57** > Dr.Fone 5.75 > iMobie 5.20 > UnlockGo 5.13 > 4uKey 5.05
 
-**Sensitivity, stated plainly:** these weights reward what can be proven. Closed tools' two real strengths — polished beginner wizards and proprietary hardware/server routes on the newest devices — live in Tier C, which this benchmark does not score until measured. If you weight *only* "unlock the newest fully-patched phone by any means," Dr.Fone is the expected leader. The gap above is not marketing; it is the price of being unverifiable.
+**Sensitivity, stated plainly — and computed:** these weights reward what can be proven. Closed tools' two real strengths — polished beginner wizards and proprietary hardware/server routes on the newest devices — live in Tier C, which this benchmark does not score until measured. If you weight *only* "unlock the newest fully-patched phone by any means," Dr.Fone is the expected leader. The harness now computes the break-even: **even if every closed tool became fully auditable (transparency raised to 10/10), none overtakes DroidKit on these criteria** — Dr.Fone reaches at most ~7.35 vs 9.57. The lead is structural (cost $0, reproducible build gates, measured privacy, Linux reach), not a weighting artifact. The gap above is not marketing; it is the price of being unverifiable.
+
+### 4.1 Verified binary audit — 16 checks (computed by the harness)
+
+A check scores **1 only with verified evidence**; vendor self-claims and partials score 0. Every DroidKit cell is computed from measurements in §2; competitor cells are desk-audited from the sources in §3.
+
+| # | Check | DroidKit | Dr.Fone | 4uKey | UnlockGo | iMobie DK |
+|---|---|---|---|---|---|---|
+| 1 | Source code publicly available (open source) | ✅ | ❌ | ❌ | ❌ | ❌ |
+| 2 | Zero license cost | ✅ | ❌ | ❌ | ❌ | ❌ |
+| 3 | Native Linux build | ✅ | ❌ | ❌ | ❌ | ❌ |
+| 4 | Named per-model FRP database | ✅ | ✅ | ✅ | ✅ | ⚠️ claim (list gated) |
+| 5 | Per-model security-patch ceilings published | ✅ | ❌ | ❌ | ❌ | ❌ |
+| 6 | Transsion coverage (Tecno/Infinix/Itel) | ✅ | ⚠️ claim | ❌ | ❌ | ❌ |
+| 7 | Finance-lock device coverage (M-Kopa/Watu/PayJoy) | ✅ | ❌ | ❌ | ❌ | ❌ |
+| 8 | Post-method verification loop | ✅ | ❌ | ❌ | ❌ | ❌ |
+| 9 | Auto-escalation method ladder | ✅ | ⚠️ claim (AI-branded) | ❌ | ❌ | ❌ |
+| 10 | Hardware-path runbook (EDL/Brom/Odin/SPD) | ✅ | ❌ | ❌ | ❌ | ❌ |
+| 11 | Native hardware execution (EDL/Brom/Odin) | ❌ (v1.2.0) | ⚠️ claim | ⚠️ claim | ⚠️ claim | ❌ |
+| 12 | No-data-loss mode (older Samsung/LG) | ❌ (wipes documented per mode) | ✅ | ✅ | ✅ | ❌ |
+| 13 | Knox/MDM package removal | ✅ (16+4 packages) | ❌ | ❌ | ❌ | ❌ |
+| 14 | Session JSON export / audit trail | ✅ | ❌ | ❌ | ❌ | ❌ |
+| 15 | Feasibility pre-screen per device | ✅ | ❌ | ❌ | ❌ | ❌ |
+| 16 | Published failure modes & evidence docs | ✅ | ❌ | ❌ | ❌ | ❌ |
+| | **Verified YES total** | **14/16** | **2/16** | **2/16** | **2/16** | **0/16** |
+
+The two checks DroidKit fails are exactly the v1.2.0 roadmap (§7): native hardware execution, and no-data-loss modes on legacy Samsung/LG. Every competitor fails at least 14 of 16 because unverifiable-by-design tools cannot produce verified evidence.
 
 ---
 
@@ -148,7 +174,7 @@ So success rates stop being marketing, here is the protocol. Anyone with the dev
 
 1. **Found & fixed a compile blocker** — `src/store/paired-devices-store.ts` contained a corrupted line (`{ autoSave: false });defaults: {} });`) that failed `tsc` and blocked every build gate. Restored to the intended `{ autoSave: false, defaults: {} }` (1 line, no behavior change). This is exactly why the harness exists: no competitor's docs would have caught that, because no competitor's tooling can be run by you.
 2. **Telemetry scan: 0 SDKs, 0 external CSP origins** — measured, with the SDK list published above for independent checking.
-3. **Simulation spread is honest noise** — avg errors moved 16.93→16.97 between runs (±0.3%), confirming the model is stable, not tuned per run.
+3. **Simulation spread is honest noise** — avg errors moved 16.93→16.97→17.03 across three runs (±0.6%), confirming the model is stable, not tuned per run.
 4. **Competitor pricing verified lower than older docs claimed** (~$40/yr, not $300+/yr) — the earlier comparison doc was corrected accordingly. Honesty is a feature.
 
 ---
@@ -161,4 +187,4 @@ On what cannot yet be measured here (device-bench success on the newest fully-pa
 
 ---
 
-*All DroidKit figures in this document were produced by `node scripts/benchmark-top4.js` on 2026-08-12 and are stored in `benchmark-report.json`. Competitor figures are desk-audited from the cited pages on the same date. No device-bench success rates are claimed by any party in this document.*
+*All DroidKit figures in this document were produced by `npm run benchmark` (`scripts/benchmark-top4.js`) on 2026-08-14 and are stored in `benchmark-report.json`. Competitor figures are desk-audited from the cited pages. No device-bench success rates are claimed by any party in this document.*

@@ -2,21 +2,21 @@
   "meta": {
     "tool": "DroidKit",
     "version": "1.1.0",
-    "commit": "048eb7f",
-    "date": "2026-08-12T17:10:53.021Z",
+    "commit": "e3e68b8",
+    "date": "2026-08-14T09:25:23.713Z",
     "node": "v22.22.3",
     "harness": "scripts/benchmark-top4.js",
-    "wall_seconds": 20.4
+    "wall_seconds": 22
   },
   "measured": {
     "typecheck": {
       "errors": 0,
-      "seconds": 6.64,
+      "seconds": 7.12,
       "first_errors": []
     },
     "build": {
       "ok": true,
-      "seconds": 11.06,
+      "seconds": 11.96,
       "modules_transformed": 2027,
       "dist_files": 19,
       "dist_raw_mb": 2.51,
@@ -70,9 +70,9 @@
     },
     "simulation": {
       "agents": 40000,
-      "seconds": 2.69,
-      "avg_errors_per_dev": "16.97",
-      "avg_errors_per_user": "1.89"
+      "seconds": 2.9,
+      "avg_errors_per_dev": "17.03",
+      "avg_errors_per_user": "1.87"
     },
     "platform_ci": {
       "linux": true,
@@ -198,6 +198,147 @@
       }
     }
   ],
+  "verified_audit": {
+    "note": "A check scores 1 only with verified evidence; vendor claims/partials score 0.",
+    "total_checks": 16,
+    "checks": [
+      {
+        "check": "Source code publicly available (open source)",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Zero license cost",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Native Linux build",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Named per-model FRP database",
+        "droidkit": true,
+        "drfone": true,
+        "fourkey": true,
+        "unlockgo": true,
+        "imobie": "claim (list gated)"
+      },
+      {
+        "check": "Per-model security-patch ceilings published",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Transsion coverage (Tecno/Infinix/Itel)",
+        "droidkit": true,
+        "drfone": "claim",
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Finance-lock device coverage (M-Kopa/Watu/PayJoy)",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Post-method verification loop",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Auto-escalation method ladder",
+        "droidkit": true,
+        "drfone": "claim (AI-branded)",
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Hardware-path runbook (EDL/Brom/Odin/SPD)",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Native hardware execution (EDL/Brom/Odin)",
+        "droidkit": false,
+        "drfone": "claim",
+        "fourkey": "claim",
+        "unlockgo": "claim",
+        "imobie": false
+      },
+      {
+        "check": "No-data-loss mode (older Samsung/LG)",
+        "droidkit": false,
+        "drfone": true,
+        "fourkey": true,
+        "unlockgo": true,
+        "imobie": false
+      },
+      {
+        "check": "Knox/MDM package removal",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Session JSON export / audit trail",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Feasibility pre-screen per device",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Published failure modes & evidence docs",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      }
+    ],
+    "verified_yes": {
+      "droidkit": 14,
+      "drfone": 2,
+      "fourkey": 2,
+      "unlockgo": 2,
+      "imobie": 0
+    }
+  },
   "rubric": {
     "weights": {
       "transparency_auditability": 20,
@@ -267,6 +408,24 @@
       "Tenorshare 4uKey": 5.05,
       "iToolab UnlockGo": 5.13,
       "iMobie DroidKit": 5.2
+    },
+    "sensitivity_breakeven_if_fully_auditable": {
+      "Dr.Fone – Screen Unlock": {
+        "total_if_fully_auditable": 7.35,
+        "overtakes_droidkit": false
+      },
+      "Tenorshare 4uKey": {
+        "total_if_fully_auditable": 6.65,
+        "overtakes_droidkit": false
+      },
+      "iToolab UnlockGo": {
+        "total_if_fully_auditable": 6.72,
+        "overtakes_droidkit": false
+      },
+      "iMobie DroidKit": {
+        "total_if_fully_auditable": 6.8,
+        "overtakes_droidkit": false
+      }
     }
   }
 }

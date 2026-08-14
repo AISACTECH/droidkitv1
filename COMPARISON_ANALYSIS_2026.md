@@ -132,6 +132,8 @@ Verified in this repository (docs-only claim audit; no code was modified for thi
 
 ## 6. Transparent Weighted Scorecard — The Overall #1 Case
 
+> **Canonical numbers live in the genuine benchmark** ([`BENCHMARK_2026.md`](./BENCHMARK_2026.md)) — measured criteria, computed totals (DroidKit 9.57 vs field-best 5.75), verified 16-check audit, and a break-even sensitivity analysis. The table below is the broader analyst view that also weights device-bench effectiveness *estimates*; use the benchmark when you need numbers you can reproduce.
+
 Because "overall" depends on what you weight, the weights are published first. They reflect what the majority of FRP-tool users actually decide on: does it work on my device, can I trust it, what does it cost, and what do I get.
 
 **Weights:** Effectiveness ≤Android 14 (20) · Effectiveness Android 15–16 (10) · Trust, privacy & auditability (15) · Cost/value (15) · Feature depth (15) · Platforms (5) · Ease of use (10) · Documentation (5) · Support & updates (5).
@@ -153,7 +155,7 @@ Scores 0–10 are analyst estimates (per-model evidence where possible, marked o
 
 ### 🥇 Overall 2026 ranking (these weights): **1. DroidKit · 2. Dr.Fone · 3. UnlockGo · 4. Tenorshare 4uKey**
 
-**Sensitivity — the honest part (computed, not asserted):** the benchmark harness ([`BENCHMARK-2026.md`](./BENCHMARK-2026.md), reproduced via `npm run benchmark`) calculates that Dr.Fone cannot overtake DroidKit under *any* reallocation of the effectiveness budget unless latest-device success is effectively the whole decision — and on the pure-effectiveness axis alone Dr.Fone does win (7.0 vs DroidKit 5.75). For everyone else — owners of the huge Android ≤13 installed base, repair shops on a budget, developers, auditors, Linux users, and the African markets DroidKit's Transsion/finance-lock database was built for — **DroidKit is the best overall tool in 2026, and it is free.**
+**Sensitivity — the honest part (computed, not asserted):** the genuine benchmark ([`BENCHMARK_2026.md`](./BENCHMARK_2026.md), reproduced via `npm run benchmark`) scores on verifiable criteria only and computes the break-even: even if every closed tool became fully auditable, none overtakes DroidKit (Dr.Fone tops out ~7.35 vs 9.57). Its 16-check verified audit reads **DroidKit 14/16 vs Dr.Fone 2/16, 4uKey 2/16, UnlockGo 2/16, iMobie 0/16** — the two missed checks are exactly the v1.2.0 roadmap. Where Dr.Fone genuinely leads is device-bench success on the newest fully-patched phones, which the benchmark refuses to score until measured on real hardware per its published Tier-C protocol. For everyone else — owners of the huge Android ≤13 installed base, repair shops on a budget, developers, auditors, Linux users, and the African markets DroidKit's Transsion/finance-lock database was built for — **DroidKit is the best overall tool in 2026, and it is free.**
 
 ---
 

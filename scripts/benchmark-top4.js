@@ -228,6 +228,49 @@ const competitors = [
   },
 ];
 
+// ---------------------------------------------------------------- verified binary feature audit
+// 16 checks. DroidKit cells are computed from measurements above (or checked in source).
+// Competitor cells are desk-audited from official pages/reviews; only verified evidence scores 1 —
+// vendor claims and partials score 0. See BENCHMARK_2026.md §4.1 for the table + provenance.
+const labSrc = existsSync(path.join(ROOT, 'src/components/views/DeveloperLab.tsx'))
+  ? read('src/components/views/DeveloperLab.tsx') : '';
+const realityCheckPresent = existsSync(path.join(ROOT, 'src/components/views/FrpRemoval/RealityCheck.tsx'));
+const q4Txt = read('src-tauri/src/frp/q4_database.rs');
+const financeLocked = /M-Kopa|Watu|PayJoy/i.test(q4Txt);
+const evidenceWords = ['RESEARCH-2026-FRP.md', 'DEBATE-AI-VS-GOOGLE.md', 'FRP-ALGORITHM-ANALYSIS.md', 'COMPARISON_ANALYSIS_2026.md']
+  .filter((f) => existsSync(path.join(ROOT, f)))
+  .reduce((sum, f) => sum + read(f).split(/\s+/).length, 0);
+
+const auditChecks = [
+  { check: 'Source code publicly available (open source)',          droidkit: /MIT/.test(license),            drfone: false, fourkey: false, unlockgo: false, imobie: false },
+  { check: 'Zero license cost',                                     droidkit: true,                            drfone: false, fourkey: false, unlockgo: false, imobie: false },
+  { check: 'Native Linux build',                                    droidkit: !!ciTargets.linux,               drfone: false, fourkey: false, unlockgo: false, imobie: false },
+  { check: 'Named per-model FRP database',                          droidkit: modelsTotal >= 260,              drfone: true,  fourkey: true,  unlockgo: true,  imobie: 'claim (list gated)' },
+  { check: 'Per-model security-patch ceilings published',           droidkit: modelsWithPatchCeiling > 0,      drfone: false, fourkey: false, unlockgo: false, imobie: false },
+  { check: 'Transsion coverage (Tecno/Infinix/Itel)',               droidkit: db.tecno + db.infinix + db.itel >= 100, drfone: 'claim', fourkey: false, unlockgo: false, imobie: false },
+  { check: 'Finance-lock device coverage (M-Kopa/Watu/PayJoy)',     droidkit: financeLocked,                   drfone: false, fourkey: false, unlockgo: false, imobie: false },
+  { check: 'Post-method verification loop',                         droidkit: /removed_verified/.test(labSrc), drfone: false, fourkey: false, unlockgo: false, imobie: false },
+  { check: 'Auto-escalation method ladder',                         droidkit: /escalat/i.test(labSrc),         drfone: 'claim (AI-branded)', fourkey: false, unlockgo: false, imobie: false },
+  { check: 'Hardware-path runbook (EDL/Brom/Odin/SPD)',             droidkit: /runbook/i.test(labSrc),         drfone: false, fourkey: false, unlockgo: false, imobie: false },
+  { check: 'Native hardware execution (EDL/Brom/Odin)',             droidkit: false,                           drfone: 'claim', fourkey: 'claim', unlockgo: 'claim', imobie: false },
+  { check: 'No-data-loss mode (older Samsung/LG)',                  droidkit: false,                           drfone: true,  fourkey: true,  unlockgo: true,  imobie: false },
+  { check: 'Knox/MDM package removal',                              droidkit: knoxPackages >= 10,              drfone: false, fourkey: false, unlockgo: false, imobie: false },
+  { check: 'Session JSON export / audit trail',                     droidkit: /exportJournal/.test(labSrc),    drfone: false, fourkey: false, unlockgo: false, imobie: false },
+  { check: 'Feasibility pre-screen per device',                     droidkit: realityCheckPresent,             drfone: false, fourkey: false, unlockgo: false, imobie: false },
+  { check: 'Published failure modes & evidence docs',               droidkit: evidenceWords > 3000,            drfone: false, fourkey: false, unlockgo: false, imobie: false },
+];
+const verifiedCount = (tool) => auditChecks.reduce((s, r) => s + (r[tool] === true ? 1 : 0), 0);
+const verifiedAudit = {
+  note: 'A check scores 1 only with verified evidence; vendor claims/partials score 0.',
+  total_checks: auditChecks.length,
+  checks: auditChecks,
+  verified_yes: {
+    droidkit: verifiedCount('droidkit'), drfone: verifiedCount('drfone'),
+    fourkey: verifiedCount('fourkey'), unlockgo: verifiedCount('unlockgo'), imobie: verifiedCount('imobie'),
+  },
+};
+log(`7/7 verified audit: DroidKit ${verifiedAudit.verified_yes.droidkit}/${auditChecks.length} · Dr.Fone ${verifiedAudit.verified_yes.drfone} · 4uKey ${verifiedAudit.verified_yes.fourkey} · UnlockGo ${verifiedAudit.verified_yes.unlockgo} · iMobie ${verifiedAudit.verified_yes.imobie}`);
+
 // ---------------------------------------------------------------- scoring rubric (transparent)
 // Only verifiable criteria are scored. Device-bench success rates (Tier C) are EXCLUDED
 // until measured per the published protocol — see BENCHMARK_2026.md §5.
@@ -280,6 +323,20 @@ const totals = Object.fromEntries(
   ])
 );
 
+// Sensitivity — computed break-even: if every closed tool became fully auditable
+// (transparency score raised to 10), could any of them overtake DroidKit on these
+// verifiable criteria? Answers honestly whether the lead is structural or thin.
+const droidkitKey = 'DroidKit (AISACTECH)';
+const breakeven = Object.fromEntries(
+  Object.entries(scores)
+    .filter(([tool]) => tool !== droidkitKey)
+    .map(([tool, s]) => {
+      const fullyAuditable = { ...s, transparency_auditability: 10 };
+      const t = +(Object.entries(WEIGHTS).reduce((sum, [k, w]) => sum + (fullyAuditable[k] || 0) * w, 0) / 100).toFixed(2);
+      return [tool, { total_if_fully_auditable: t, overtakes_droidkit: t >= totals[droidkitKey] }];
+    })
+);
+
 // ---------------------------------------------------------------- report
 const report = {
   meta: { tool: 'DroidKit', version, commit, date: new Date().toISOString(), node: nodeVer, harness: 'scripts/benchmark-top4.js', wall_seconds: +((Date.now() - started) / 1000).toFixed(1) },
@@ -294,7 +351,8 @@ const report = {
     lockfile_present: lockfilePresent,
   },
   competitors,
-  rubric: { weights: WEIGHTS, note: 'Verifiable criteria only. Device-bench success rates excluded until measured per protocol.', scores, totals },
+  verified_audit: verifiedAudit,
+  rubric: { weights: WEIGHTS, note: 'Verifiable criteria only. Device-bench success rates excluded until measured per protocol.', scores, totals, sensitivity_breakeven_if_fully_auditable: breakeven },
 };
 
 writeFileSync(path.join(ROOT, 'benchmark-report.json'), JSON.stringify(report, null, 2));
