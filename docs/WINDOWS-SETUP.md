@@ -1,4 +1,4 @@
-# 🪟 DroidKit on Windows — git clone → running app → installer
+# 🪟 Paralock on Windows — git clone → running app → installer
 
 Everything below was validated against **v1.1.0** (`Passed: 61/61` on `scripts/test-all.js`). Follow it top-to-bottom on a fresh Windows 10/11 machine.
 
@@ -27,7 +27,7 @@ Close and reopen PowerShell so PATH refreshes, then sanity-check:
 
 ```powershell
 git --version        # any 2.x
-node -v              # v18 or newer
+node -v              # v22.x LTS (>= 22.6) — Vite 7 + type-stripped tests require it
 rustc --version      # e.g. 1.7x+
 ```
 
@@ -36,7 +36,7 @@ rustc --version      # e.g. 1.7x+
 ```powershell
 cd $env:USERPROFILE\source 2>$null; if (-not $?) { mkdir ~\source; cd ~\source }
 git clone https://github.com/AISACTECH/droidkitv1.git
-cd droidkitv1
+cd paralockv1
 ```
 
 ## 3. Install JavaScript dependencies
@@ -68,8 +68,8 @@ powershell -ExecutionPolicy Bypass -File .\build-windows.ps1
 The script auto-detects your package manager, verifies Rust/MSVC, type-checks the frontend, and produces:
 
 ```
-src-tauri\target\release\droidkit.exe                                    # standalone binary
-src-tauri\target\release\bundle\nsis\DroidKit_<version>_x64-setup.exe    # NSIS installer
+src-tauri\target\release\paralock.exe                                    # standalone binary
+src-tauri\target\release\bundle\nsis\Paralock_<version>_x64-setup.exe    # NSIS installer
 ```
 
 ## 6. Troubleshooting

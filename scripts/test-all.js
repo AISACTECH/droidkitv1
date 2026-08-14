@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * DroidKit — Comprehensive Test Suite
+ * Paralock — Comprehensive Test Suite
  * Tests everything to pass, ready to clone/install on GitHub,
  * accuracy peak, speed efficiency, reliability, Windows support,
  * ADB/USB/WiFi/Fastboot, Screen Mirror reflection window
@@ -35,7 +35,7 @@ function exec(cmd, opts = {}) {
   }
 }
 
-console.log("\n🧪 DroidKit Comprehensive Test Suite");
+console.log("\n🧪 Paralock Comprehensive Test Suite");
 console.log("==============================================\n");
 
 // 1. Clone / Install Ready
@@ -198,6 +198,69 @@ if (viteConf.includes('manualChunks') && viteConf.includes('vendor-react') && vi
   log('Speed efficiency: Vite manualChunks code-split vendor-react, views, mocks — reduces load', 'pass');
 } else log('Vite manualChunks missing', 'warn');
 
+// 4b. Three-gate solutions (installers / CI / bench) — no Rust, no hardware
+console.log("\n--- 4b. Three-gate solutions ---");
+if (!fs.existsSync(path.join(root, 'bun.lock')) && !fs.existsSync(path.join(root, 'bun.lockb'))) {
+  log('No bun.lock — tauri-action will not pick bun over npm', 'pass');
+} else log('bun.lock present — publish matrix will run bun tauri build', 'fail');
+
+const stagedPublish = fs.readFileSync(path.join(root, 'docs/workflows-manual/publish.yml'), 'utf8');
+if (stagedPublish.includes('tauriScript: npm run tauri') && !stagedPublish.includes('setup-bun')) {
+  log('Staged publish.yml forces npm tauriScript (no setup-bun)', 'pass');
+} else log('Staged publish.yml missing npm tauriScript', 'fail');
+
+if (fs.existsSync(path.join(root, 'docs/workflows-manual/ci.yml'))) {
+  log('Staged ci.yml ready to paste into .github/workflows/', 'pass');
+} else log('Staged ci.yml missing', 'fail');
+
+if (fs.existsSync(path.join(root, 'src/lib/bench/index.ts')) && fs.existsSync(path.join(root, 'scripts/verify-bench.mts'))) {
+  log('Bench desk module + verify-bench gate present', 'pass');
+} else log('Bench desk missing', 'fail');
+
+{
+  const icnsPath = path.join(root, 'src-tauri/icons/icon.icns');
+  if (fs.existsSync(icnsPath) && fs.readFileSync(icnsPath).subarray(0, 4).toString('ascii') === 'icns') {
+    log('icon.icns is a real Apple icon (not a renamed PNG)', 'pass');
+  } else log('icon.icns missing or is a PNG renamed to .icns — macOS tauri build will fail', 'fail');
+}
+
+const changelog = fs.readFileSync(path.join(root, 'CHANGELOG.md'), 'utf8');
+const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
+if (!changelog.includes('<<<<<<<') && !readme.includes('<<<<<<<')) {
+  log('README + CHANGELOG have no leftover merge-conflict markers', 'pass');
+} else log('Merge-conflict markers left in README or CHANGELOG', 'fail');
+
+{
+  const bundle = JSON.parse(fs.readFileSync(path.join(root, 'src-tauri/tauri.conf.json'), 'utf8')).bundle;
+  if (bundle && typeof bundle.publisher === 'string' && !(bundle.windows && 'publisher' in bundle.windows)) {
+    log('tauri.conf.json publisher at bundle root (schema-valid)', 'pass');
+  } else log('tauri.conf.json publisher misplaced under bundle.windows', 'fail');
+}
+
+// 4c. Honesty + no-friction chrome
+console.log("\n--- 4c. Honesty + background pause ---");
+{
+  const statusBar = fs.readFileSync(path.join(root, 'src/components/StatusBar.tsx'), 'utf8');
+  if (!statusBar.includes('Donate') && !statusBar.includes('Windows 11') && !statusBar.includes('B450M')) {
+    log('Status bar has no fake Donate / Windows / motherboard chrome', 'pass');
+  } else log('Status bar still has fake Donate/Windows/B450M chrome', 'fail');
+
+  const main = fs.readFileSync(path.join(root, 'src/components/MainContent.tsx'), 'utf8');
+  if (main.includes("activeView === 'rescue-lab'") && main.indexOf("activeView === 'rescue-lab'") < main.indexOf('!selectedDevice')) {
+    log('Rescue Lab is available without a selected phone', 'pass');
+  } else log('Rescue Lab still gated on selectedDevice', 'fail');
+
+  const queries = fs.readFileSync(path.join(root, 'src/hooks/useDeviceQueries.ts'), 'utf8');
+  const screen = fs.readFileSync(path.join(root, 'src/components/views/ScreenControl.tsx'), 'utf8');
+  const perf = fs.readFileSync(path.join(root, 'src/components/views/PerformanceMonitor.tsx'), 'utf8');
+  if (fs.existsSync(path.join(root, 'src/hooks/usePageVisible.ts')) && queries.includes('usePageVisible') && screen.includes('usePageVisible') && perf.includes('usePageVisible')) {
+    log('ADB polling / mirror / perf pause when the window is hidden', 'pass');
+  } else log('Background pause not wired — Windows may force-stop a hidden window', 'fail');
+
+  if (!perf.includes('Math.random()')) log('Performance monitor does not invent CPU numbers', 'pass');
+  else log('Performance monitor still uses Math.random() for CPU', 'fail');
+}
+
 // 5. Windows Support
 console.log("\n--- 5. Windows Support ---");
 const tauriConf = JSON.parse(fs.readFileSync(path.join(root, 'src-tauri/tauri.conf.json'), 'utf8'));
@@ -246,10 +309,10 @@ const criteria = [
     })(), msg: 'Version aligned across manifests (package.json + tauri.conf.json + Cargo.toml)' },
   { check: tauriConf.app.security.csp && !tauriConf.app.security.csp.includes('null'), msg: 'Security CSP hardened not null' },
   { check: fs.existsSync(path.join(root, 'LICENSE')), msg: 'License MIT exists' },
-  { check: fs.existsSync(path.join(root, 'README.md')) && fs.readFileSync(path.join(root, 'README.md'), 'utf8').includes('DroidKit'), msg: 'README exists with DroidKit' },
+  { check: fs.existsSync(path.join(root, 'README.md')) && fs.readFileSync(path.join(root, 'README.md'), 'utf8').includes('Paralock'), msg: 'README exists with Paralock' },
   { check: fs.existsSync(path.join(root, 'docs/FEATURE_CONFIRMATION_USB_KNOX_RESET.md')), msg: 'Feature confirmation doc exists' },
   { check: fs.existsSync(path.join(root, 'docs/COMPARISON_2026_TOP_FRP_APPS.md')), msg: 'Comparison with top 2026 apps exists — outperforms' },
-  { check: fs.existsSync(path.join(root, 'docs/screenshots/droidkit-enhanced-frp-main.png')), msg: 'Screenshots exist for UI' },
+  { check: fs.existsSync(path.join(root, 'docs/screenshots/paralock-enhanced-frp-main.png')), msg: 'Screenshots exist for UI' },
   { check: fs.readFileSync(path.join(root, 'src/components/views/ScreenControl.tsx'), 'utf8').includes('Reflection Window') && fs.readFileSync(path.join(root, 'src/components/views/ScreenControl.tsx'), 'utf8').includes('broken touch sensor'), msg: 'Best preview reflection window for broken sensor repair' },
 ];
 

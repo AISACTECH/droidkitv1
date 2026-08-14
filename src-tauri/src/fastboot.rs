@@ -57,7 +57,7 @@ fn run_fastboot(args: &[&str]) -> Result<String, String> {
 
 /// List fastboot devices — supports phones where charger port data is tampered but bootloader USB still works
 #[tauri::command]
-pub fn fastboot_list_devices() -> Result<Vec<FastbootDevice>, String> {
+pub async fn fastboot_list_devices() -> Result<Vec<FastbootDevice>, String> {
     // Try adb_client fastboot via command line first
     match run_fastboot(&["devices"]) {
         Ok(output) => {
@@ -92,7 +92,7 @@ pub fn fastboot_list_devices() -> Result<Vec<FastbootDevice>, String> {
 
 /// Reboot device to bootloader (from ADB mode) — supports damaged data port fallback via WiFi ADB
 #[tauri::command]
-pub fn fastboot_reboot_to_bootloader(device_serial: String) -> Result<FastbootResult, String> {
+pub async fn fastboot_reboot_to_bootloader(device_serial: String) -> Result<FastbootResult, String> {
     use crate::adb_commands::device::reconnect_device;
     
     if let Some(mut device) = reconnect_device(&device_serial) {
@@ -113,7 +113,7 @@ pub fn fastboot_reboot_to_bootloader(device_serial: String) -> Result<FastbootRe
 
 /// Reboot from fastboot to system
 #[tauri::command]
-pub fn fastboot_reboot_to_system() -> Result<FastbootResult, String> {
+pub async fn fastboot_reboot_to_system() -> Result<FastbootResult, String> {
     match run_fastboot(&["reboot"]) {
         Ok(output) => Ok(FastbootResult {
             success: true,
@@ -127,7 +127,7 @@ pub fn fastboot_reboot_to_system() -> Result<FastbootResult, String> {
 
 /// Fastboot unlock bootloader — for advanced FRP/bootloader operations
 #[tauri::command]
-pub fn fastboot_oem_unlock() -> Result<FastbootResult, String> {
+pub async fn fastboot_oem_unlock() -> Result<FastbootResult, String> {
     match run_fastboot(&["flashing", "unlock"]) {
         Ok(output) => Ok(FastbootResult {
             success: true,
@@ -147,7 +147,7 @@ pub fn fastboot_oem_unlock() -> Result<FastbootResult, String> {
 
 /// Fastboot getvar all — diagnostics for device in fastboot mode
 #[tauri::command]
-pub fn fastboot_getvar_all() -> Result<FastbootResult, String> {
+pub async fn fastboot_getvar_all() -> Result<FastbootResult, String> {
     match run_fastboot(&["getvar", "all"]) {
         Ok(output) => Ok(FastbootResult {
             success: true,
@@ -161,7 +161,7 @@ pub fn fastboot_getvar_all() -> Result<FastbootResult, String> {
 
 /// Fastboot erase FRP partition directly in fastboot mode — for phones where ADB not available but fastboot is
 #[tauri::command]
-pub fn fastboot_erase_frp() -> Result<FastbootResult, String> {
+pub async fn fastboot_erase_frp() -> Result<FastbootResult, String> {
     let frp_partitions = ["frp", "frp_a", "frp_b", "persistent", "config"];
     let mut last_output = String::new();
     
@@ -194,7 +194,7 @@ pub fn fastboot_erase_frp() -> Result<FastbootResult, String> {
 
 /// Check fastboot availability and guidance for damaged port scenario
 #[tauri::command]
-pub fn fastboot_check_availability() -> Result<FastbootAvailability, String> {
+pub async fn fastboot_check_availability() -> Result<FastbootAvailability, String> {
     let fastboot_installed = fastboot_available();
     let devices = fastboot_list_devices().unwrap_or_default();
     
@@ -212,7 +212,7 @@ pub fn fastboot_check_availability() -> Result<FastbootAvailability, String> {
         },
         devices_found: devices.len(),
         devices,
-        guidance_for_damaged_port: "For phones with damaged charger port data system:\n1. WiFi ADB is BEST: Enable Wireless Debugging in Developer Options (no USB needed if already enabled) → Pair via QR Code → Connect → Now you can control phone via DroidKit Screen Mirror even with broken touch sensor via cursor\n2. Fastboot still needs USB data pins — if port data is fully tampered, fastboot won't work, use WiFi ADB\n3. If USB data partially works, fastboot may still work for bootloader unlock/FRP erase in fastboot mode\n4. For fully broken port, consider wireless charging + WiFi ADB workflow".to_string(),
+        guidance_for_damaged_port: "For phones with damaged charger port data system:\n1. WiFi ADB is BEST: Enable Wireless Debugging in Developer Options (no USB needed if already enabled) → Pair via QR Code → Connect → Now you can control phone via Paralock Screen Mirror even with broken touch sensor via cursor\n2. Fastboot still needs USB data pins — if port data is fully tampered, fastboot won't work, use WiFi ADB\n3. If USB data partially works, fastboot may still work for bootloader unlock/FRP erase in fastboot mode\n4. For fully broken port, consider wireless charging + WiFi ADB workflow".to_string(),
     })
 }
 

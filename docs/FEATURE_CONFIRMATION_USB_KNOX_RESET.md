@@ -1,7 +1,7 @@
 # ✅ CONFIRMED FEATURES — USB Debugging Handshake, Reset 100%/70% Brand New, Knox Removal
 
 **Date:** 2026-08-10  
-**Version:** DroidKit v1.0.0 Enhanced  
+**Version:** Paralock v1.0.0 Enhanced  
 **User Question:** "CONFIRM IF the feature that you allow the usb to debug, allow developer option on phone so let the phone to handshake with the app software then you run the reset 100% 70% 100% means the phone will be new as brand like new phone at hi there home page also confirm knox remove feature"
 
 ---
@@ -36,7 +36,7 @@
    - Connect USB cable
    - Phone shows RSA fingerprint dialog "Allow USB debugging? Computer's RSA key fingerprint..."
    - Tap Allow + Always allow from this computer
-   - DroidKit detects device via `adb_client` USB transport
+   - Paralock detects device via `adb_client` USB transport
    - `AdbState::Authorized` → handshake OK
    - UI shows: `🔒 Device Connected • Authorized • ADB Enabled`
 

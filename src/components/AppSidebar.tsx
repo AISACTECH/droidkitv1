@@ -26,7 +26,10 @@ import {
   Activity,
   Settings,
   ShieldAlert,
-  FlaskConical
+  FlaskConical,
+  LifeBuoy,
+  HelpCircle,
+  Workflow
 } from "lucide-react"
 
 interface SidebarProps {
@@ -42,6 +45,9 @@ const navigationItems = [
   { id: 'system-info', label: 'System Info', icon: Info },
   { id: 'frp', label: 'FRP Removal', icon: ShieldAlert },
   { id: 'frp-lab', label: 'FRP Lab 🧪', icon: FlaskConical },
+  { id: 'adaptive-engine', label: 'FRP Adaptive Engine ⚡', icon: Workflow },
+  { id: 'rescue-lab', label: 'Rescue Lab 🛠️', icon: LifeBuoy },
+  { id: 'help', label: 'Help & Info ❓', icon: HelpCircle },
   { id: 'files', label: 'Files', icon: FileText },
   { id: 'logcat', label: 'Logcat', icon: Terminal },
   { id: 'apps', label: 'Apps', icon: Package },
@@ -65,11 +71,11 @@ export function AppSidebar({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img 
-              src="/droidkit-icon-128.png" 
-              alt="DroidKit" 
+              src="/paralock-icon-128.png" 
+              alt="Paralock" 
               className="size-8"
             />
-            <h2 className="text-lg font-semibold">DroidKit</h2>
+            <h2 className="text-lg font-semibold">Paralock</h2>
           </div>
           <div className="flex gap-1">
             <WirelessConnectionDialog onDeviceConnected={onWirelessDeviceConnected}>

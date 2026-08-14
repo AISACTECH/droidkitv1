@@ -1,7 +1,7 @@
-# 🔬 DroidKit v1.1.0 vs Top 3 Competitors (2026 Comparison) — Reviewed & Fact-Checked
+# 🔬 Paralock v1.1.0 vs Top 3 Competitors (2026 Comparison) — Reviewed & Fact-Checked
 
 **Date:** August 12, 2026
-**Analyzed:** DroidKit v1.1.0 (AISACTECH, open source) vs Dr.Fone (Wondershare) · Tenorshare 4uKey · iToolab UnlockGo
+**Analyzed:** Paralock v1.1.0 (Isaac Real, open source) vs Dr.Fone (Wondershare) · Tenorshare 4uKey · iToolab UnlockGo
 **Methodology:** Feature audit against this repository's source, FRP-compatibility evidence ([`RESEARCH-2026-FRP.md`](./RESEARCH-2026-FRP.md), [`FRP-ALGORITHM-ANALYSIS.md`](./FRP-ALGORITHM-ANALYSIS.md)), vendor pricing pages and independent 2026 reviews (sources at bottom).
 
 > **This revision is a peer review of the original AI (Copilot) draft.** Every claim was re-checked against the codebase and current 2026 web sources. Corrections are logged in §1 before any ranking is made. Where competitors' numbers are their own marketing, they are labeled as such.
@@ -12,31 +12,31 @@
 
 | # | Original claim | Verdict | Correction / evidence |
 |---|---|---|---|
-| 1 | Competitors cost "$360 / $300 / $480 per year" | ❌ **Wrong — inflated 5–12×** | Official 2026 prices are ~**$39.95/yr** each (Dr.Fone [$24.95/mo · $39.95/yr · $49.95 perpetual](https://drfone.wondershare.com/unlock-android-screen.html); 4uKey [$24.95/mo · $39.95/yr · $49.95 lifetime](https://www.filehorse.com/download-4ukey-android-unlocker/); UnlockGo [$29.95/mo · $39.95/yr · $49.95 lifetime](https://www.streetinsider.com/Press+Releases/iToolab+UnlockGo+(Android)+New+Version+V7.6.0+Released+to+Support+Motorola+FRP+Bypass/22701369.html)). Dr.Fone Full Toolkit tops out ~$99.95–139.95/yr, UnlockGo business tier ~$399.95/yr. DroidKit still wins on cost ($0) — but honestly priced. |
-| 2 | DroidKit covers "260+ models (6 brands)" | ⚠️ **Understated** | The repo ships a **268-model database across 16 brand families** — Samsung, Tecno, Infinix, Itel, Xiaomi, Redmi, POCO, OPPO, Realme, Vivo, Honor, Nokia, Motorola, Huawei, Sony, Pixel + M-Kopa/Watu/PayJoy finance-locked devices (6 database buckets: `database.rs` 35+70, `infinix_database.rs` 35, `itel_database.rs` 35, `q3_database.rs` 60, `q4_database.rs` 33). "6" was the bucket count, not the brand count. |
-| 3 | Desktop platforms row scored "TIE" | ⚠️ **Scored wrong** | DroidKit builds for **Windows + macOS + Linux** (and a browser demo mode) via Tauri; all three competitors are Windows/macOS only. DroidKit win. |
+| 1 | Competitors cost "$360 / $300 / $480 per year" | ❌ **Wrong — inflated 5–12×** | Official 2026 prices are ~**$39.95/yr** each (Dr.Fone [$24.95/mo · $39.95/yr · $49.95 perpetual](https://drfone.wondershare.com/unlock-android-screen.html); 4uKey [$24.95/mo · $39.95/yr · $49.95 lifetime](https://www.filehorse.com/download-4ukey-android-unlocker/); UnlockGo [$29.95/mo · $39.95/yr · $49.95 lifetime](https://www.streetinsider.com/Press+Releases/iToolab+UnlockGo+(Android)+New+Version+V7.6.0+Released+to+Support+Motorola+FRP+Bypass/22701369.html)). Dr.Fone Full Toolkit tops out ~$99.95–139.95/yr, UnlockGo business tier ~$399.95/yr. Paralock still wins on cost ($0) — but honestly priced. |
+| 2 | Paralock covers "260+ models (6 brands)" | ⚠️ **Understated** | The repo ships a **268-model database across 16 brand families** — Samsung, Tecno, Infinix, Itel, Xiaomi, Redmi, POCO, OPPO, Realme, Vivo, Honor, Nokia, Motorola, Huawei, Sony, Pixel + M-Kopa/Watu/PayJoy finance-locked devices (6 database buckets: `database.rs` 35+70, `infinix_database.rs` 35, `itel_database.rs` 35, `q3_database.rs` 60, `q4_database.rs` 33). "6" was the bucket count, not the brand count. |
+| 3 | Desktop platforms row scored "TIE" | ⚠️ **Scored wrong** | Paralock builds for **Windows + macOS + Linux** (and a browser demo mode) via Tauri; all three competitors are Windows/macOS only. Paralock win. |
 | 4 | Tenorshare "17+ brands" for FRP | ❌ **Wrong for FRP** | 15+ brands applies to *screen-lock* removal; **FRP support is ~9 brands and Samsung-centric** (Samsung, Xiaomi, Redmi, OPPO, Realme, OnePlus, Huawei, Vivo, Motorola) per [Tenorshare's own guide](https://www.tenorshare.com/unlock-android/4ukey-android-frp-bypass.html); independent review notes ["inconsistent success rate, especially for non-Samsung devices"](https://tickcoupon.com/coupons/tenorshare-4ukey-for-android-review). |
 | 5 | UnlockGo "18+ brands" | ⚠️ **Refined** | FRP bypass covers ~11 brands (Samsung, Xiaomi, Redmi, vivo, OPPO, Motorola, Realme, OnePlus, Huawei, Lenovo, Micromax); "15+ brands / 6000+ models" is the whole-suite claim ([softwaresuggest](https://www.softwaresuggest.com/itoolab-unlockgo), [iToolab](https://itoolab.com/unlock-android/top-frp-bypass-tools/)). |
 | 6 | Dr.Fone "29+ brands, AI for 12+" | ⚠️ **Outdated** | Current official figures: **32 brands unlocked, FRP for 19 brands**, "AI-powered" positioning incl. a claim of "100% success on Samsung Snapdragon" ([official page](https://toolbox.iskysoft.com/reference/android-lock-screen-removal.html)) — an unaudited marketing claim. |
-| 7 | "DroidKit genuinely removes FRP (Android ≤13 envelope); no tool beats the Android 14–16 patch wall in software" | ✅ **Confirmed** | Matches the independently sourced evidence in [`RESEARCH-2026-FRP.md`](./RESEARCH-2026-FRP.md) §2–3. |
+| 7 | "Paralock genuinely removes FRP (Android ≤13 envelope); no tool beats the Android 14–16 patch wall in software" | ✅ **Confirmed** | Matches the independently sourced evidence in [`RESEARCH-2026-FRP.md`](./RESEARCH-2026-FRP.md) §2–3. |
 | 8 | Developer Lab (auto-escalation, verification loop, Phase Runbook, JSON export) exists and is unique | ✅ **Confirmed in source** | `src/components/views/DeveloperLab.tsx`: verdicts `removed_verified` / `flags_set_unverified` / `escalated_failed`, deterministic weighted progress, runbook driven by `algorithm.rs` phase weights, `exportJournal()`. |
 | 9 | Scorecard values like "Stability 8.5 vs 9.2" | ⚠️ **Unverifiable** | No independent benchmark exists; re-labeled as **estimates**, and the ranking below now rests on a transparent weighted scorecard instead. |
 | 10 | Open source, free, auditable, no telemetry | ✅ **Confirmed** | MIT license, full source on GitHub (`AISACTECH/droidkitv1`), hardened CSP, minimal Tauri capabilities, no analytics code. |
 
-**Bottom line of the review:** Copilot's direction was right, but it inflated competitor prices (which actually *weakens* an honesty-first argument), understated DroidKit's own brand coverage, and missed several real differentiators (below). Corrected, the competitive case gets **stronger**, not weaker.
+**Bottom line of the review:** Copilot's direction was right, but it inflated competitor prices (which actually *weakens* an honesty-first argument), understated Paralock's own brand coverage, and missed several real differentiators (below). Corrected, the competitive case gets **stronger**, not weaker.
 
 ---
 
-## 2. Executive Summary — Does DroidKit Genuinely Remove FRP?
+## 2. Executive Summary — Does Paralock Genuinely Remove FRP?
 
 ### ✅ YES — within the documented evidence envelope
 - **Evidence base:** [`RESEARCH-2026-FRP.md`](./RESEARCH-2026-FRP.md) and [`FRP-ALGORITHM-ANALYSIS.md`](./FRP-ALGORITHM-ANALYSIS.md) document real, independently verified ADB sequences and chipset-branching methods.
 - **Feature completeness:** 268 models, 16 brand families, 15 implemented bypass methods in `bypass.rs` (SetupWizard disable/uninstall, Device Provisioning, Content Provider, Account Manager, Emergency Dialer/`#0#` test-mode, TalkBack, SIM-PIN, Combination Firmware, Alliance Shield, HackTM, Smart Switch, Settings Access, QuickShortcutMaker, Browser Download) plus chipset algorithms in `algorithm.rs` (Exynos Download-Mode, Qualcomm EDL, MTK Brom, SPD bootloader).
 - **New in 1.1.0:** FRP Developer Lab with auto-escalation engine, post-method verification loop, deterministic progress, Phase Runbook, session JSON export — plus the **Research Reality Check** panel that tells each user which feasibility band their device is in *before* they spend an attempt.
-- **Honest limitation:** software-only routes work up to ~Android 13; Android 14–16 on recent patches require chipset hardware paths (EDL/Brom/Odin). DroidKit documents and guides those paths today (Phase Runbook) and executes them in **v1.2.0**.
+- **Honest limitation:** software-only routes work up to ~Android 13; Android 14–16 on recent patches require chipset hardware paths (EDL/Brom/Odin). Paralock documents and guides those paths today (Phase Runbook) and executes them in **v1.2.0**.
 
 ### ❌ NOT "100% FRP removal" — and we say so
-No app — Dr.Fone, Tenorshare, iToolab, or DroidKit — removes FRP 100% on a fully patched Android 15/16 device via software alone. Vendor pages claiming otherwise (e.g. "100% success on Samsung Snapdragon", "up to 99%") are unaudited marketing. This wall is Google/Samsung platform security doing its job, and it applies to the entire industry equally.
+No app — Dr.Fone, Tenorshare, iToolab, or Paralock — removes FRP 100% on a fully patched Android 15/16 device via software alone. Vendor pages claiming otherwise (e.g. "100% success on Samsung Snapdragon", "up to 99%") are unaudited marketing. This wall is Google/Samsung platform security doing its job, and it applies to the entire industry equally.
 
 ---
 
@@ -89,7 +89,7 @@ No app — Dr.Fone, Tenorshare, iToolab, or DroidKit — removes FRP 100% on a f
 
 ---
 
-## 4. What the Original Draft Missed — DroidKit's Extra Differentiators
+## 4. What the Original Draft Missed — Paralock's Extra Differentiators
 
 Verified in this repository (docs-only claim audit; no code was modified for this comparison):
 
@@ -100,28 +100,28 @@ Verified in this repository (docs-only claim audit; no code was modified for thi
 5. **Knox/MDM removal** — 20 packages (16 Knox + 4 Knox Guard) with Alliance Shield fallback for Exynos.
 6. **Linux support + browser demo mode** — the only tool in this comparison you can run on Linux or try with zero install (`npm run dev`).
 7. **Engineering quality you can audit** — CI on every push, `tsc --noEmit` gate, hardened CSP, minimal Tauri capabilities, production audit script, and a 40k-agent simulation suite (`simulate-report.json`). No competitor publishes equivalent artifacts.
-8. **Name clarity** — this is AISACTECH's open-source DroidKit (`com.aisactech.droidkit`). The proprietary iMobie product also named "DroidKit" ($39.99 FRP module) is an unrelated competitor.
+8. **Name clarity** — this product is Isaac Real's open-source **Paralock** (`com.isaacreal.paralock`), developed under the working name Paralock in repo `AISACTECH/droidkitv1`. The proprietary iMobie product named "Paralock" ($39.99 FRP module) is an unrelated competitor — the 2026 rebrand also removes that name collision.
 
 ---
 
 ## 5. Updated Feature Matrix
 
-| Feature | DroidKit | Dr.Fone | 4uKey | UnlockGo | Winner |
+| Feature | Paralock | Dr.Fone | 4uKey | UnlockGo | Winner |
 |---|---|---|---|---|---|
 | FRP removal | ✅ | ✅ | ✅ | ✅ | TIE |
-| FRP brand coverage | **16 brand families, 268 named models** | 19 brands (marketing) | ~9, Samsung-centric | ~11 | **Dr.Fone (breadth) / 🏆 DroidKit (per-model depth: methods + patch ceilings)** |
-| Open source / auditable | ✅ **MIT, full GitHub** | ❌ | ❌ | ❌ | **🏆 DroidKit** |
-| Price | **$0 forever** | $39.95/yr+ | $39.95/yr | $39.95/yr | **🏆 DroidKit** |
-| Platforms | **Win / macOS / Linux + browser demo** | Win/macOS | Win/macOS | Win/macOS | **🏆 DroidKit** |
-| Verification loop after each method | ✅ **NEW 1.1.0** | ❌ | ❌ | ❌ | **🏆 DroidKit** |
-| Auto-escalation ladder | ✅ **NEW 1.1.0** | partial (AI-branded) | ❌ | ❌ | **🏆 DroidKit** |
-| Phase Runbook (EDL/Brom/Odin/SPD) | ✅ **NEW 1.1.0 (guided)** | executed (proprietary) | ❌ | partial | Dr.Fone (execution) — DroidKit only open guide |
-| Research Reality Check pre-screen | ✅ **unique** | ❌ | ❌ | ❌ | **🏆 DroidKit** |
-| Session JSON export / audit trail | ✅ | ❌ | ❌ | ❌ | **🏆 DroidKit** |
-| Reset-mode granularity (100%/70% ± wipe) | ✅ 4 modes | partial | partial | partial | **🏆 DroidKit** |
-| Knox/MDM package removal | ✅ 20 packages | partial | ❌ | ❌ | **🏆 DroidKit** |
-| Handshake verification + guided enable | ✅ | ❌ | ❌ | ❌ | **🏆 DroidKit** |
-| Finance-lock device coverage (M-Kopa/Watu/PayJoy) | ✅ | ❌ | ❌ | ❌ | **🏆 DroidKit** |
+| FRP brand coverage | **16 brand families, 268 named models** | 19 brands (marketing) | ~9, Samsung-centric | ~11 | **Dr.Fone (breadth) / 🏆 Paralock (per-model depth: methods + patch ceilings)** |
+| Open source / auditable | ✅ **MIT, full GitHub** | ❌ | ❌ | ❌ | **🏆 Paralock** |
+| Price | **$0 forever** | $39.95/yr+ | $39.95/yr | $39.95/yr | **🏆 Paralock** |
+| Platforms | **Win / macOS / Linux + browser demo** | Win/macOS | Win/macOS | Win/macOS | **🏆 Paralock** |
+| Verification loop after each method | ✅ **NEW 1.1.0** | ❌ | ❌ | ❌ | **🏆 Paralock** |
+| Auto-escalation ladder | ✅ **NEW 1.1.0** | partial (AI-branded) | ❌ | ❌ | **🏆 Paralock** |
+| Phase Runbook (EDL/Brom/Odin/SPD) | ✅ **NEW 1.1.0 (guided)** | executed (proprietary) | ❌ | partial | Dr.Fone (execution) — Paralock only open guide |
+| Research Reality Check pre-screen | ✅ **unique** | ❌ | ❌ | ❌ | **🏆 Paralock** |
+| Session JSON export / audit trail | ✅ | ❌ | ❌ | ❌ | **🏆 Paralock** |
+| Reset-mode granularity (100%/70% ± wipe) | ✅ 4 modes | partial | partial | partial | **🏆 Paralock** |
+| Knox/MDM package removal | ✅ 20 packages | partial | ❌ | ❌ | **🏆 Paralock** |
+| Handshake verification + guided enable | ✅ | ❌ | ❌ | ❌ | **🏆 Paralock** |
+| Finance-lock device coverage (M-Kopa/Watu/PayJoy) | ✅ | ❌ | ❌ | ❌ | **🏆 Paralock** |
 | Chipset detection | ✅ Exynos/Qualcomm/MediaTek/SPD/Kirin | ✅ | ⚠️ | ✅ | TIE |
 | No-data-loss on early Samsung/LG | ❌ | ✅ | ✅ | ✅ | Dr.Fone/4uKey/UnlockGo |
 | Android 15–16 (fully patched) success | guided-only today | **best-in-industry (claims)** | low | low | **Dr.Fone** |
@@ -132,13 +132,13 @@ Verified in this repository (docs-only claim audit; no code was modified for thi
 
 ## 6. Transparent Weighted Scorecard — The Overall #1 Case
 
-> **Canonical numbers live in the genuine benchmark** ([`BENCHMARK_2026.md`](./BENCHMARK_2026.md)) — measured criteria, computed totals (DroidKit 9.57 vs field-best 5.75), verified 16-check audit, and a break-even sensitivity analysis. The table below is the broader analyst view that also weights device-bench effectiveness *estimates*; use the benchmark when you need numbers you can reproduce.
+> **Canonical numbers live in the genuine benchmark** ([`BENCHMARK_2026.md`](./BENCHMARK_2026.md)) — measured criteria, computed totals (Paralock 9.38 vs field-best 5.75), verified 16-check audit, and a break-even sensitivity analysis. The table below is the broader analyst view that also weights device-bench effectiveness *estimates*; use the benchmark when you need numbers you can reproduce.
 
 Because "overall" depends on what you weight, the weights are published first. They reflect what the majority of FRP-tool users actually decide on: does it work on my device, can I trust it, what does it cost, and what do I get.
 
 **Weights:** Effectiveness ≤Android 14 (20) · Effectiveness Android 15–16 (10) · Trust, privacy & auditability (15) · Cost/value (15) · Feature depth (15) · Platforms (5) · Ease of use (10) · Documentation (5) · Support & updates (5).
 
-| Criterion (weight) | DroidKit | Dr.Fone | 4uKey | UnlockGo |
+| Criterion (weight) | Paralock | Dr.Fone | 4uKey | UnlockGo |
 |---|---|---|---|---|
 | Effectiveness ≤A14 (20) | 8.5 | **9.0** | 7.5 | 8.0 |
 | Effectiveness A15–16 (10) | 3.0 | **5.0** | 3.5 | 4.0 |
@@ -151,19 +151,19 @@ Because "overall" depends on what you weight, the weights are published first. T
 | Support & updates (5) | 6.0 | **9.5** | 8.0 | 8.0 |
 | **Weighted total /10** | **8.35 🥇** | **7.43 🥈** | **6.53** | **6.60** |
 
-Scores 0–10 are analyst estimates (per-model evidence where possible, marked otherwise); rationale: DroidKit's ≤A14 score rests on verified ADB/test-mode/Brom-class methods with preconditions published per model; its A15–16 score reflects the documented patch wall plus guided-only hardware paths until v1.2.0; trust/cost/docs/platforms are verifiable facts, not opinions.
+Scores 0–10 are analyst estimates (per-model evidence where possible, marked otherwise); rationale: Paralock's ≤A14 score rests on verified ADB/test-mode/Brom-class methods with preconditions published per model; its A15–16 score reflects the documented patch wall plus guided-only hardware paths until v1.2.0; trust/cost/docs/platforms are verifiable facts, not opinions.
 
-### 🥇 Overall 2026 ranking (these weights): **1. DroidKit · 2. Dr.Fone · 3. UnlockGo · 4. Tenorshare 4uKey**
+### 🥇 Overall 2026 ranking (these weights): **1. Paralock · 2. Dr.Fone · 3. UnlockGo · 4. Tenorshare 4uKey**
 
-**Sensitivity — the honest part (computed, not asserted):** the genuine benchmark ([`BENCHMARK_2026.md`](./BENCHMARK_2026.md), reproduced via `npm run benchmark`) scores on verifiable criteria only and computes the break-even: even if every closed tool became fully auditable, none overtakes DroidKit (Dr.Fone tops out ~7.35 vs 9.57). Its 16-check verified audit reads **DroidKit 14/16 vs Dr.Fone 2/16, 4uKey 2/16, UnlockGo 2/16, iMobie 0/16** — the two missed checks are exactly the v1.2.0 roadmap. Where Dr.Fone genuinely leads is device-bench success on the newest fully-patched phones, which the benchmark refuses to score until measured on real hardware per its published Tier-C protocol. For everyone else — owners of the huge Android ≤13 installed base, repair shops on a budget, developers, auditors, Linux users, and the African markets DroidKit's Transsion/finance-lock database was built for — **DroidKit is the best overall tool in 2026, and it is free.**
+**Sensitivity — the honest part (computed, not asserted):** the genuine benchmark ([`BENCHMARK_2026.md`](./BENCHMARK_2026.md), reproduced via `npm run benchmark`) scores on verifiable criteria only and computes the break-even: even if every closed tool became fully auditable, none overtakes Paralock (Dr.Fone tops out ~7.35 vs 9.38). Its 16-check verified audit reads **Paralock 14/16 vs Dr.Fone 2/16, 4uKey 2/16, UnlockGo 2/16, iMobie 0/16** — the two missed checks are exactly the v1.2.0 roadmap. Where Dr.Fone genuinely leads is device-bench success on the newest fully-patched phones, which the benchmark refuses to score until measured on real hardware per its published Tier-C protocol. For everyone else — owners of the huge Android ≤13 installed base, repair shops on a budget, developers, auditors, Linux users, and the African markets Paralock's Transsion/finance-lock database was built for — **Paralock is the best overall tool in 2026, and it is free.**
 
 ---
 
 ## 7. Honest Limitations (unchanged, non-negotiable)
 
-- **vs Dr.Fone on Android 15–16:** Dr.Fone's proprietary firehose/server routes give it the edge on the newest fully-patched devices. DroidKit currently *documents and guides* those paths (Phase Runbook); native execution (MTK Brom, Qualcomm EDL firehose, Odin/Heimdall) is the v1.2.0 roadmap and needs a hardware bench.
+- **vs Dr.Fone on Android 15–16:** Dr.Fone's proprietary firehose/server routes give it the edge on the newest fully-patched devices. Paralock currently *documents and guides* those paths (Phase Runbook); native execution (MTK Brom, Qualcomm EDL firehose, Odin/Heimdall) is the v1.2.0 roadmap and needs a hardware bench.
 - **vs Tenorshare on hand-holding:** 4uKey's wizard remains the easiest for a first-timer who wants zero technical context.
-- **vs UnlockGo on edge cases:** its no-emergency-call routes cover scenarios DroidKit doesn't explicitly model yet.
+- **vs UnlockGo on edge cases:** its no-emergency-call routes cover scenarios Paralock doesn't explicitly model yet.
 - **Support:** community (GitHub Issues, ~24–48h) vs paid SLAs. No paid tier exists today.
 - **The patch wall is real for everyone:** on fully patched Android 14–16 with FRP armed and no pre-authorized ADB, no software-only tool works — ours included. The Research Reality Check panel says so in-app, per device, before you try.
 
@@ -173,13 +173,13 @@ Scores 0–10 are analyst estimates (per-model evidence where possible, marked o
 
 | You are… | Best pick | Why |
 |---|---|---|
-| Owner of Android ≤13, any major/Transsion brand | **DroidKit** | Verified methods, per-model patch ceilings, free |
-| Repair shop (esp. Tecno/Infinix/Itel/finance-lock) | **DroidKit** | 175-model Transsion DB, Knox/MDM, session export for audit |
-| Developer / security researcher / auditor | **DroidKit** | Only auditable code, evidence dossiers, JSON journals |
-| Linux user | **DroidKit** | Only Linux build in the category |
+| Owner of Android ≤13, any major/Transsion brand | **Paralock** | Verified methods, per-model patch ceilings, free |
+| Repair shop (esp. Tecno/Infinix/Itel/finance-lock) | **Paralock** | 175-model Transsion DB, Knox/MDM, session export for audit |
+| Developer / security researcher / auditor | **Paralock** | Only auditable code, evidence dossiers, JSON journals |
+| Linux user | **Paralock** | Only Linux build in the category |
 | Non-technical user, recent Samsung, willing to pay | Dr.Fone or 4uKey | Polished wizards, paid support |
-| Fully-patched Android 15–16 flagship | Dr.Fone (or official service center) | Hardware/server routes DroidKit doesn't execute yet |
-| Budget one-off unlock | DroidKit → then 4uKey monthly | $0 first; $24.95 fallback |
+| Fully-patched Android 15–16 flagship | Dr.Fone (or official service center) | Hardware/server routes Paralock doesn't execute yet |
+| Budget one-off unlock | Paralock → then 4uKey monthly | $0 first; $24.95 fallback |
 
 ---
 
@@ -195,7 +195,7 @@ Scores 0–10 are analyst estimates (per-model evidence where possible, marked o
 
 ## 🚀 Conclusion
 
-**DroidKit v1.1.0 is a legitimate, evidence-based FRP toolkit and — on a transparent weighted scorecard — the #1 overall FRP tool of 2026:**
+**Paralock v1.1.0 is a legitimate, evidence-based FRP toolkit and — on a transparent weighted scorecard — the #1 overall FRP tool of 2026:**
 
 - ✅ Genuinely removes FRP on supported models (Android ≤14 envelope, per-model evidence)
 - ✅ Only open-source, free, Linux-capable, telemetry-free, audit-trail-exporting option in the category
@@ -203,7 +203,7 @@ Scores 0–10 are analyst estimates (per-model evidence where possible, marked o
 - ❌ Trails Dr.Fone on fully-patched Android 15–16 (hardware execution is v1.2.0)
 - ❌ Community support only; wizards less beginner-polished than Tenorshare
 
-The original draft's conclusion (Dr.Fone #1 overall) rested on inflated competitor-annual-pricing and missed differentiators. With the facts corrected, DroidKit leads — and it leads honestly, which is the point of this project.
+The original draft's conclusion (Dr.Fone #1 overall) rested on inflated competitor-annual-pricing and missed differentiators. With the facts corrected, Paralock leads — and it leads honestly, which is the point of this project.
 
 ---
 
@@ -216,4 +216,4 @@ The original draft's conclusion (Dr.Fone #1 overall) rested on inflated competit
 - Market landscape: [Wondershare top-5 Samsung FRP tools 2026](https://unlock-android.wondershare.com/learn/online-frp-bypass-tools.html)
 - Internal evidence: [`RESEARCH-2026-FRP.md`](./RESEARCH-2026-FRP.md) · [`FRP-ALGORITHM-ANALYSIS.md`](./FRP-ALGORITHM-ANALYSIS.md) · [`DEBATE-AI-VS-GOOGLE.md`](./DEBATE-AI-VS-GOOGLE.md) · [`CHANGELOG.md`](./CHANGELOG.md)
 
-*Competitor success-rate figures on their own pages are marketing claims and are not independently benchmarked. All DroidKit capabilities listed here were verified against source in this repository on 2026-08-12; no code was modified for this comparison.*
+*Competitor success-rate figures on their own pages are marketing claims and are not independently benchmarked. All Paralock capabilities listed here were verified against source in this repository on 2026-08-12; no code was modified for this comparison.*

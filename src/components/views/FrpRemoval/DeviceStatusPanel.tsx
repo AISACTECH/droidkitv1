@@ -100,7 +100,7 @@ export function DeviceStatusPanel({ selectedDevice, deviceProfile, algorithms, i
       {/* Categorized Operations List - inspired by TFT right pane color-coded sections but original left-border accent */}
       <Card className="flex-1 flex flex-col overflow-hidden">
         <CardHeader className="pb-2 pt-3 px-3">
-          <CardTitle className="text-xs">TFT Unlock Tools 2024-6.2.1.1 (Reference) → DroidKit v1.0.0</CardTitle>
+          <CardTitle className="text-xs">TFT Unlock Tools 2024-6.2.1.1 (Reference) → Paralock v1.1.0</CardTitle>
           <CardDescription className="text-[11px]">Categorized operations — same functions, enhanced UX</CardDescription>
         </CardHeader>
         <CardContent className="flex-1 p-0 overflow-hidden">
@@ -162,7 +162,7 @@ export function DeviceStatusPanel({ selectedDevice, deviceProfile, algorithms, i
 
               <Separator />
 
-              {/* DroidKit algorithms live */}
+              {/* Paralock algorithms live */}
               {algorithms.length > 0 && (
                 <div className="space-y-1">
                   <div className="text-[11px] font-semibold flex items-center gap-2 uppercase">
@@ -198,7 +198,7 @@ export function DeviceStatusPanel({ selectedDevice, deviceProfile, algorithms, i
       {/* Tool footer info similar to TFT bottom */}
       <div className="text-[10px] text-muted-foreground flex justify-between px-1">
         <span>TFT Ref: v2024-6.2.1.1</span>
-        <span>DroidKit v1.0.0</span>
+        <span>Paralock v1.1.0 · Isaac Real</span>
       </div>
     </div>
   )

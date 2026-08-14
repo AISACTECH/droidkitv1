@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useRef } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -94,6 +94,17 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
   const [operationTab, setOperationTab] = useState<"security" | "brom" | "function" | "repair" | "adb" | "knox">("security")
   const [preloaderAuth, setPreloaderAuth] = useState<string>("Samsung (A10S)")
   const [progress, setProgress] = useState(0)
+  // audit fix (2026-08-12): trailing progress-reset timers were orphaned —
+  // a new run left the old timer alive to wipe the new run's bar, and an
+  // unmount fired setProgress after teardown. Track + gate + clear all.
+  const progressResetRef = useRef<number | null>(null)
+  const resetProgressSoon = (ms: number) => {
+    if (progressResetRef.current !== null) window.clearTimeout(progressResetRef.current)
+    progressResetRef.current = window.setTimeout(() => { progressResetRef.current = null; setProgress(0) }, ms)
+  }
+  useEffect(() => () => {
+    if (progressResetRef.current !== null) window.clearTimeout(progressResetRef.current)
+  }, [])
 
   // === Confirmed Features States ===
   const [handshake, setHandshake] = useState<HandshakeVerification | null>(null)
@@ -167,7 +178,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
       logger.error("Scan failed", e)
     } finally {
       setIsDetecting(false)
-      setTimeout(() => setProgress(0), 2000)
+      resetProgressSoon(2000)
     }
   }
 
@@ -209,7 +220,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
     } finally {
       if (interval) clearInterval(interval)
       setIsRunning(false)
-      setTimeout(() => setProgress(0), 2500)
+      resetProgressSoon(2500)
     }
   }
 
@@ -270,7 +281,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
     } finally {
       if (interval) clearInterval(interval)
       setIsRunningReset(false)
-      setTimeout(() => setProgress(0), 3000)
+      resetProgressSoon(3000)
     }
   }
 
@@ -291,7 +302,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
     } finally {
       if (interval) clearInterval(interval)
       setIsRemovingKnox(false)
-      setTimeout(() => setProgress(0), 2500)
+      resetProgressSoon(2500)
     }
   }
 
@@ -428,7 +439,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
           <div>
             <h2 className="text-base font-semibold flex items-center gap-2">
               FRP Removal — Enhanced UX
-              <Badge variant="outline" className="text-[10px]">v1.0.0 • 268 Models</Badge>
+              <Badge variant="outline" className="text-[10px]">v1.1.0 • 268 Models</Badge>
             </h2>
             <p className="text-xs text-muted-foreground">Security • Flash • BROM/EDL • Function • Repair — same functions, superior UX (inspired by TFT, original design)</p>
           </div>
@@ -771,7 +782,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                       Chipset-Optimized — {deviceProfile?.chipset_family || "Universal"}
                       <Badge variant="outline" className={`${chipsetColors[deviceProfile?.chipset_family || "Unknown"]} text-[10px]`}>{deviceProfile?.chipset_family}</Badge>
                     </CardTitle>
-                    <CardDescription className="text-[11px]">TFT shows BROM/EDL as flat buttons — DroidKit groups Safe vs High-Risk with success rate and phase progress</CardDescription>
+                    <CardDescription className="text-[11px]">TFT shows BROM/EDL as flat buttons — Paralock groups Safe vs High-Risk with success rate and phase progress</CardDescription>
                   </CardHeader>
                   <CardContent className="p-2 space-y-2">
                     {algorithms.map((algo, idx) => (
@@ -948,7 +959,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                 <Card>
                   <CardHeader className="pb-2 pt-3 px-3">
                     <CardTitle className="text-xs flex items-center gap-2"><Terminal className="h-4 w-4" /> ADB — Read Pattern & Commands</CardTitle>
-                    <CardDescription className="text-[11px]">From TFT ADB Read Screen Pattern (Adb/Root) — maps to DroidKit ShellTerminal + ScreenControl</CardDescription>
+                    <CardDescription className="text-[11px]">From TFT ADB Read Screen Pattern (Adb/Root) — maps to Paralock ShellTerminal + ScreenControl</CardDescription>
                   </CardHeader>
                   <CardContent className="p-3 space-y-2 text-xs">
                     <div className="grid grid-cols-2 gap-2">
@@ -974,7 +985,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                         const data = { ts: new Date().toISOString(), device: selectedDevice, profile: deviceProfile, result: bypassResult }
                         const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
                         const url = URL.createObjectURL(blob)
-                        const a = document.createElement("a"); a.href = url; a.download = `droidkit-audit-${selectedDevice.serial_no}.json`; a.click()
+                        const a = document.createElement("a"); a.href = url; a.download = `paralock-audit-${selectedDevice.serial_no}.json`; a.click()
                       }}>Export JSON</Button>
                     </div>
                   </CardHeader>
@@ -1020,9 +1031,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
       <div className="shrink-0 flex items-center justify-between text-[10px] text-muted-foreground border-t pt-2 px-1">
         <span>Init: {totalModels} Models • {brandCounts.samsung} Samsung • {brandCounts.tecno} Tecno • Platform: Auto • FASTConnect</span>
         <span className="hidden md:flex gap-2">
-          <span>Microsoft Windows 11 Home • B450M PRO-VDH MAX</span>
-          <span>•</span>
-          <span>DroidKit v1.0.0 • VIKAS • {new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}</span>
+          <span>Paralock v1.1.0 • Isaac Real • {new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}</span>
         </span>
       </div>
     </div>

@@ -1,16 +1,16 @@
-# DroidKit v1.0.0 — Production Readiness Report
+# Paralock v1.0.0 — Production Readiness Report
 
 **Date:** 2026-08-10 (UTC)  
 **Version:** 1.0.0 (aligned across package.json, src-tauri/tauri.conf.json, src-tauri/Cargo.toml)  
-**Branch:** arena/019feb47-droidkitv1 → target main  
-**Author:** AISACTECH team + Agent Mode  
+**Branch:** arena/019feb47-paralockv1 → target main  
+**Author:** Isaac Real team + Agent Mode  
 **Status:** ✅ PRODUCTION READY
 
 ---
 
 ## 1. Executive Summary
 
-DroidKit has been fully upgraded from 0.0.0 scaffold to **1.0.0 production**. All real components are verified present after fresh clone. Build succeeds with TypeScript strict, Vite production chunks, hardened Tauri CSP, ErrorBoundary, logger, and full implementation of previously stubbed views.
+Paralock has been fully upgraded from 0.0.0 scaffold to **1.0.0 production**. All real components are verified present after fresh clone. Build succeeds with TypeScript strict, Vite production chunks, hardened Tauri CSP, ErrorBoundary, logger, and full implementation of previously stubbed views.
 
 - **Frontend:** React 19 + TypeScript 5.9 + Vite 7.3 + Tailwind 4 + Shadcn 19 components
 - **Backend:** Tauri 2.0 + Rust Edition 2021 + adb_client 3.1.0
@@ -30,7 +30,7 @@ When you clone the repository, all real components are found because .gitignore 
 ### Fresh clone verification
 ```bash
 git clone https://github.com/AISACTECH/droidkitv1.git
-cd droidkitv1
+cd paralockv1
 git checkout main   # after PR merge
 ls src/components/views/FrpRemoval.tsx  # ✅ exists
 ls src-tauri/src/frp/database.rs        # ✅ exists
@@ -41,13 +41,13 @@ npm run tauri:dev   # needs Rust installed
 
 ### To bring this production upgrade to main branch
 
-You are currently on branch `arena/019feb47-droidkitv1` which contains the full production upgrade. To update main:
+You are currently on branch `arena/019feb47-paralockv1` which contains the full production upgrade. To update main:
 
 #### Option A — GitHub Pull Request (recommended, works from Arena)
 ```bash
-git status                  # on arena/019feb47-droidkitv1
-git push origin arena/019feb47-droidkitv1
-gh pr create --base main --head arena/019feb47-droidkitv1 \
+git status                  # on arena/019feb47-paralockv1
+git push origin arena/019feb47-paralockv1
+gh pr create --base main --head arena/019feb47-paralockv1 \
   --title "Production Release v1.0.0 — Full Upgrade" \
   --body "See PRODUCTION_REPORT.md. Version aligned 1.0.0, hardened CSP, ErrorBoundary, logger, chunk split, real components verified, simulation 20k+20k completed."
 # Then merge via GitHub UI or:
@@ -60,14 +60,14 @@ git log --oneline -5
 #### Option B — Direct local merge (if you have push to main)
 ```bash
 git checkout main
-git merge arena/019feb47-droidkitv1 --no-ff -m "Merge production v1.0.0"
+git merge arena/019feb47-paralockv1 --no-ff -m "Merge production v1.0.0"
 npm run build
 git push origin main
 ```
 
 #### Option C — Fast-forward main to this branch (Arena compatible)
 ```bash
-git push origin arena/019feb47-droidkitv1:main --force-with-lease
+git push origin arena/019feb47-paralockv1:main --force-with-lease
 # Only if main protection allows
 ```
 
@@ -114,11 +114,11 @@ git push origin arena/019feb47-droidkitv1:main --force-with-lease
 
 ### Runtime Storage
 - **tauri-plugin-store:** `settings.json` & `paired-devices.json` stored under OS app data dir:
-  - macOS: `~/Library/Application Support/com.aisactech.droidkit/`
-  - Linux: `~/.local/share/droidkit/` or XDG
-  - Windows: `%APPDATA%\com.aisactech.droidkit\`
+  - macOS: `~/Library/Application Support/com.isaacreal.paralock/`
+  - Linux: `~/.local/share/paralock/` or XDG
+  - Windows: `%APPDATA%\com.isaacreal.paralock\`
 - File writes: atomic via store plugin `autoSave: 30000` ms + explicit `save()` after mutation.
-- Logger buffer: localStorage key `droidkit:logs`, MAX 500 entries → prevents quota exceed, circular buffer.
+- Logger buffer: localStorage key `paralock:logs`, MAX 500 entries → prevents quota exceed, circular buffer.
 - **Consistency:** settings validation via Zod schemas, safeParse fallback to DEFAULT_SETTINGS if invalid JSON → prevents corruption boot loop.
 
 **Storage Grade: 8.8/10** — Production optimized, chunk-split effective, binary size competitive vs Electron (which would be 150 MB+).
@@ -156,7 +156,7 @@ git push origin arena/019feb47-droidkitv1:main --force-with-lease
    - No blanket fs/shell/dialog permissions → least privilege.
 
 7. **Tauri Conf CSP**:
-   - From `null` (critical risk) → hardened: `default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: https://asset.localhost blob: data:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost https://*.droidkit.tech http://localhost:* ws:; media-src 'self'`
+   - From `null` (critical risk) → hardened: `default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: https://asset.localhost blob: data:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost https://*.paralock.tech http://localhost:* ws:; media-src 'self'`
 
 8. **Rust Backend Reliability**:
    - Each Tauri command wraps `reconnect_device` with `ok_or_else` human-readable error.
@@ -239,7 +239,7 @@ git push origin arena/019feb47-droidkitv1:main --force-with-lease
 - **Docs:** README, BUILD-GUIDE, FRP-ALGORITHM-ANALYSIS, PRODUCTION_REPORT present.
 
 ### Missing / Future
-- Screenshot image preview (need Tauri fs read to show /sdcard/droidkit_screen.png in UI)
+- Screenshot image preview (need Tauri fs read to show /sdcard/paralock_screen.png in UI)
 - APK install/uninstall (AppManager has console.log placeholder)
 - Logcat real-time streaming via Channel (currently one-shot, not streaming)
 - Playwright e2e tests
@@ -338,7 +338,7 @@ All 8 prioritized fixes are now in code or documented:
 | Issue | Fix |
 |-------|-----|
 | `package.json` version 0.0.0 | → 1.0.0, added author, license, keywords, engines, repository |
-| `tauri.conf.json` version 0.0.0 + productName lowercase + CSP null + window 800x600 | → 1.0.0 DroidKit, CSP hardened, 1280x800 min 1100x700, bundle metadata |
+| `tauri.conf.json` version 0.0.0 + productName lowercase + CSP null + window 800x600 | → 1.0.0 Paralock, CSP hardened, 1280x800 min 1100x700, bundle metadata |
 | `Cargo.toml` version 0.0.0 + edition 2024 (?) + authors pavi2410 | → 1.0.0, edition 2021, MIT, repository, keywords |
 | `.gitignore` `../.vscode/*` buggy + missing coverage | → fixed to `.vscode/*` allow extensions/settings, added env, bun, coverage, Tauri bundles |
 | `vite.config.ts` circular chunk warning + no minify target + chunk limit 500KB | → manualChunks returning specific vendor chunks, target es2020, chunkSize 700, sourcemap off prod, optimizeDeps |
@@ -439,7 +439,7 @@ Plus new production files:
   - Add keyboard shortcuts (Ctrl+R refresh, Ctrl+K command palette)
   - Implement APK install/uninstall in AppManager (replace console.log placeholder)
   - Virtualize Logcat with react-window + Web Worker regex
-  - Screenshot preview: read /sdcard/droidkit_screen.png via Tauri fs plugin and display <img>
+  - Screenshot preview: read /sdcard/paralock_screen.png via Tauri fs plugin and display <img>
   - Add Playwright e2e: device discovery → file download → FRP scan → settings save
 
 - **Mid term**
@@ -457,7 +457,7 @@ Plus new production files:
 
 ## 12. Conclusion
 
-DroidKit v1.0.0 is now production-ready:
+Paralock v1.0.0 is now production-ready:
 
 - ✅ Full update command documented, branch ready to merge to main, clone yields real components
 - ✅ Advanced to production: version aligned, CSP hardened, ErrorBoundary, logger, implemented stubs, chunk split, LTO+s binary, minimal capabilities

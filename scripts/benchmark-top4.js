@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * DroidKit 2026 Benchmark Harness — Top 4 Competitors vs DroidKit
+ * Paralock 2026 Benchmark Harness — Top 4 Competitors vs Paralock
  * ----------------------------------------------------------------
- * Every DroidKit number below is MEASURED LIVE in this repository.
+ * Every Paralock number below is MEASURED LIVE in this repository.
  * Competitor numbers are DESK-AUDITED from official/reviewed sources
  * (each carries its provenance) — closed-source tools cannot be run here.
  *
@@ -27,7 +27,7 @@ const log = (s) => console.log(`[benchmark] ${s}`);
 const version = JSON.parse(read('package.json')).version;
 const commit = spawnSync('git', ['rev-parse', '--short', 'HEAD'], { encoding: 'utf8' }).stdout.trim();
 const nodeVer = process.version;
-log(`DroidKit v${version} · commit ${commit} · node ${nodeVer}`);
+log(`Paralock v${version} · commit ${commit} · node ${nodeVer}`);
 
 // ---------------------------------------------------------------- 1. typecheck (measured)
 log('1/6 typecheck (tsc --noEmit)…');
@@ -229,7 +229,7 @@ const competitors = [
 ];
 
 // ---------------------------------------------------------------- verified binary feature audit
-// 16 checks. DroidKit cells are computed from measurements above (or checked in source).
+// 16 checks. Paralock cells are computed from measurements above (or checked in source).
 // Competitor cells are desk-audited from official pages/reviews; only verified evidence scores 1 —
 // vendor claims and partials score 0. See BENCHMARK_2026.md §4.1 for the table + provenance.
 const labSrc = existsSync(path.join(ROOT, 'src/components/views/DeveloperLab.tsx'))
@@ -269,7 +269,7 @@ const verifiedAudit = {
     fourkey: verifiedCount('fourkey'), unlockgo: verifiedCount('unlockgo'), imobie: verifiedCount('imobie'),
   },
 };
-log(`7/7 verified audit: DroidKit ${verifiedAudit.verified_yes.droidkit}/${auditChecks.length} · Dr.Fone ${verifiedAudit.verified_yes.drfone} · 4uKey ${verifiedAudit.verified_yes.fourkey} · UnlockGo ${verifiedAudit.verified_yes.unlockgo} · iMobie ${verifiedAudit.verified_yes.imobie}`);
+log(`7/7 verified audit: Paralock ${verifiedAudit.verified_yes.droidkit}/${auditChecks.length} · Dr.Fone ${verifiedAudit.verified_yes.drfone} · 4uKey ${verifiedAudit.verified_yes.fourkey} · UnlockGo ${verifiedAudit.verified_yes.unlockgo} · iMobie ${verifiedAudit.verified_yes.imobie}`);
 
 // ---------------------------------------------------------------- scoring rubric (transparent)
 // Only verifiable criteria are scored. Device-bench success rates (Tier C) are EXCLUDED
@@ -285,14 +285,14 @@ const WEIGHTS = {
 };
 
 const scores = {
-  'DroidKit (AISACTECH)': {
+  'Paralock (Isaac Real)': {
     basis: 'measured in this repo',
     transparency_auditability: 10,   // MIT, full source, evidence dossiers, audit script, CI
     cost_of_ownership_3yr: 10,       // $0 forever vs ≥$119.85 3-yr subscriptions
     feature_depth_verifiable: 9,     // 15 methods, 4 reset modes, verification loop, runbook, JSON export, reality check, Knox/KG
     coverage_quality: 8.5,           // 268 named models w/ per-model methods + patch ceilings; fewer brands than Dr.Fone claims
     platform_reach: 10,              // Win + macOS (Intel/ARM) + Linux + browser demo
-    privacy_posture: 10,             // 0 telemetry SDKs, 0 external CSP origins, minimal capabilities
+    privacy_posture: 8,              // 0 telemetry SDKs, minimal capabilities; -2: connect-src carries an https://* wildcard (Paralock network lanes); script/style/img stay 'self'
     reproducibility_build_health: (tscErrors.length === 0 && buildOk) ? 10 : 0,
   },
   'Dr.Fone – Screen Unlock': {
@@ -324,9 +324,9 @@ const totals = Object.fromEntries(
 );
 
 // Sensitivity — computed break-even: if every closed tool became fully auditable
-// (transparency score raised to 10), could any of them overtake DroidKit on these
+// (transparency score raised to 10), could any of them overtake Paralock on these
 // verifiable criteria? Answers honestly whether the lead is structural or thin.
-const droidkitKey = 'DroidKit (AISACTECH)';
+const droidkitKey = 'Paralock (Isaac Real)';
 const breakeven = Object.fromEntries(
   Object.entries(scores)
     .filter(([tool]) => tool !== droidkitKey)
@@ -339,7 +339,7 @@ const breakeven = Object.fromEntries(
 
 // ---------------------------------------------------------------- report
 const report = {
-  meta: { tool: 'DroidKit', version, commit, date: new Date().toISOString(), node: nodeVer, harness: 'scripts/benchmark-top4.js', wall_seconds: +((Date.now() - started) / 1000).toFixed(1) },
+  meta: { tool: 'Paralock', version, commit, date: new Date().toISOString(), node: nodeVer, harness: 'scripts/benchmark-top4.js', wall_seconds: +((Date.now() - started) / 1000).toFixed(1) },
   measured: {
     typecheck: { errors: tscErrors.length, seconds: tscSeconds, first_errors: tscErrors.slice(0, 5) },
     build: { ok: buildOk, seconds: buildSeconds, modules_transformed: modulesTransformed, dist_files: distFiles, dist_raw_mb: +(distBytesRaw / 1048576).toFixed(2), dist_gzip_kb_text: +(distBytesGzip / 1024).toFixed(0) },

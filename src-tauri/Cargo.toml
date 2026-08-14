@@ -1,8 +1,8 @@
 [package]
-name = "droidkit"
+name = "paralock"
 version = "1.1.0"
 description = "Enterprise-grade cross-platform Android toolkit for device management, FRP removal, and developer diagnostics"
-authors = ["AISACTECH <support@droidkit.tech>"]
+authors = ["Isaac Real <isaacreal2026@gmail.com>"]
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/AISACTECH/droidkitv1"
@@ -16,7 +16,7 @@ categories = ["development-tools"]
 # The `_lib` suffix may seem redundant but it is necessary
 # to make the lib name unique and wouldn't conflict with the bin name.
 # This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
-name = "droidkit_lib"
+name = "paralock_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

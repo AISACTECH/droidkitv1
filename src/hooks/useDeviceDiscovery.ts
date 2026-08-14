@@ -1,5 +1,6 @@
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { useAppSettings } from '@/hooks/useAppSettings'
+import { usePageVisible, visibleRefetch } from '@/hooks/usePageVisible'
 import { 
   listDiscoveredDevices, 
   discoverWirelessDevicesDetailed, 
@@ -12,6 +13,7 @@ import {
 export function useUSBDevices() {
   const { getCategory } = useAppSettings()
   const deviceSettings = getCategory('devices')
+  const pageVisible = usePageVisible()
 
   const {
     data: devices = [],
@@ -24,8 +26,8 @@ export function useUSBDevices() {
       return discoveredDevices.filter(d => 'USB' in d.connection_method)
     },
     enabled: deviceSettings.autoDiscoverUSB,
-    refetchInterval: deviceSettings.autoRefresh ? deviceSettings.pollingInterval * 1000 : false,
-    refetchOnWindowFocus: true,
+    refetchInterval: visibleRefetch(deviceSettings.autoRefresh ? deviceSettings.pollingInterval * 1000 : false, pageVisible),
+    refetchOnWindowFocus: false,
     staleTime: 5 * 1000, // 5 seconds
   })
 
@@ -39,6 +41,7 @@ export function useUSBDevices() {
 export function useWirelessDevices() {
   const { getCategory } = useAppSettings()
   const deviceSettings = getCategory('devices')
+  const pageVisible = usePageVisible()
 
   const {
     data: devices = [],
@@ -50,8 +53,8 @@ export function useWirelessDevices() {
       return await discoverWirelessDevicesDetailed()
     },
     enabled: deviceSettings.autoDiscoverWireless,
-    refetchInterval: deviceSettings.autoDiscoverWireless ? deviceSettings.wirelessDiscoveryInterval * 1000 : false,
-    refetchOnWindowFocus: true,
+    refetchInterval: visibleRefetch(deviceSettings.autoDiscoverWireless ? deviceSettings.wirelessDiscoveryInterval * 1000 : false, pageVisible),
+    refetchOnWindowFocus: false,
     staleTime: 5 * 1000, // 5 seconds
   })
 

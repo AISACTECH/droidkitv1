@@ -12,7 +12,7 @@ export function DeviceSettings() {
       <div>
         <h3 className="text-lg font-medium mb-2">Device Connection & Discovery</h3>
         <p className="text-sm text-muted-foreground mb-4">
-          Control how DroidKit monitors, discovers, and connects to your Android devices.
+          Control how Paralock monitors, discovers, and connects to your Android devices.
         </p>
         
         <div className="space-y-6">

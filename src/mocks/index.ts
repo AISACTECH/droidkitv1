@@ -126,7 +126,7 @@ const MOCK_TECNO_METHODS = [
 
 export function initMocks() {
   if (typeof window !== 'undefined' && !('__TAURI_INTERNALS__' in window)) {
-    console.log('[DroidKit Mocks] Initializing browser-only mock Tauri API — full model catalogues loaded.');
+    console.log('[Paralock Mocks] Initializing browser-only mock Tauri API — full model catalogues loaded.');
     mockIPC((cmd: string, payload?: Record<string, any>) => {
       switch (cmd) {
         // Device Info & Basics
@@ -296,6 +296,28 @@ export function initMocks() {
             usb_config: 'mtp,adb',
             message: '✅ Handshake confirmed: USB Debugging enabled, Developer Options allowed, RSA authorized. App can now run reset 100%/70% and Knox removal. Phone will be brand new at Hi there home page after reset 100%.'
           };
+        case 'frp_partition_survey':
+          // Read-only survey mock — getprop samples + by-name listing.
+          return {
+            read_only: true,
+            properties: [
+              { name: 'ro.boot.verifiedbootstate', value: 'green' },
+              { name: 'ro.boot.vbmeta.device_state', value: 'locked' },
+              { name: 'ro.build.tags', value: 'release-keys' },
+              { name: 'ro.oem_unlock_supported', value: '1' },
+              { name: 'ro.boot.flash.locked', value: '1' },
+              { name: 'ro.build.version.security_patch', value: '2025-12-01' },
+              { name: 'ro.build.version.release', value: '15' },
+              { name: 'ro.build.fingerprint', value: 'samsung/a15xnnxx/a15x:15/AQ3A.202512.001/REL:user/release-keys' }
+            ],
+            block_devices: [
+              'lrwxrwxrwx 1 root root 21 boot -> /dev/block/mmcblk0p1',
+              'lrwxrwxrwx 1 root root 21 frp -> /dev/block/mmcblk0p23',
+              'lrwxrwxrwx 1 root root 21 vbmeta -> /dev/block/mmcblk0p3',
+              'lrwxrwxrwx 1 root root 21 userdata -> /dev/block/mmcblk0p40'
+            ]
+          };
+
         case 'frp_execute_reset_mode': {
           const modeId = payload?.resetModeId || 'factory_reset_frp100';
           const percent = modeId.includes('100') ? 100 : 70;

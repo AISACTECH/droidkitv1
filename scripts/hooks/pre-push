@@ -1,0 +1,6 @@
+#!/bin/sh
+# Optional pre-push hook. Install with:
+#   cp scripts/hooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+# Runs the cheap local CI gate so a red push never leaves the laptop.
+set -e
+npm run ci:fast

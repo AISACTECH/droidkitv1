@@ -20,7 +20,9 @@ import {
   Circle,
   Battery,
   Power,
-  Unplug
+  Unplug,
+  HelpCircle,
+  LifeBuoy
 } from "lucide-react"
 import { useState } from "react"
 
@@ -29,6 +31,7 @@ interface DeviceListProps {
   selectedDevice?: DeviceInfo
   onDeviceSelect: (device: DeviceInfo) => void
   onWirelessDeviceConnected: (device: DeviceInfo) => void
+  onOpenView?: (view: string) => void
 }
 
 interface UnifiedDevice {
@@ -207,7 +210,8 @@ export function DeviceList({
   connectedDevices,
   selectedDevice,
   onDeviceSelect,
-  onWirelessDeviceConnected
+  onWirelessDeviceConnected,
+  onOpenView
 }: DeviceListProps) {
   const { getCategory } = useAppSettings()
   const { data: usbDevices = [], isLoading: isDiscoveringUSB, refetch: refetchUSB } = useUSBDevices()
@@ -341,7 +345,8 @@ export function DeviceList({
             <div className="text-center text-muted-foreground">
               <Smartphone className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <h3 className="text-lg font-medium mb-2">No devices discovered</h3>
-              <p className="text-sm mb-6">Connect a device or start an emulator to get started</p>
+              <p className="text-sm mb-3">Connect a phone, scan USB / Wi‑Fi, or start an emulator.</p>
+              <p className="text-sm mb-6">Need a laptop password, MiFi, or button-phone job? Rescue Lab and Help work without Android.</p>
               <div className="flex flex-wrap justify-center gap-2">
                 <Button variant="outline" onClick={() => loadAvds()} disabled={isLoadingAvds}>
                   <RefreshCw className={`h-4 w-4 mr-2 ${isLoadingAvds ? 'animate-spin' : ''}`} />
@@ -358,6 +363,18 @@ export function DeviceList({
                     <RefreshCw className={`h-4 w-4 mr-2 ${isDiscoveringWireless ? 'animate-spin' : ''}`} />
                     Scan Wireless
                   </Button>
+                )}
+                {onOpenView && (
+                  <>
+                    <Button variant="outline" onClick={() => onOpenView('rescue-lab')}>
+                      <LifeBuoy className="h-4 w-4 mr-2" />
+                      Rescue Lab
+                    </Button>
+                    <Button variant="outline" onClick={() => onOpenView('help')}>
+                      <HelpCircle className="h-4 w-4 mr-2" />
+                      Help & Guide
+                    </Button>
+                  </>
                 )}
               </div>
             </div>

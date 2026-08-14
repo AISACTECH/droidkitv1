@@ -1,11 +1,11 @@
 # ==============================================================================
-# DroidKit v1.1.0 - Automated Windows Build Script
+# Paralock v1.1.0 - Automated Windows Build Script
 # ==============================================================================
-# Builds DroidKit for Windows (x64 native installer and standalone executable).
+# Builds Paralock for Windows (x64 native installer and standalone executable).
 # Supports both Bun and Node.js/NPM environments automatically.
 # Output (version read dynamically from package.json at build time):
-#   Installer:  src-tauri/target/release/bundle/nsis/DroidKit_<version>_x64-setup.exe
-#   Executable: src-tauri/target/release/droidkit.exe
+#   Installer:  src-tauri/target/release/bundle/nsis/Paralock_<version>_x64-setup.exe
+#   Executable: src-tauri/target/release/paralock.exe
 # Full guide: docs/WINDOWS-SETUP.md
 # ==============================================================================
 
@@ -27,7 +27,7 @@ function Write-Err {
 }
 
 Write-Host "================================================" -ForegroundColor Yellow
-Write-Host "         DroidKit v1 - Windows Build Tool       " -ForegroundColor Yellow
+Write-Host "         Paralock v1 - Windows Build Tool       " -ForegroundColor Yellow
 Write-Host "================================================" -ForegroundColor Yellow
 
 # Step 0: Ensure we are in repo root
@@ -55,7 +55,7 @@ if (Get-Command bun -ErrorAction SilentlyContinue) {
         $pkgCmd = "bun"
         $runCmd = "bun run"
     } catch {
-        Write-Err "Failed to install Bun automatically. Please install Node.js 18+ LTS via: winget install --id OpenJS.NodeJS.LTS -e"
+        Write-Err "Failed to install Bun automatically. Please install Node.js 22 LTS via: winget install --id OpenJS.NodeJS.LTS -e"
         exit 1
     }
 }
@@ -136,7 +136,7 @@ if ($LASTEXITCODE -ne 0) {
 
 # Step 9: Report artifacts
 Write-Host "`n================================================" -ForegroundColor Green
-Write-Success "DroidKit Windows Build Complete!"
+Write-Success "Paralock Windows Build Complete!"
 Write-Host "================================================" -ForegroundColor Green
 Write-Host "Built Artifacts Location:" -ForegroundColor White
 Get-ChildItem -Path "src-tauri\target\release\bundle" -Recurse -Force -ErrorAction SilentlyContinue | Select-Object FullName, Length | Format-Table -AutoSize

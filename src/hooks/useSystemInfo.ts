@@ -8,6 +8,7 @@ import {
   getDeviceNetworkInfo
 } from '@/tauri-commands'
 import { createLogger } from '@/lib/logger'
+import { usePageVisible, visibleRefetch } from '@/hooks/usePageVisible'
 
 const logger = createLogger('SystemInfo')
 
@@ -55,13 +56,14 @@ export function useDeviceDisplayInfo(device: DeviceInfo | undefined) {
 
 // Battery Info Hook - more frequent refresh
 export function useDeviceBatteryInfo(device: DeviceInfo | undefined) {
+  const pageVisible = usePageVisible()
   return useQuery({
     queryKey: systemInfoKeys.battery(device?.serial_no || ''),
     queryFn: () => getDeviceBatteryInfo(device!.serial_no),
     enabled: !!device,
     staleTime: 30 * 1000,
     gcTime: 2 * 60 * 1000,
-    refetchInterval: 60 * 1000, // Refresh every minute for production monitoring
+    refetchInterval: visibleRefetch(60 * 1000, pageVisible),
     retry: 1, // Battery info might not be available on all devices
   })
 }

@@ -1,26 +1,26 @@
 {
   "meta": {
-    "tool": "DroidKit",
+    "tool": "Paralock",
     "version": "1.1.0",
-    "commit": "e3e68b8",
-    "date": "2026-08-14T09:25:23.713Z",
+    "commit": "5298644",
+    "date": "2026-08-14T10:34:22.689Z",
     "node": "v22.22.3",
     "harness": "scripts/benchmark-top4.js",
-    "wall_seconds": 22
+    "wall_seconds": 25.7
   },
   "measured": {
     "typecheck": {
       "errors": 0,
-      "seconds": 7.12,
+      "seconds": 9.45,
       "first_errors": []
     },
     "build": {
       "ok": true,
-      "seconds": 11.96,
-      "modules_transformed": 2027,
-      "dist_files": 19,
-      "dist_raw_mb": 2.51,
-      "dist_gzip_kb_text": 228
+      "seconds": 13.39,
+      "modules_transformed": 2072,
+      "dist_files": 20,
+      "dist_raw_mb": 1.6,
+      "dist_gzip_kb_text": 314
     },
     "frp_coverage": {
       "models_total": 268,
@@ -65,14 +65,16 @@
     },
     "privacy_security": {
       "telemetry_sdk_hits": [],
-      "csp_external_origins": [],
+      "csp_external_origins": [
+        "https://*"
+      ],
       "capability_permissions": 16
     },
     "simulation": {
       "agents": 40000,
-      "seconds": 2.9,
-      "avg_errors_per_dev": "17.03",
-      "avg_errors_per_user": "1.87"
+      "seconds": 2.76,
+      "avg_errors_per_dev": "17.02",
+      "avg_errors_per_user": "1.89"
     },
     "platform_ci": {
       "linux": true,
@@ -351,14 +353,14 @@
     },
     "note": "Verifiable criteria only. Device-bench success rates excluded until measured per protocol.",
     "scores": {
-      "DroidKit (AISACTECH)": {
+      "Paralock (Isaac Real)": {
         "basis": "measured in this repo",
         "transparency_auditability": 10,
         "cost_of_ownership_3yr": 10,
         "feature_depth_verifiable": 9,
         "coverage_quality": 8.5,
         "platform_reach": 10,
-        "privacy_posture": 10,
+        "privacy_posture": 8,
         "reproducibility_build_health": 10
       },
       "Dr.Fone – Screen Unlock": {
@@ -403,7 +405,7 @@
       }
     },
     "totals": {
-      "DroidKit (AISACTECH)": 9.57,
+      "Paralock (Isaac Real)": 9.38,
       "Dr.Fone – Screen Unlock": 5.75,
       "Tenorshare 4uKey": 5.05,
       "iToolab UnlockGo": 5.13,

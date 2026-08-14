@@ -1,78 +1,110 @@
-name: CI - Production Validation
+name: ci
 
 on:
   push:
-    branches: [main, arena/*]
+    branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Fast, cheap gates that turn every push/PR green-or-red in minutes,
+# BEFORE the heavyweight publish matrix ever runs. This is the
+# "installs-from-git-and-builds-without-friction" guarantee: nothing
+# unbuildable reaches main unnoticed.
 
 jobs:
-  frontend:
+  frontend-gates:
+    name: Frontend gates (doctor, typecheck, build, tests, benchmarks)
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
 
-      - name: Install dependencies
+      - name: refuse bun.lock (tauri-action lockfile detect)
+        run: |
+          if [ -f bun.lock ] || [ -f bun.lockb ]; then
+            echo "::error::bun.lock present — publish will pick bun over npm."
+            exit 1
+          fi
+
+      - name: install frontend dependencies (frozen lockfile = one truth)
         run: npm ci
 
-      - name: TypeScript strict check
-        run: npx tsc --noEmit
+      - name: environment doctor (launch/build diagnosis)
+        run: npm run doctor
 
-      - name: Production build
+      - name: release preflight (schema + conflict markers)
+        run: npm run release:prepare
+
+      - name: typecheck
+        run: npm run lint
+
+      - name: production build
         run: npm run build
 
-      - name: Check real components exist
-        run: |
-          echo "Checking core components..."
-          test -f src/App.tsx || (echo "Missing App.tsx" && exit 1)
-          test -f src/components/ErrorBoundary.tsx || (echo "Missing ErrorBoundary" && exit 1)
-          test -f src/lib/logger.ts || (echo "Missing logger" && exit 1)
-          test -f src/components/views/PerformanceMonitor.tsx || (echo "Missing PerformanceMonitor" && exit 1)
-          test -f src/components/views/ScreenControl.tsx || (echo "Missing ScreenControl" && exit 1)
-          test -f src-tauri/Cargo.toml || (echo "Missing Cargo.toml" && exit 1)
-          test -f src-tauri/tauri.conf.json || (echo "Missing tauri.conf.json" && exit 1)
-          echo "✅ All core components found"
+      - name: regression suite (61+ checks)
+        run: node scripts/test-all.js
 
-      - name: Production audit
-        run: node scripts/production-audit.js || true
+      - name: adaptive engine + research layer + bench desk
+        run: npm run test:adaptive && npm run test:research && npm run test:bench
 
-      - name: Large-scale simulation (quick)
-        run: node scripts/simulate-large-scale.js --devs=1000 --users=1000 --quick
+      - name: rescue lab + NCK + core lib gates
+        run: npm run test:lab && npm run test:nck && npm run test:rescue && npm run test:core
 
-      - name: Check bundle size
-        run: |
-          SIZE=$(du -sk dist | cut -f1)
-          echo "dist size KB: $SIZE"
-          if [ $SIZE -gt 10240 ]; then
-            echo "⚠️ dist >10MB, consider code splitting"
-          else
-            echo "✅ dist size OK"
-          fi
+      - name: brand + protocol matrix gates
+        run: npm run test:brands && npm run test:matrix
 
-  security:
-    runs-on: ubuntu-latest
+      - name: test-generated benchmarks (documents stay honest)
+        run: npm run benchmark:frp && npm run benchmark:sheet
+
+      - name: production audit
+        run: npm run audit:prod
+
+  rust-compile-check:
+    name: Rust compile check (${{ matrix.os }}) — the historical blind spot
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v4
-      - name: Check CSP not null
+      - uses: actions/checkout@v5
+
+      - name: install system libs (ubuntu)
+        if: matrix.os == 'ubuntu-latest'
         run: |
-          CSP=$(cat src-tauri/tauri.conf.json | grep -o '"csp":.*')
-          echo "CSP: $CSP"
-          if echo "$CSP" | grep -q "null"; then
-            echo "❌ CSP is null - security risk!"
-            exit 1
-          else
-            echo "✅ CSP hardened"
-          fi
-      - name: Check versions aligned
-        run: |
-          PKG=$(node -p "require('./package.json').version")
-          TAURI=$(node -p "require('./src-tauri/tauri.conf.json').version")
-          CARGO=$(grep 'version =' src-tauri/Cargo.toml | head -1 | cut -d'"' -f2)
-          echo "package.json: $PKG, tauri.conf: $TAURI, Cargo.toml: $CARGO"
-          if [ "$PKG" != "$TAURI" ]; then echo "Version mismatch" && exit 1; fi
-          echo "✅ Versions aligned"
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev libsoup-3.0-dev libappindicator3-dev librsvg2-dev patchelf libudev-dev libusb-1.0-0-dev
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: frontend deps (cargo generate_context needs dist/, so build it)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: build frontend (dist/ feeds tauri generate_context!)
+        run: npm ci && npm run build
+
+      - name: cargo check src-tauri
+        working-directory: src-tauri
+        run: cargo check --locked

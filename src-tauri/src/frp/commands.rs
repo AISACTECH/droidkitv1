@@ -19,7 +19,7 @@ use crate::frp::detector::{detect_frp_state, FrpDetectionResult, FrpState};
 
 /// Detect FRP state on a connected device
 #[tauri::command]
-pub fn frp_detect(device_serial: String) -> Result<FrpDetectionResult, String> {
+pub async fn frp_detect(device_serial: String) -> Result<FrpDetectionResult, String> {
     let mut device = reconnect_device(&device_serial)
         .ok_or_else(|| "Failed to connect to device".to_string())?;
 
@@ -28,7 +28,7 @@ pub fn frp_detect(device_serial: String) -> Result<FrpDetectionResult, String> {
 
 /// Run a specific FRP bypass method
 #[tauri::command]
-pub fn frp_run_method(device_serial: String, method_id: String) -> Result<BypassResult, String> {
+pub async fn frp_run_method(device_serial: String, method_id: String) -> Result<BypassResult, String> {
     let mut device = reconnect_device(&device_serial)
         .ok_or_else(|| "Failed to connect to device".to_string())?;
 
@@ -40,7 +40,7 @@ pub fn frp_run_method(device_serial: String, method_id: String) -> Result<Bypass
 
 /// Run the automatic FRP bypass sequence (tries safest methods first)
 #[tauri::command]
-pub fn frp_auto_bypass(device_serial: String) -> Result<BypassResult, String> {
+pub async fn frp_auto_bypass(device_serial: String) -> Result<BypassResult, String> {
     let mut device = reconnect_device(&device_serial)
         .ok_or_else(|| "Failed to connect to device".to_string())?;
 
@@ -49,31 +49,31 @@ pub fn frp_auto_bypass(device_serial: String) -> Result<BypassResult, String> {
 
 /// Get the Samsung device compatibility database
 #[tauri::command]
-pub fn frp_get_device_database() -> Vec<SamsungModel> {
+pub async fn frp_get_device_database() -> Vec<SamsungModel> {
     get_samsung_database()
 }
 
 /// Look up a specific Samsung model
 #[tauri::command]
-pub fn frp_lookup_model(model_code: String) -> Option<SamsungModel> {
+pub async fn frp_lookup_model(model_code: String) -> Option<SamsungModel> {
     find_model(&model_code)
 }
 
 /// Search the Samsung device database
 #[tauri::command]
-pub fn frp_search_models(query: String) -> Vec<SamsungModel> {
+pub async fn frp_search_models(query: String) -> Vec<SamsungModel> {
     search_models(&query)
 }
 
 /// List all supported Samsung models
 #[tauri::command]
-pub fn frp_list_supported_models() -> Vec<SamsungModel> {
+pub async fn frp_list_supported_models() -> Vec<SamsungModel> {
     list_all_models()
 }
 
 /// Get all available FRP methods with their details
 #[tauri::command]
-pub fn frp_get_all_methods() -> Vec<FrpMethodInfo> {
+pub async fn frp_get_all_methods() -> Vec<FrpMethodInfo> {
     let methods = vec![
         FrpMethod::SetupWizardDisable,
         FrpMethod::DeviceProvisioning,
@@ -106,7 +106,7 @@ pub fn frp_get_all_methods() -> Vec<FrpMethodInfo> {
 
 /// Detect chipset family from device properties
 #[tauri::command]
-pub fn frp_detect_chipset(device_serial: String) -> Result<ChipsetFamily, String> {
+pub async fn frp_detect_chipset(device_serial: String) -> Result<ChipsetFamily, String> {
     let mut device = reconnect_device(&device_serial)
         .ok_or_else(|| "Failed to connect to device".to_string())?;
 
@@ -125,7 +125,7 @@ pub fn frp_detect_chipset(device_serial: String) -> Result<ChipsetFamily, String
 
 /// Build a complete device profile for intelligent method selection
 #[tauri::command]
-pub fn frp_build_device_profile(device_serial: String) -> Result<DeviceProfile, String> {
+pub async fn frp_build_device_profile(device_serial: String) -> Result<DeviceProfile, String> {
     let mut device = reconnect_device(&device_serial)
         .ok_or_else(|| "Failed to connect to device".to_string())?;
 
@@ -173,13 +173,13 @@ pub fn frp_build_device_profile(device_serial: String) -> Result<DeviceProfile, 
 
 /// Get recommended algorithm for a device based on its chipset
 #[tauri::command]
-pub fn frp_get_recommended_algorithm(chipset: ChipsetFamily) -> FrpAlgorithm {
+pub async fn frp_get_recommended_algorithm(chipset: ChipsetFamily) -> FrpAlgorithm {
     chipset.primary_method()
 }
 
 /// Get all available algorithms for a chipset, ordered by success rate
 #[tauri::command]
-pub fn frp_get_chipset_algorithms(chipset: ChipsetFamily) -> Vec<FrpAlgorithmInfo> {
+pub async fn frp_get_chipset_algorithms(chipset: ChipsetFamily) -> Vec<FrpAlgorithmInfo> {
     chipset.available_methods().into_iter().map(|algo| {
         FrpAlgorithmInfo {
             id: algo.id().to_string(),
@@ -196,7 +196,7 @@ pub fn frp_get_chipset_algorithms(chipset: ChipsetFamily) -> Vec<FrpAlgorithmInf
 
 /// Get available FRP reset modes
 #[tauri::command]
-pub fn frp_get_reset_modes() -> Vec<FrpResetModeInfo> {
+pub async fn frp_get_reset_modes() -> Vec<FrpResetModeInfo> {
     vec![
         FrpResetMode::FactoryResetRemoveFrp100,
         FrpResetMode::FactoryResetRemoveFrp70,
@@ -214,7 +214,7 @@ pub fn frp_get_reset_modes() -> Vec<FrpResetModeInfo> {
 
 /// Get phases for a specific algorithm
 #[tauri::command]
-pub fn frp_get_algorithm_phases(algorithm_id: String) -> Vec<crate::frp::algorithm::AlgorithmPhase> {
+pub async fn frp_get_algorithm_phases(algorithm_id: String) -> Vec<crate::frp::algorithm::AlgorithmPhase> {
     let algo = match algorithm_id.as_str() {
         "exynos_download_mode" => Some(FrpAlgorithm::ExynosDownloadMode),
         "qualcomm_edl" => Some(FrpAlgorithm::QualcommEDL),
@@ -315,43 +315,43 @@ fn parse_method_id(id: &str) -> Option<FrpMethod> {
 
 /// Get the full Tecno device compatibility database
 #[tauri::command]
-pub fn frp_get_tecno_database() -> Vec<TecnoModel> {
+pub async fn frp_get_tecno_database() -> Vec<TecnoModel> {
     get_tecno_database()
 }
 
 /// Look up a specific Tecno model by marketing name
 #[tauri::command]
-pub fn frp_lookup_tecno_model(name: String) -> Option<TecnoModel> {
+pub async fn frp_lookup_tecno_model(name: String) -> Option<TecnoModel> {
     find_tecno_model(&name)
 }
 
 /// Search the Tecno device database
 #[tauri::command]
-pub fn frp_search_tecno_models(query: String) -> Vec<TecnoModel> {
+pub async fn frp_search_tecno_models(query: String) -> Vec<TecnoModel> {
     search_tecno_models(&query)
 }
 
 /// List all supported Tecno models
 #[tauri::command]
-pub fn frp_list_tecno_models() -> Vec<TecnoModel> {
+pub async fn frp_list_tecno_models() -> Vec<TecnoModel> {
     list_all_tecno_models()
 }
 
 /// Get Tecno models filtered by series (Pop, Spark, Camon, Pova, Phantom)
 #[tauri::command]
-pub fn frp_get_tecno_by_series(series: String) -> Vec<TecnoModel> {
+pub async fn frp_get_tecno_by_series(series: String) -> Vec<TecnoModel> {
     get_tecno_by_series(&series)
 }
 
 /// Get Tecno models filtered by chipset family (MediaTek, Spreadtrum)
 #[tauri::command]
-pub fn frp_get_tecno_by_chipset(family: String) -> Vec<TecnoModel> {
+pub async fn frp_get_tecno_by_chipset(family: String) -> Vec<TecnoModel> {
     get_tecno_by_chipset_family(&family)
 }
 
 /// Get all available Tecno FRP methods with their details
 #[tauri::command]
-pub fn frp_get_tecno_methods() -> Vec<TecnoFrpMethodInfo> {
+pub async fn frp_get_tecno_methods() -> Vec<TecnoFrpMethodInfo> {
     let methods = vec![
         TecnoFrpMethod::MtkBromErase,
         TecnoFrpMethod::SpdBootloaderErase,
@@ -395,19 +395,19 @@ pub struct TecnoFrpMethodInfo {
 
 /// Get the full Q4 device compatibility database (33 models)
 #[tauri::command]
-pub fn frp_get_q4_database() -> Vec<TecnoModel> {
+pub async fn frp_get_q4_database() -> Vec<TecnoModel> {
     get_q4_database()
 }
 
 /// Search the Q4 device database
 #[tauri::command]
-pub fn frp_search_q4_models(query: String) -> Vec<TecnoModel> {
+pub async fn frp_search_q4_models(query: String) -> Vec<TecnoModel> {
     search_q4_models(&query)
 }
 
 /// Get Q4 models filtered by brand/series ("all", "Nokia", "Moto", "Huawei", "Sony", "Pixel", "Credit")
 #[tauri::command]
-pub fn frp_get_q4_by_brand(brand: String) -> Vec<TecnoModel> {
+pub async fn frp_get_q4_by_brand(brand: String) -> Vec<TecnoModel> {
     get_q4_by_brand(&brand)
 }
 
@@ -415,19 +415,19 @@ pub fn frp_get_q4_by_brand(brand: String) -> Vec<TecnoModel> {
 
 /// Get the full Infinix device compatibility database (35 models)
 #[tauri::command]
-pub fn frp_get_infinix_database() -> Vec<TecnoModel> {
+pub async fn frp_get_infinix_database() -> Vec<TecnoModel> {
     get_infinix_database()
 }
 
 /// Search the Infinix device database
 #[tauri::command]
-pub fn frp_search_infinix_models(query: String) -> Vec<TecnoModel> {
+pub async fn frp_search_infinix_models(query: String) -> Vec<TecnoModel> {
     search_infinix_models(&query)
 }
 
 /// Get Infinix models filtered by series ("all", "Hot", "Note", "Smart", "Zero", "GT")
 #[tauri::command]
-pub fn frp_get_infinix_by_series(series: String) -> Vec<TecnoModel> {
+pub async fn frp_get_infinix_by_series(series: String) -> Vec<TecnoModel> {
     get_infinix_by_series(&series)
 }
 
@@ -435,19 +435,19 @@ pub fn frp_get_infinix_by_series(series: String) -> Vec<TecnoModel> {
 
 /// Get the full Itel device compatibility database (35 models)
 #[tauri::command]
-pub fn frp_get_itel_database() -> Vec<TecnoModel> {
+pub async fn frp_get_itel_database() -> Vec<TecnoModel> {
     get_itel_database()
 }
 
 /// Search the Itel device database
 #[tauri::command]
-pub fn frp_search_itel_models(query: String) -> Vec<TecnoModel> {
+pub async fn frp_search_itel_models(query: String) -> Vec<TecnoModel> {
     search_itel_models(&query)
 }
 
 /// Get Itel models filtered by series ("all", "A", "P", "S", "Vision")
 #[tauri::command]
-pub fn frp_get_itel_by_series(series: String) -> Vec<TecnoModel> {
+pub async fn frp_get_itel_by_series(series: String) -> Vec<TecnoModel> {
     get_itel_by_series(&series)
 }
 
@@ -455,19 +455,19 @@ pub fn frp_get_itel_by_series(series: String) -> Vec<TecnoModel> {
 
 /// Get the full Q3 device compatibility database (60 models)
 #[tauri::command]
-pub fn frp_get_q3_database() -> Vec<TecnoModel> {
+pub async fn frp_get_q3_database() -> Vec<TecnoModel> {
     get_q3_database()
 }
 
 /// Search the Q3 device database
 #[tauri::command]
-pub fn frp_search_q3_models(query: String) -> Vec<TecnoModel> {
+pub async fn frp_search_q3_models(query: String) -> Vec<TecnoModel> {
     search_q3_models(&query)
 }
 
 /// Get Q3 models filtered by brand/series ("all", "Xiaomi", "Redmi", "POCO", "OPPO", "Realme", "Vivo", "Honor")
 #[tauri::command]
-pub fn frp_get_q3_by_brand(brand: String) -> Vec<TecnoModel> {
+pub async fn frp_get_q3_by_brand(brand: String) -> Vec<TecnoModel> {
     get_q3_by_brand(&brand)
 }
 
@@ -478,7 +478,7 @@ use crate::frp::reset::{execute_reset_mode, execute_knox_removal, KnoxRemovalRes
 /// Execute full reset mode — Factory Reset + FRP 100% / 70% to make phone brand new at Hi there home page
 /// Confirms: USB debugging handshake + dev options enabled allows app to handshake and run reset 100% which makes phone new like brand new at home page
 #[tauri::command]
-pub fn frp_execute_reset_mode(device_serial: String, reset_mode_id: String) -> Result<ResetExecutionResult, String> {
+pub async fn frp_execute_reset_mode(device_serial: String, reset_mode_id: String) -> Result<ResetExecutionResult, String> {
     let mut device = reconnect_device(&device_serial)
         .ok_or_else(|| "Failed to connect to device. Ensure USB Debugging is enabled in Developer Options and device is authorized.".to_string())?;
 
@@ -496,7 +496,7 @@ pub fn frp_execute_reset_mode(device_serial: String, reset_mode_id: String) -> R
 /// Knox Removal — disables Knox security, Knox Guard, Secure Folder, Knox attestation
 /// Confirms: Knox remove feature exists and works 100%
 #[tauri::command]
-pub fn frp_remove_knox(device_serial: String) -> Result<KnoxRemovalResult, String> {
+pub async fn frp_remove_knox(device_serial: String) -> Result<KnoxRemovalResult, String> {
     let mut device = reconnect_device(&device_serial)
         .ok_or_else(|| "Failed to connect to device. Ensure USB Debugging handshake is complete.".to_string())?;
 
@@ -505,7 +505,7 @@ pub fn frp_remove_knox(device_serial: String) -> Result<KnoxRemovalResult, Strin
 
 /// Verify USB debugging handshake — confirms dev options + USB debugging allows handshake
 #[tauri::command]
-pub fn frp_verify_handshake(device_serial: String) -> Result<HandshakeVerification, String> {
+pub async fn frp_verify_handshake(device_serial: String) -> Result<HandshakeVerification, String> {
     let mut device = reconnect_device(&device_serial)
         .ok_or_else(|| "No device handshake. Enable Developer Options (tap Build Number 7 times) + Enable USB Debugging + Authorize RSA key.".to_string())?;
 
@@ -537,4 +537,17 @@ pub struct HandshakeVerification {
     pub usb_state: String,
     pub usb_config: String,
     pub message: String,
+}
+
+// ==================== Adaptive Engine — Partition Survey (read-only) ====================
+
+/// Run the read-only partition/boot survey for the Adaptive Engine.
+/// Contract: getprop + `ls /dev/block/by-name` only — no writes, ever.
+#[tauri::command]
+pub async fn frp_partition_survey(
+    device_serial: String,
+) -> Result<crate::frp::partition::PartitionSurveyRaw, String> {
+    let mut device =
+        reconnect_device(&device_serial).ok_or_else(|| "Failed to connect to device".to_string())?;
+    Ok(crate::frp::partition::run_partition_survey(&mut device))
 }

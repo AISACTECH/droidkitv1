@@ -1,11 +1,11 @@
 {
-  "name": "droidkit",
+  "name": "paralock",
   "private": true,
   "version": "1.1.0",
   "description": "Enterprise-grade cross-platform Android toolkit — device management, FRP removal, system diagnostics, and developer utilities powered by Tauri + React",
   "author": {
-    "name": "AISACTECH",
-    "email": "support@droidkit.tech"
+    "name": "Isaac Real",
+    "email": "isaacreal2026@gmail.com"
   },
   "license": "MIT",
   "type": "module",
@@ -29,11 +29,17 @@
     "url": "https://github.com/AISACTECH/droidkitv1/issues"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "node": ">=22.6.0",
+    "npm": ">=10.0.0"
   },
   "packageManager": "npm@10.9.0",
   "scripts": {
+    "doctor": "node --experimental-strip-types scripts/doctor.mts",
+    "ci": "node --experimental-strip-types scripts/ci-local.mts",
+    "ci:fast": "node --experimental-strip-types scripts/ci-local.mts --fast",
+    "test:bench": "node --experimental-strip-types scripts/verify-bench.mts",
+    "release:prepare": "node --experimental-strip-types scripts/prepare-release.mts",
+    "bench:ingest": "node --experimental-strip-types scripts/ingest-bench-log.mts",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
@@ -46,11 +52,27 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" || echo 'prettier not installed, skipping'",
     "analyze": "vite build --mode analyze",
     "audit:prod": "node scripts/production-audit.js",
+    "test:rescue": "node --experimental-strip-types scripts/verify-gesture-crack.mts",
+    "test:nck": "node --experimental-strip-types scripts/verify-nck.mts",
+    "test:lab": "node --experimental-strip-types scripts/verify-rescue-lab.mts",
+    "test:core": "node --experimental-strip-types scripts/verify-core-lib.mts",
+    "test:adaptive": "node --experimental-strip-types scripts/verify-adaptive-engine.mts",
+    "test:research": "node --experimental-strip-types scripts/verify-parallel-research.mts",
+    "benchmark:frp": "node --experimental-strip-types scripts/benchmark-frp-tools.mts",
+    "benchmark:sheet": "node --experimental-strip-types scripts/benchmark-comparison-sheet.mts",
+    "refine:ui-flows": "node --experimental-strip-types scripts/refine-ui-flows.mts",
+    "update:validate": "node --experimental-strip-types scripts/validate-update-pack.mts",
+    "test:brands": "node --experimental-strip-types scripts/verify-brand-db.mts",
+    "test:matrix": "node --experimental-strip-types scripts/verify-protocol-matrix.mts",
+    "build:help-pdf": "node --experimental-strip-types scripts/build-help-pdf.mts",
     "simulate": "node scripts/simulate-large-scale.js",
+    "simulate:market": "node scripts/simulate-market-comparison.js",
+    "perf:report": "node scripts/perf-report.js",
     "simulate:devs": "node scripts/simulate-large-scale.js --devs=20000",
     "simulate:users": "node scripts/simulate-large-scale.js --users=20000",
     "simulate:full": "node scripts/simulate-large-scale.js --devs=20000 --users=20000",
-    "postinstall": "echo 'DroidKit v1.1.0 installed. Run npm run tauri:dev for desktop or npm run dev for browser mock mode.'"
+    "postinstall": "echo 'Paralock v1.1.0 installed. Run npm run tauri:dev for desktop or npm run dev for browser mock mode.'",
+    "simulate:frp-mock": "node scripts/sim-harness.mjs"
   },
   "dependencies": {
     "@fontsource-variable/jost": "^5.1.1",
@@ -88,6 +110,7 @@
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.2",
     "@vitejs/plugin-react": "^5.0.0",
+    "pdfkit": "^0.15.2",
     "tw-animate-css": "^1.3.6",
     "typescript": "~5.9.2",
     "vite": "^7.1.2"
