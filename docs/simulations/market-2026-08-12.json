@@ -15,7 +15,7 @@
   ],
   "scenarioA_today": {
     "overall": {
-      "droidkit": {
+      "paralock": {
         "sessions": 10266,
         "categoriesCoveredShare": "100.0%",
         "successShareWhereCovered": "65.8%",
@@ -61,7 +61,7 @@
           "success": "21.0%",
           "avgStars": "2.00"
         },
-        "droidkit": {
+        "paralock": {
           "n": 3146,
           "success": "72.0%",
           "avgStars": "4.23"
@@ -73,7 +73,7 @@
           "success": "48.1%",
           "avgStars": "3.48"
         },
-        "droidkit": {
+        "paralock": {
           "n": 1182,
           "success": "70.6%",
           "avgStars": "4.22"
@@ -90,7 +90,7 @@
         }
       },
       "Africa": {
-        "droidkit": {
+        "paralock": {
           "n": 2289,
           "success": "72.7%",
           "avgStars": "4.23"
@@ -112,7 +112,7 @@
         }
       },
       "North America": {
-        "droidkit": {
+        "paralock": {
           "n": 1949,
           "success": "53.8%",
           "avgStars": "4.01"
@@ -134,7 +134,7 @@
         }
       },
       "Europe": {
-        "droidkit": {
+        "paralock": {
           "n": 1229,
           "success": "56.6%",
           "avgStars": "4.04"
@@ -166,7 +166,7 @@
           "success": "43.6%",
           "avgStars": "3.47"
         },
-        "droidkit": {
+        "paralock": {
           "n": 471,
           "success": "51.8%",
           "avgStars": "3.95"
@@ -208,7 +208,7 @@
         "reports": 302
       }
     ],
-    "droidkitOwnPains": [
+    "paralockOwnPains": [
       {
         "pain": "needs Node/Rust/winget setup — not a one-click exe for total beginners",
         "reports": 1051
@@ -238,7 +238,7 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "India",
         "stars": 3,
@@ -252,21 +252,21 @@
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "United States",
         "stars": 4,
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "South Africa",
         "stars": 4,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Mexico",
         "stars": 5,
@@ -301,21 +301,21 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Canada",
         "stars": 3,
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "India",
         "stars": 5,
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "India",
         "stars": 3,
@@ -329,21 +329,21 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Mexico",
         "stars": 4,
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Brazil",
         "stars": 3,
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "South Africa",
         "stars": 5,
@@ -364,7 +364,7 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "India",
         "stars": 5,
@@ -434,7 +434,7 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Egypt",
         "stars": 5,
@@ -448,14 +448,14 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Mexico",
         "stars": 4,
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "United Kingdom",
         "stars": 4,
@@ -476,7 +476,7 @@
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Kenya",
         "stars": 4,
@@ -518,7 +518,7 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "South Africa",
         "stars": 3,
@@ -532,7 +532,7 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Nigeria",
         "stars": 4,
@@ -546,7 +546,7 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Bangladesh",
         "stars": 4,
@@ -560,14 +560,14 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Nigeria",
         "stars": 4,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Brazil",
         "stars": 5,
@@ -588,7 +588,7 @@
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Australia",
         "stars": 4,
@@ -602,7 +602,7 @@
         "text": "they sent me to the official carrier route — worked in 3 days"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Colombia",
         "stars": 5,
@@ -623,7 +623,7 @@
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "United States",
         "stars": 4,
@@ -672,7 +672,7 @@
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Nigeria",
         "stars": 4,
@@ -686,14 +686,14 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Indonesia",
         "stars": 4,
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Pakistan",
         "stars": 4,
@@ -742,7 +742,7 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "India",
         "stars": 3,
@@ -763,7 +763,7 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Nigeria",
         "stars": 4,
@@ -777,7 +777,7 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Nigeria",
         "stars": 5,
@@ -791,7 +791,7 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "United Kingdom",
         "stars": 4,
@@ -812,14 +812,14 @@
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Brazil",
         "stars": 5,
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "Nigeria",
         "stars": 3,
@@ -847,21 +847,21 @@
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Bangladesh",
         "stars": 5,
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Germany",
         "stars": 4,
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Kenya",
         "stars": 5,
@@ -875,28 +875,28 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Australia",
         "stars": 3,
         "text": "they sent me to the official carrier route — worked in 3 days"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Poland",
         "stars": 4,
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Philippines",
         "stars": 5,
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Poland",
         "stars": 3,
@@ -917,21 +917,21 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "United Kingdom",
         "stars": 3,
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Pakistan",
         "stars": 3,
         "text": "they sent me to the official carrier route — worked in 3 days"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Brazil",
         "stars": 3,
@@ -959,7 +959,7 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "South Africa",
         "stars": 4,
@@ -973,14 +973,14 @@
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Indonesia",
         "stars": 3,
         "text": "they sent me to the official carrier route — worked in 3 days"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Bangladesh",
         "stars": 3,
@@ -1064,7 +1064,7 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "India",
         "stars": 4,
@@ -1078,7 +1078,7 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Colombia",
         "stars": 5,
@@ -1092,14 +1092,14 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "Kenya",
         "stars": 5,
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "United States",
         "stars": 4,
@@ -1113,7 +1113,7 @@
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Philippines",
         "stars": 4,
@@ -1162,7 +1162,7 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Bangladesh",
         "stars": 4,
@@ -1183,14 +1183,14 @@
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Kenya",
         "stars": 4,
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Egypt",
         "stars": 3,
@@ -1211,7 +1211,7 @@
         "text": "they sent me to the official carrier route — worked in 3 days"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Colombia",
         "stars": 4,
@@ -1351,7 +1351,7 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Indonesia",
         "stars": 4,
@@ -1365,7 +1365,7 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Colombia",
         "stars": 3,
@@ -1407,21 +1407,21 @@
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Canada",
         "stars": 3,
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "South Africa",
         "stars": 3,
         "text": "they sent me to the official carrier route — worked in 3 days"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Germany",
         "stars": 3,
@@ -1442,7 +1442,7 @@
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Kenya",
         "stars": 4,
@@ -1456,7 +1456,7 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Indonesia",
         "stars": 4,
@@ -1484,7 +1484,7 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Kenya",
         "stars": 5,
@@ -1505,14 +1505,14 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Mexico",
         "stars": 3,
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Australia",
         "stars": 5,
@@ -1596,7 +1596,7 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Kenya",
         "stars": 3,
@@ -1610,14 +1610,14 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "United States",
         "stars": 4,
         "text": "they sent me to the official carrier route — worked in 3 days"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Poland",
         "stars": 4,
@@ -1631,21 +1631,21 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Philippines",
         "stars": 5,
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Brazil",
         "stars": 3,
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Brazil",
         "stars": 5,
@@ -1694,7 +1694,7 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Brazil",
         "stars": 4,
@@ -1708,7 +1708,7 @@
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Bangladesh",
         "stars": 5,
@@ -1722,21 +1722,21 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "South Africa",
         "stars": 5,
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "Colombia",
         "stars": 5,
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Brazil",
         "stars": 5,
@@ -1750,21 +1750,21 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Australia",
         "stars": 4,
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "Kenya",
         "stars": 5,
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "South Africa",
         "stars": 4,
@@ -1778,21 +1778,21 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Philippines",
         "stars": 4,
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "India",
         "stars": 4,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "Bangladesh",
         "stars": 3,
@@ -1806,7 +1806,7 @@
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Mexico",
         "stars": 4,
@@ -1890,7 +1890,7 @@
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "Egypt",
         "stars": 5,
@@ -1904,7 +1904,7 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Poland",
         "stars": 4,
@@ -1918,14 +1918,14 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "India",
         "stars": 4,
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Brazil",
         "stars": 3,
@@ -2016,14 +2016,14 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Brazil",
         "stars": 5,
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Mexico",
         "stars": 4,
@@ -2037,14 +2037,14 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "United States",
         "stars": 4,
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Colombia",
         "stars": 5,
@@ -2079,7 +2079,7 @@
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "India",
         "stars": 4,
@@ -2093,21 +2093,21 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Australia",
         "stars": 5,
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Kenya",
         "stars": 4,
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "United Kingdom",
         "stars": 4,
@@ -2142,7 +2142,7 @@
         "text": "they sent me to the official carrier route — worked in 3 days"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Brazil",
         "stars": 3,
@@ -2156,14 +2156,14 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "United States",
         "stars": 4,
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Germany",
         "stars": 3,
@@ -2198,7 +2198,7 @@
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "United States",
         "stars": 3,
@@ -2226,14 +2226,14 @@
         "text": "they sent me to the official carrier route — worked in 3 days"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Australia",
         "stars": 4,
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Germany",
         "stars": 5,
@@ -2282,21 +2282,21 @@
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "United States",
         "stars": 3,
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Indonesia",
         "stars": 5,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Colombia",
         "stars": 4,
@@ -2310,14 +2310,14 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Philippines",
         "stars": 3,
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Germany",
         "stars": 4,
@@ -2352,7 +2352,7 @@
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Pakistan",
         "stars": 4,
@@ -2366,7 +2366,7 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "India",
         "stars": 5,
@@ -2408,7 +2408,7 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Brazil",
         "stars": 5,
@@ -2422,21 +2422,21 @@
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Mexico",
         "stars": 5,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Poland",
         "stars": 5,
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Bangladesh",
         "stars": 5,
@@ -2464,14 +2464,14 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Kenya",
         "stars": 5,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "India",
         "stars": 5,
@@ -2492,7 +2492,7 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Kenya",
         "stars": 3,
@@ -2527,7 +2527,7 @@
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Colombia",
         "stars": 5,
@@ -2541,7 +2541,7 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Brazil",
         "stars": 5,
@@ -2555,14 +2555,14 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Bangladesh",
         "stars": 5,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "India",
         "stars": 4,
@@ -2590,7 +2590,7 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Colombia",
         "stars": 4,
@@ -2611,7 +2611,7 @@
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Indonesia",
         "stars": 5,
@@ -2632,7 +2632,7 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "India",
         "stars": 4,
@@ -2653,7 +2653,7 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Germany",
         "stars": 3,
@@ -2674,7 +2674,7 @@
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "India",
         "stars": 5,
@@ -2695,7 +2695,7 @@
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "India",
         "stars": 5,
@@ -2709,14 +2709,14 @@
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "India",
         "stars": 5,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Nigeria",
         "stars": 4,
@@ -2730,7 +2730,7 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Brazil",
         "stars": 4,
@@ -2744,7 +2744,7 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Philippines",
         "stars": 3,
@@ -2765,7 +2765,7 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "South Africa",
         "stars": 4,
@@ -2779,7 +2779,7 @@
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Australia",
         "stars": 3,
@@ -2807,14 +2807,14 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Kenya",
         "stars": 3,
         "text": "they sent me to the official carrier route — worked in 3 days"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "Nigeria",
         "stars": 5,
@@ -2835,7 +2835,7 @@
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "India",
         "stars": 4,
@@ -2870,7 +2870,7 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Colombia",
         "stars": 5,
@@ -2905,7 +2905,7 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Pakistan",
         "stars": 5,
@@ -2947,7 +2947,7 @@
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Brazil",
         "stars": 4,
@@ -2975,7 +2975,7 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "United States",
         "stars": 5,
@@ -2989,14 +2989,14 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "India",
         "stars": 3,
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "United States",
         "stars": 4,
@@ -3027,7 +3027,7 @@
   },
   "scenarioB_afterFixes": {
     "overall": {
-      "droidkit": {
+      "paralock": {
         "sessions": 10197,
         "categoriesCoveredShare": "100.0%",
         "successShareWhereCovered": "65.3%",
@@ -3073,7 +3073,7 @@
           "success": "19.8%",
           "avgStars": "1.98"
         },
-        "droidkit": {
+        "paralock": {
           "n": 3179,
           "success": "71.5%",
           "avgStars": "4.38"
@@ -3085,7 +3085,7 @@
           "success": "48.2%",
           "avgStars": "3.46"
         },
-        "droidkit": {
+        "paralock": {
           "n": 1195,
           "success": "70.7%",
           "avgStars": "4.36"
@@ -3102,7 +3102,7 @@
         }
       },
       "Africa": {
-        "droidkit": {
+        "paralock": {
           "n": 2339,
           "success": "71.5%",
           "avgStars": "4.34"
@@ -3124,7 +3124,7 @@
         }
       },
       "North America": {
-        "droidkit": {
+        "paralock": {
           "n": 1899,
           "success": "53.1%",
           "avgStars": "4.35"
@@ -3146,7 +3146,7 @@
         }
       },
       "Europe": {
-        "droidkit": {
+        "paralock": {
           "n": 1143,
           "success": "54.2%",
           "avgStars": "4.35"
@@ -3178,7 +3178,7 @@
           "success": "41.6%",
           "avgStars": "3.42"
         },
-        "droidkit": {
+        "paralock": {
           "n": 442,
           "success": "53.6%",
           "avgStars": "4.29"
@@ -3220,7 +3220,7 @@
         "reports": 283
       }
     ],
-    "droidkitOwnPains": [
+    "paralockOwnPains": [
       {
         "pain": "serial backend RFC pending — modem steps still copy-paste guided",
         "reports": 529
@@ -3250,7 +3250,7 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Nigeria",
         "stars": 4,
@@ -3292,7 +3292,7 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "United States",
         "stars": 4,
@@ -3306,14 +3306,14 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "South Africa",
         "stars": 4,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Mexico",
         "stars": 5,
@@ -3348,7 +3348,7 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "India",
         "stars": 5,
@@ -3362,21 +3362,21 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Mexico",
         "stars": 4,
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Brazil",
         "stars": 3,
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "South Africa",
         "stars": 5,
@@ -3390,7 +3390,7 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "India",
         "stars": 5,
@@ -3425,7 +3425,7 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "United Kingdom",
         "stars": 5,
@@ -3446,14 +3446,14 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Philippines",
         "stars": 5,
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Egypt",
         "stars": 5,
@@ -3474,7 +3474,7 @@
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Kenya",
         "stars": 4,
@@ -3488,14 +3488,14 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Indonesia",
         "stars": 4,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "United States",
         "stars": 5,
@@ -3544,14 +3544,14 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "Indonesia",
         "stars": 5,
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "India",
         "stars": 5,
@@ -3565,7 +3565,7 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Colombia",
         "stars": 5,
@@ -3586,7 +3586,7 @@
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "United States",
         "stars": 4,
@@ -3614,14 +3614,14 @@
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Nigeria",
         "stars": 4,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Kenya",
         "stars": 4,
@@ -3642,7 +3642,7 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Pakistan",
         "stars": 4,
@@ -3663,14 +3663,14 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Pakistan",
         "stars": 4,
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Indonesia",
         "stars": 4,
@@ -3691,14 +3691,14 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Pakistan",
         "stars": 5,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Nigeria",
         "stars": 5,
@@ -3712,7 +3712,7 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "United Kingdom",
         "stars": 4,
@@ -3733,14 +3733,14 @@
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Brazil",
         "stars": 5,
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "Nigeria",
         "stars": 3,
@@ -3754,7 +3754,7 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Germany",
         "stars": 5,
@@ -3775,21 +3775,21 @@
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Bangladesh",
         "stars": 5,
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Germany",
         "stars": 4,
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Kenya",
         "stars": 5,
@@ -3803,7 +3803,7 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Mexico",
         "stars": 3,
@@ -3817,21 +3817,21 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Pakistan",
         "stars": 4,
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Poland",
         "stars": 4,
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Philippines",
         "stars": 5,
@@ -3852,7 +3852,7 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Brazil",
         "stars": 3,
@@ -3880,14 +3880,14 @@
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "South Africa",
         "stars": 4,
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "India",
         "stars": 4,
@@ -3929,14 +3929,14 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Brazil",
         "stars": 5,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Brazil",
         "stars": 4,
@@ -3957,7 +3957,7 @@
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Nigeria",
         "stars": 3,
@@ -3978,14 +3978,14 @@
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Colombia",
         "stars": 5,
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Brazil",
         "stars": 5,
@@ -3999,7 +3999,7 @@
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "Kenya",
         "stars": 5,
@@ -4027,14 +4027,14 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "United States",
         "stars": 4,
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Philippines",
         "stars": 4,
@@ -4062,14 +4062,14 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Colombia",
         "stars": 4,
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Bangladesh",
         "stars": 4,
@@ -4083,7 +4083,7 @@
         "text": "they sent me to the official carrier route — worked in 3 days"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "United States",
         "stars": 4,
@@ -4118,7 +4118,7 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Bangladesh",
         "stars": 4,
@@ -4139,7 +4139,7 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Australia",
         "stars": 4,
@@ -4160,7 +4160,7 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Brazil",
         "stars": 4,
@@ -4244,7 +4244,7 @@
         "text": "they sent me to the official carrier route — worked in 3 days"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Bangladesh",
         "stars": 5,
@@ -4279,14 +4279,14 @@
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Brazil",
         "stars": 5,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Indonesia",
         "stars": 4,
@@ -4321,7 +4321,7 @@
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "United States",
         "stars": 5,
@@ -4363,7 +4363,7 @@
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "South Africa",
         "stars": 3,
@@ -4391,21 +4391,21 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Nigeria",
         "stars": 5,
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Brazil",
         "stars": 5,
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "United States",
         "stars": 5,
@@ -4419,7 +4419,7 @@
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Kenya",
         "stars": 4,
@@ -4461,7 +4461,7 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Kenya",
         "stars": 5,
@@ -4496,7 +4496,7 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Australia",
         "stars": 5,
@@ -4510,7 +4510,7 @@
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Kenya",
         "stars": 5,
@@ -4587,14 +4587,14 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Nigeria",
         "stars": 4,
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Germany",
         "stars": 4,
@@ -4615,7 +4615,7 @@
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Poland",
         "stars": 4,
@@ -4636,7 +4636,7 @@
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Brazil",
         "stars": 5,
@@ -4685,14 +4685,14 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "South Africa",
         "stars": 5,
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Brazil",
         "stars": 5,
@@ -4706,7 +4706,7 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Australia",
         "stars": 4,
@@ -4720,14 +4720,14 @@
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Australia",
         "stars": 5,
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "South Africa",
         "stars": 4,
@@ -4741,28 +4741,28 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Philippines",
         "stars": 4,
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "India",
         "stars": 4,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "Bangladesh",
         "stars": 3,
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Indonesia",
         "stars": 4,
@@ -4825,7 +4825,7 @@
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "United States",
         "stars": 4,
@@ -4860,7 +4860,7 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Modem firmware reinstall",
         "country": "Egypt",
         "stars": 5,
@@ -4874,7 +4874,7 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Brazil",
         "stars": 4,
@@ -4888,14 +4888,14 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Brazil",
         "stars": 3,
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Egypt",
         "stars": 4,
@@ -4923,7 +4923,7 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Australia",
         "stars": 5,
@@ -4993,7 +4993,7 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Canada",
         "stars": 5,
@@ -5028,14 +5028,14 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Mexico",
         "stars": 5,
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Brazil",
         "stars": 5,
@@ -5049,7 +5049,7 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Kenya",
         "stars": 4,
@@ -5077,7 +5077,7 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Kenya",
         "stars": 4,
@@ -5091,7 +5091,7 @@
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Colombia",
         "stars": 3,
@@ -5119,7 +5119,7 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "United States",
         "stars": 4,
@@ -5140,7 +5140,7 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "United Kingdom",
         "stars": 4,
@@ -5154,14 +5154,14 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Colombia",
         "stars": 4,
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "India",
         "stars": 5,
@@ -5196,7 +5196,7 @@
         "text": "they sent me to the official carrier route — worked in 3 days"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Brazil",
         "stars": 3,
@@ -5210,7 +5210,7 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "United States",
         "stars": 4,
@@ -5224,14 +5224,14 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Brazil",
         "stars": 5,
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Germany",
         "stars": 5,
@@ -5259,7 +5259,7 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Nigeria",
         "stars": 5,
@@ -5287,14 +5287,14 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Nigeria",
         "stars": 4,
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Germany",
         "stars": 5,
@@ -5329,7 +5329,7 @@
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Brazil",
         "stars": 5,
@@ -5350,21 +5350,21 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "India",
         "stars": 5,
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Nigeria",
         "stars": 4,
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Nigeria",
         "stars": 3,
@@ -5378,21 +5378,21 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Colombia",
         "stars": 4,
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Canada",
         "stars": 4,
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "India",
         "stars": 4,
@@ -5413,14 +5413,14 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Philippines",
         "stars": 3,
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Philippines",
         "stars": 4,
@@ -5448,7 +5448,7 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Pakistan",
         "stars": 4,
@@ -5462,21 +5462,21 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "India",
         "stars": 5,
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Canada",
         "stars": 5,
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Australia",
         "stars": 4,
@@ -5504,7 +5504,7 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "India",
         "stars": 3,
@@ -5525,14 +5525,14 @@
         "text": "support ghosted me 4 weeks"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Brazil",
         "stars": 5,
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Nigeria",
         "stars": 4,
@@ -5546,14 +5546,14 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Mexico",
         "stars": 5,
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "Poland",
         "stars": 5,
@@ -5567,7 +5567,7 @@
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Bangladesh",
         "stars": 5,
@@ -5581,7 +5581,7 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "India",
         "stars": 4,
@@ -5602,7 +5602,7 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "India",
         "stars": 5,
@@ -5644,7 +5644,7 @@
         "text": "unlocked my old Orange MiFi — Safaricom SIM works now"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Mexico",
         "stars": 5,
@@ -5686,14 +5686,14 @@
         "text": "finally an app that told me the truth before I started"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Bangladesh",
         "stars": 4,
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Bangladesh",
         "stars": 5,
@@ -5721,14 +5721,14 @@
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Nigeria",
         "stars": 5,
         "text": "free, and the tests run on my own machine"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "India",
         "stars": 4,
@@ -5763,7 +5763,7 @@
         "text": "they sent me to the official carrier route — worked in 3 days"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Indonesia",
         "stars": 4,
@@ -5784,7 +5784,7 @@
         "text": "it didn't fix it but it TOLD me upfront who can"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android 15/16 server)",
         "country": "Germany",
         "stars": 4,
@@ -5812,14 +5812,14 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Australia",
         "stars": 4,
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Button-phone password",
         "country": "Kenya",
         "stars": 5,
@@ -5847,7 +5847,7 @@
         "text": "button phone sorted with 12345, no flashing needed"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "India",
         "stars": 5,
@@ -5875,7 +5875,7 @@
         "text": "wiped my whole phone with zero warning"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Black-screen data rescue",
         "country": "India",
         "stars": 5,
@@ -5896,7 +5896,7 @@
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "United Kingdom",
         "stars": 5,
@@ -5917,7 +5917,7 @@
         "text": "they sent me to the official carrier route — worked in 3 days"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "Indonesia",
         "stars": 4,
@@ -5931,14 +5931,14 @@
         "text": "the traffic-light bands saved me a wasted hour"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "PC/laptop password",
         "country": "India",
         "stars": 5,
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Bangladesh",
         "stars": 5,
@@ -5952,21 +5952,21 @@
         "text": "kept entering codes — now attempts are gone forever"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "Indonesia",
         "stars": 3,
         "text": "honest 'not possible by software' beats a surprise wipe"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "South Africa",
         "stars": 4,
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "United Kingdom",
         "stars": 4,
@@ -5987,7 +5987,7 @@
         "text": "paid, failed, no refund — it never warned me about Android 15"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "FRP (Android ≤13)",
         "country": "Indonesia",
         "stars": 4,
@@ -6008,7 +6008,7 @@
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "Carrier unlock (phone)",
         "country": "United States",
         "stars": 5,
@@ -6022,7 +6022,7 @@
         "text": "the pattern cracker saved the baby photos"
       },
       {
-        "tool": "droidkit",
+        "tool": "paralock",
         "task": "MiFi/modem carrier unlock",
         "country": "Nigeria",
         "stars": 5,

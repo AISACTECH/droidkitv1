@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAppSettings } from '@/hooks/useAppSettings'
+import { usePageVisible, visibleRefetch } from '@/hooks/usePageVisible'
 import { PairedDevice } from '@/types/paired-device'
 import { 
   listDiscoveredDevices, 
@@ -45,12 +46,13 @@ const deviceKeys = {
 export function useDiscoveredDevices() {
   const { getCategory } = useAppSettings()
   const deviceSettings = getCategory('devices')
+  const pageVisible = usePageVisible()
 
   return useQuery({
     queryKey: deviceKeys.discovered(),
     queryFn: listDiscoveredDevices,
     enabled: deviceSettings.autoDiscoverUSB,
-    refetchInterval: deviceSettings.autoRefresh ? deviceSettings.pollingInterval * 1000 : false,
+    refetchInterval: visibleRefetch(deviceSettings.autoRefresh ? deviceSettings.pollingInterval * 1000 : false, pageVisible),
     staleTime: 2000, // Consider data stale after 2 seconds
   })
 }
@@ -67,12 +69,13 @@ export function useUSBDevices() {
 export function useWirelessDevices() {
   const { getCategory } = useAppSettings()
   const deviceSettings = getCategory('devices')
+  const pageVisible = usePageVisible()
 
   return useQuery({
     queryKey: deviceKeys.wireless(),
     queryFn: discoverWirelessDevicesDetailed,
     enabled: deviceSettings.autoDiscoverWireless,
-    refetchInterval: deviceSettings.autoDiscoverWireless ? deviceSettings.wirelessDiscoveryInterval * 1000 : false,
+    refetchInterval: visibleRefetch(deviceSettings.autoDiscoverWireless ? deviceSettings.wirelessDiscoveryInterval * 1000 : false, pageVisible),
     staleTime: 10000, // Wireless discovery is more expensive, cache longer
   })
 }
@@ -119,6 +122,7 @@ export function useConnectedDevices() {
   const { getCategory } = useAppSettings()
   const deviceSettings = getCategory('devices')
   const queryClient = useQueryClient()
+  const pageVisible = usePageVisible()
 
   const query = useQuery({
     queryKey: deviceKeys.connected(),
@@ -147,7 +151,7 @@ export function useConnectedDevices() {
         return existingDevices.filter(d => d.transport === "TCP")
       }
     },
-    refetchInterval: deviceSettings.autoRefresh ? deviceSettings.pollingInterval * 1000 : false,
+    refetchInterval: visibleRefetch(deviceSettings.autoRefresh ? deviceSettings.pollingInterval * 1000 : false, pageVisible),
     staleTime: 1000, // Consider data stale after 1 second
   })
 

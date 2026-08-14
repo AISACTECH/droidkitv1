@@ -66,7 +66,7 @@ pub async fn capture_screen_via_file(device_serial: String) -> Result<ScreenFram
     let mut buf: Vec<u8> = Vec::new();
     
     // Step 1: screencap to sdcard
-    let _ = device.shell_command(&"screencap -p /sdcard/droidkit_mirror.png", &mut Vec::new());
+    let _ = device.shell_command(&"screencap -p /sdcard/paralock_mirror.png", &mut Vec::new());
     
     // Step 2: read file via cat? Actually we need to pull - but we can cat and encode
     // For simplicity, try direct screencap again but with file existence check

@@ -71,11 +71,11 @@ export function AppSidebar({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img 
-              src="/droidkit-icon-128.png" 
-              alt="DroidKit" 
+              src="/paralock-icon-128.png" 
+              alt="Paralock" 
               className="size-8"
             />
-            <h2 className="text-lg font-semibold">DroidKit</h2>
+            <h2 className="text-lg font-semibold">Paralock</h2>
           </div>
           <div className="flex gap-1">
             <WirelessConnectionDialog onDeviceConnected={onWirelessDeviceConnected}>

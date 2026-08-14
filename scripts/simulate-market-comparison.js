@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * DroidKit — Market-Comparison Simulation (deterministic, SYNTHETIC)
+ * Paralock — Market-Comparison Simulation (deterministic, SYNTHETIC)
  * 20,000 users + 10,000 developers · 6 continents · country-level
  *
  * HONESTY LABEL (repo law): these agents are MODELLED, not real people.
@@ -49,17 +49,17 @@ const countryPick = cont => {
 }
 
 // tasks: id, weight per region-type, physics success per tool, honesty flag per tool
-// tools: droidkit | paid (PassFab/4uKey/iMobie/Dr.Fone/MagFone) | free (mtkclient/forums) | box (UnlockTool/Miracle)
-const TOOLS = ["droidkit", "paid", "free", "box"]
+// tools: paralock | paid (PassFab/4uKey/iMobie/Dr.Fone/MagFone) | free (mtkclient/forums) | box (UnlockTool/Miracle)
+const TOOLS = ["paralock", "paid", "free", "box"]
 const TASKS = [
-  { id: "frp_legacy",   label: "FRP (Android ≤13)",            phys: { droidkit: 0.88, paid: 0.90, free: 0.80, box: 0.92 }, honesty: { droidkit: 1, paid: 0.6, free: 0.7, box: 0.5 }, painFails: ["P2"] },
-  { id: "frp_modern",   label: "FRP (Android 15/16 server)",   phys: { droidkit: 0.05, paid: 0.05, free: 0.06, box: 0.10 }, honesty: { droidkit: 1, paid: 0.1, free: 0.7, box: 0.4 }, painFails: ["P1"] },
-  { id: "mifi_unlock",  label: "MiFi/modem carrier unlock",    phys: { droidkit: 0.82, paid: null, free: 0.30, box: 0.85 }, honesty: { droidkit: 1, paid: 0, free: 0.5, box: 0.6 }, painFails: ["P8", "P6"] },
-  { id: "button_phone", label: "Button-phone password",        phys: { droidkit: 0.90, paid: null, free: 0.40, box: 0.95 }, honesty: { droidkit: 1, paid: 0, free: 0.5, box: 0.6 }, painFails: ["P2", "P6"] },
-  { id: "pc_password",  label: "PC/laptop password",           phys: { droidkit: 0.92, paid: null, free: 0.75, box: null }, honesty: { droidkit: 1, paid: 0, free: 0.6, box: 0 }, painFails: ["P4"] },
-  { id: "black_screen", label: "Black-screen data rescue",     phys: { droidkit: 0.84, paid: null, free: 0.65, box: 0.88 }, honesty: { droidkit: 1, paid: 0, free: 0.6, box: 0.6 }, painFails: ["P2"] },
-  { id: "carrier_phone",label: "Carrier unlock (phone)",       phys: { droidkit: 0.10, paid: 0.10, free: 0.08, box: 0.35 }, honesty: { droidkit: 1, paid: 0.2, free: 0.6, box: 0.5 }, painFails: ["P1"] },
-  { id: "modem_fw",     label: "Modem firmware reinstall",     phys: { droidkit: 0.78, paid: null, free: 0.60, box: 0.85 }, honesty: { droidkit: 1, paid: 0, free: 0.55, box: 0.6 }, painFails: ["P4", "P6"] },
+  { id: "frp_legacy",   label: "FRP (Android ≤13)",            phys: { paralock: 0.88, paid: 0.90, free: 0.80, box: 0.92 }, honesty: { paralock: 1, paid: 0.6, free: 0.7, box: 0.5 }, painFails: ["P2"] },
+  { id: "frp_modern",   label: "FRP (Android 15/16 server)",   phys: { paralock: 0.05, paid: 0.05, free: 0.06, box: 0.10 }, honesty: { paralock: 1, paid: 0.1, free: 0.7, box: 0.4 }, painFails: ["P1"] },
+  { id: "mifi_unlock",  label: "MiFi/modem carrier unlock",    phys: { paralock: 0.82, paid: null, free: 0.30, box: 0.85 }, honesty: { paralock: 1, paid: 0, free: 0.5, box: 0.6 }, painFails: ["P8", "P6"] },
+  { id: "button_phone", label: "Button-phone password",        phys: { paralock: 0.90, paid: null, free: 0.40, box: 0.95 }, honesty: { paralock: 1, paid: 0, free: 0.5, box: 0.6 }, painFails: ["P2", "P6"] },
+  { id: "pc_password",  label: "PC/laptop password",           phys: { paralock: 0.92, paid: null, free: 0.75, box: null }, honesty: { paralock: 1, paid: 0, free: 0.6, box: 0 }, painFails: ["P4"] },
+  { id: "black_screen", label: "Black-screen data rescue",     phys: { paralock: 0.84, paid: null, free: 0.65, box: 0.88 }, honesty: { paralock: 1, paid: 0, free: 0.6, box: 0.6 }, painFails: ["P2"] },
+  { id: "carrier_phone",label: "Carrier unlock (phone)",       phys: { paralock: 0.10, paid: 0.10, free: 0.08, box: 0.35 }, honesty: { paralock: 1, paid: 0.2, free: 0.6, box: 0.5 }, painFails: ["P1"] },
+  { id: "modem_fw",     label: "Modem firmware reinstall",     phys: { paralock: 0.78, paid: null, free: 0.60, box: 0.85 }, honesty: { paralock: 1, paid: 0, free: 0.55, box: 0.6 }, painFails: ["P4", "P6"] },
 ]
 // task mix weights: [Africa heavy southern, north heavy] — end-users vs developers
 const taskMix = (cont, isDev) => {
@@ -78,8 +78,8 @@ const taskPick = weights => {
   for (const t of TASKS) { if ((x -= weights[t.id]) <= 0) return t }
   return TASKS[0]
 }
-// tool mix: droidkit sample group + rivals as they exist in the wild
-const toolPick = () => { const x = rnd(); return x < 0.34 ? "droidkit" : x < 0.60 ? "paid" : x < 0.80 ? "free" : "box" }
+// tool mix: paralock sample group + rivals as they exist in the wild
+const toolPick = () => { const x = rnd(); return x < 0.34 ? "paralock" : x < 0.60 ? "paid" : x < 0.80 ? "free" : "box" }
 
 // pains taxonomy (grounded in recurring PUBLIC review themes for this tool class)
 const PAINS = {
@@ -128,7 +128,7 @@ function simulate(params) {
   const ourPain = {}
   const comments = []
   const byContinent = {}
-  let resolvedCount = { droidkit: 0 }
+  let resolvedCount = { paralock: 0 }
 
   for (const side of ["user", "dev"]) {
     const N = side === "user" ? USERS : DEVS
@@ -149,13 +149,13 @@ function simulate(params) {
         // honest routing upgrade: server-side failures the app routes to the
         // official channel — the customer's DEVICE still ends up working
         resolved = success
-        if (!resolved && tool === "droidkit" && honesty === 1 && params.officialRouting > 0
+        if (!resolved && tool === "paralock" && honesty === 1 && params.officialRouting > 0
             && (task.id === "frp_modern" || task.id === "carrier_phone")) {
           resolved = chance(params.officialRouting)
         }
         if (success) {
           stars = pick([4, 4, 4, 5, 5, 5, 5])
-          if (tool === "droidkit" && chance(0.03)) painCount.P4 = (painCount.P4 ?? 0) + 1
+          if (tool === "paralock" && chance(0.03)) painCount.P4 = (painCount.P4 ?? 0) + 1
         } else if (resolved) {
           stars = pick([4, 5]) // longer road, but honest and it ended working
         } else {
@@ -168,7 +168,7 @@ function simulate(params) {
           }
         }
       }
-      if (tool === "droidkit") {
+      if (tool === "paralock") {
         for (const [id, , baseP] of OUR_EXTRA) {
           const p = params.ourExtra[id] ?? baseP
           if (chance(p)) ourPain[id] = (ourPain[id] ?? 0) + 1
@@ -178,7 +178,7 @@ function simulate(params) {
       agg[tool] ??= { n: 0, stars: 0, success: 0, covered: 0, resolved: 0 }
       agg[tool].n++; agg[tool].stars += stars
       if (phys !== null) { agg[tool].covered++; if (success) agg[tool].success++; if (resolved) agg[tool].resolved++ }
-      if (tool === "droidkit" && resolved) resolvedCount.droidkit++
+      if (tool === "paralock" && resolved) resolvedCount.paralock++
       byContinent[cont.name] ??= {}; byContinent[cont.name][tool] ??= { s: 0, n: 0, stars: 0 }
       const bc = byContinent[cont.name][tool]; bc.n++; bc.stars += stars; if (success) bc.s++
       if (chance(0.02)) {
@@ -202,7 +202,7 @@ const summarize = ({ agg, painCount, ourPain, byContinent, comments }) => ({
   byContinent: Object.fromEntries(Object.entries(byContinent).map(([c, tools]) => [c,
     Object.fromEntries(Object.entries(tools).map(([t, v]) => [t, { n: v.n, success: pct(v.s, v.n), avgStars: (v.stars / v.n).toFixed(2) }]))])),
   painRanking: Object.entries(painCount).map(([k, v]) => ({ pain: PAINS[k], reports: v })).sort((a, b) => b.reports - a.reports),
-  droidkitOwnPains: Object.entries(ourPain).map(([k, v]) => ({ pain: OUR_EXTRA.find(e => e[0] === k)[1], reports: v })).sort((a, b) => b.reports - a.reports),
+  paralockOwnPains: Object.entries(ourPain).map(([k, v]) => ({ pain: OUR_EXTRA.find(e => e[0] === k)[1], reports: v })).sort((a, b) => b.reports - a.reports),
   sampledComments: comments.slice(0, 400),
 })
 
@@ -221,8 +221,8 @@ const report = {
   scenarioAssumptionsB: SCENARIOS.B_afterFixes,
   roadTo100: [
     "coverage 100.0% — already there (every category has a lane or an honest official route)",
-    `resolved@covered: ${A.overall.droidkit.resolvedShareWhereCovered} (A) -> ${B.overall.droidkit.resolvedShareWhereCovered} (B) via free official-route guidance — the customer's device ends up working even when physics forbids software`,
-    `avgStars: ${A.overall.droidkit.avgStars} (A) -> ${B.overall.droidkit.avgStars} (B) via the three shipped own-pain fixes`,
+    `resolved@covered: ${A.overall.paralock.resolvedShareWhereCovered} (A) -> ${B.overall.paralock.resolvedShareWhereCovered} (B) via free official-route guidance — the customer's device ends up working even when physics forbids software`,
+    `avgStars: ${A.overall.paralock.avgStars} (A) -> ${B.overall.paralock.avgStars} (B) via the three shipped own-pain fixes`,
     "next honest steps: native serial backend (RFC) lifts guided-mode friction; bench calibration lifts V201 coverage; 100.0% resolved & 5.0 stars is an ASYMPTOTE — a few-in-thousand edge cases (financed devices, dead hardware, ineligible carriers) stay honest non-100 forever",
   ],
 }
@@ -240,8 +240,8 @@ for (const [label, S] of [["A — today", A], ["B — after this round's fixes (
 }
 console.log("\nRoad to 100:")
 report.roadTo100.forEach(l => console.log(`  · ${l}`))
-console.log("\nDroidKit's OWN pains — A (today):")
-A.droidkitOwnPains.slice(0, 3).forEach((p, i) => console.log(`  ${i + 1}. (${p.reports.toLocaleString()}) ${p.pain}`))
-console.log("DroidKit's OWN pains — B (projected):")
-B.droidkitOwnPains.slice(0, 3).forEach((p, i) => console.log(`  ${i + 1}. (${p.reports.toLocaleString()}) ${p.pain}`))
+console.log("\nParalock's OWN pains — A (today):")
+A.paralockOwnPains.slice(0, 3).forEach((p, i) => console.log(`  ${i + 1}. (${p.reports.toLocaleString()}) ${p.pain}`))
+console.log("Paralock's OWN pains — B (projected):")
+B.paralockOwnPains.slice(0, 3).forEach((p, i) => console.log(`  ${i + 1}. (${p.reports.toLocaleString()}) ${p.pain}`))
 console.log("\nwrote docs/simulations/market-2026-08-12.json")

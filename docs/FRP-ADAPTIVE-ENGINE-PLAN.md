@@ -1,6 +1,6 @@
 # ⚡ FRP Adaptive Engine — Architecture Decision & Task Board
 
-> Decision date: 2026-08-13 · Branch: `arena/019ffa3d-droidkitv1`
+> Decision date: 2026-08-13 · Branch: `arena/019ffa3d-paralockv1`
 > Source brief: "Top 3 FRP Removal Algorithms (Non-AI Focus)" — Adaptive Exploit Automation,
 > UI & Behavior Interaction (rule-based), Stealth System Partition Patching.
 > Target: Android 15 & 16. Decision requested: extend the experimental Developer Lab,
@@ -80,9 +80,10 @@ The repo already splits reasoning engines (pure, offline, deterministic — `src
 | T16 | Repo verification gates | — | `npm run lint`, `npm run build`, `npm run audit:prod`, `node scripts/test-all.js`, `npm run test:adaptive` all green | ✅ done (in-sandbox) |
 
 **Follow-ups tracked (not implementable in-sandbox):**
-- F17 · Rust compile check (`cargo check`) — no Rust toolchain in sandbox; CI `publish.yml` covers it.
+- F17 · Rust compile check (`cargo check`) — no Rust toolchain in sandbox; CI `ci.yml` rust-compile-check + `publish.yml` cover it. Local stand-in: `npm run release:prepare`.
 - F18 · Bench validation on real Android 15/16 devices (Samsung One UI 7, Pixel 16, Transsion
-  XOS/HiOS) — requires hardware; journal export format is designed for this feedback loop.
+  XOS/HiOS) — requires hardware. Software half shipped: `src/lib/bench/` virtual donors +
+  getprop parser + ingest/promotion (`npm run test:bench`); official labels still never auto-flip.
 
 ---
 

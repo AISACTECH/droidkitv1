@@ -176,7 +176,7 @@ const NET_TOOLS: NetTool[] = [
 
 // OURS in the network sheet
 const OUR_NET: NetTool = {
-  id: "ours", name: "DroidKit v1 (AISACTECH — this repo)", klasse: "open", price: "$0, MIT, open",
+  id: "ours", name: "Paralock v1 (Isaac Real — this repo)", klasse: "open", price: "$0, MIT, open",
   category: {
     modem: 0, phone: 0, mifi: 0, router: 0, wifi: 0, // per-device scores override these
   },
@@ -267,7 +267,7 @@ interface CombinedRow {
 const combinedRows: CombinedRow[] = [
   {
     name: OUR_NET.name,
-    frp: frpComposite.get("DroidKit v1 (AISACTECH — this repo)") ?? 87.6,
+    frp: frpComposite.get("Paralock v1 (Isaac Real — this repo)") ?? 87.6,
     frpIsProxy: false,
     net: OUR_NET_COMPOSITE,
     financeHonesty: FINANCE.honesty.ours,
@@ -316,14 +316,14 @@ const COMBINED_TARGET = Math.round((0.45 * FRP_TARGET_COMPOSITE + 0.45 * OUR_NET
 // Ceiling: best composite any tool achieves in each domain
 const FRP_CEILING_COMPOSITE = Math.round((0.4 * frpCeilRaw + 60) * 10) / 10
 const COMBINED_CEILING = Math.round((0.45 * FRP_CEILING_COMPOSITE + 0.45 * NET_CEILING + 0.10 * FINANCE.honesty.ours) * 10) / 10
-const OUR_COMBINED = combinedRows.find((r) => r.name.includes("AISACTECH"))!.combined
+const OUR_COMBINED = combinedRows.find((r) => r.name.includes("Isaac Real"))!.combined
 const COMBINED_ACHIEVEMENT = COMBINED_CEILING > 0 ? Math.round((OUR_COMBINED / COMBINED_CEILING) * 1000) / 10 : 0
 // Target may legitimately exceed the current evidence ceiling (it redefines the ceiling
 // once bench-confirmed) — display-capped at 100 with the note in the doc.
 const COMBINED_TARGET_ACHIEVEMENT = COMBINED_CEILING > 0
   ? Math.min(100, Math.round((COMBINED_TARGET / COMBINED_CEILING) * 1000) / 10)
   : 0
-const OUR_FRP_RAW_MEAN = frp.overall.raw.find((t) => t.name.includes("AISACTECH"))?.raw ?? 0
+const OUR_FRP_RAW_MEAN = frp.overall.raw.find((t) => t.name.includes("Isaac Real"))?.raw ?? 0
 
 // ---------------------------------------------------------------------
 // 7. Self-checks
@@ -331,7 +331,7 @@ const OUR_FRP_RAW_MEAN = frp.overall.raw.find((t) => t.name.includes("AISACTECH"
 
 console.log("\n--- Comparison-sheet self-checks ---")
 check("FRP JSON read: 9 tools with composites", frp.overall.composite.length === 9)
-check("FRP domain winner is this repo (from the FRP run)", frp.overall.composite[0].name.includes("AISACTECH"))
+check("FRP domain winner is this repo (from the FRP run)", frp.overall.composite[0].name.includes("Isaac Real"))
 check("network corpus: 15 devices covering all 5 categories (incl. phones)",
   NET_CORPUS.length === 15 && new Set(NET_CORPUS.map((d) => d.category)).size === 5)
 check("every NETWORK_PLAN row is sourced + bounded + statused",
@@ -362,7 +362,7 @@ check("finance software-removal is 0% for EVERY tool incl. ours",
 check("network weights + honesty weight sum to 1",
   Math.abs(Object.values(NET_WEIGHTS).reduce((a, b) => a + b, 0) + HONESTY_WEIGHT - 1) < 1e-9)
 check("combined rows deterministic + ours present",
-  combinedRows.some((r) => r.name.includes("AISACTECH")) &&
+  combinedRows.some((r) => r.name.includes("Isaac Real")) &&
   JSON.stringify(combinedRows) === JSON.stringify(combinedRows))
 
 // ---------------------------------------------------------------------
@@ -399,7 +399,7 @@ const generatedAt = new Date().toISOString()
 
 const pct = (v: number) => (v === 0 ? "0%" : `${v}%`)
 
-const md = `# 📊 Full Comparison Sheet 2026 — DroidKit (this repo) vs FRP tools vs Network-unlock tools
+const md = `# 📊 Full Comparison Sheet 2026 — Paralock (this repo) vs FRP tools vs Network-unlock tools
 
 > **Test-generated.** Run \`npm run benchmark:frp\` then \`npm run benchmark:sheet\` to regenerate.
 > Generated: \`${generatedAt}\` · input hash: \`${inputHash}\` · FRP half source: \`docs/benchmarks/frp-tools-benchmark-2026.json\`
@@ -423,21 +423,21 @@ const md = `# 📊 Full Comparison Sheet 2026 — DroidKit (this repo) vs FRP to
 
 | Domain | Weight in combined | Winner (percentage) |
 |---|---|---|
-| FRP removal (12-device corpus, from the FRP benchmark) | 45% | **DroidKit v1 — composite ${frp.overall.composite[0].composite}/100** (raw ${frp.overall.composite[0].raw}/97) |
+| FRP removal (12-device corpus, from the FRP benchmark) | 45% | **Paralock v1 — composite ${frp.overall.composite[0].composite}/100** (raw ${frp.overall.composite[0].raw}/97) |
 | Network unlock — modem / phones / MiFi / router / Wi-Fi (15-device corpus) | 45% | **${netRows[0].tool.name} — ${netRows[0].composite}/100** (raw domain winner; see §3 for the honest split) |
-| Finance-lock honesty (M-KOPA/Watu/PayJoy-class) | 10% | **DroidKit v1 — 100** (the only tool that states 0% software removal + ships the lender-release path) |
+| Finance-lock honesty (M-KOPA/Watu/PayJoy-class) | 10% | **Paralock v1 — 100** (the only tool that states 0% software removal + ships the lender-release path) |
 
 **Combined score = 45%·FRP + 45%·network + 10%·finance-honesty.**
 
 Network weights: modem 30% · phones 20% · MiFi 20% · router 17% · Wi-Fi 8% · honesty 5%.
-**Plan-coverage methodology:** DroidKit's network score is the shipped plan's evidence-band outcome
+**Plan-coverage methodology:** Paralock's network score is the shipped plan's evidence-band outcome
 for the legitimate owner (verified local math → documented route → vendor-documented recovery),
 NOT only the local step; every row carries a status — engine-verified / vendor-documented /
 documented — in the table below. Competitor rows are documented-capability models as before.
 
 ## 2 · Network-unlock domain — per-device evidence bands
 
-| Device | Category | DroidKit v1 | Evidence status | DC-Unlocker | Z3X/SigmaKey | NCK Dongle | FuriousGold | TFT | Chimera | OpenWrt | WiFi apps |
+| Device | Category | Paralock v1 | Evidence status | DC-Unlocker | Z3X/SigmaKey | NCK Dongle | FuriousGold | TFT | Chimera | OpenWrt | WiFi apps |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 ${NET_CORPUS.map((d) => `| ${d.label} | ${d.category} | ${pct(ourNetScore(d))} | ${statusOf(d)} | ${pct(NET_TOOLS[0].category[d.category])} | ${pct(NET_TOOLS[1].category[d.category])} | ${pct(NET_TOOLS[2].category[d.category])} | ${pct(NET_TOOLS[3].category[d.category])} | ${pct(NET_TOOLS[4].category[d.category])} | ${pct(NET_TOOLS[5].category[d.category])} | ${pct(NET_TOOLS[6].category[d.category])} | ${pct(NET_TOOLS[7].category[d.category])} |`).join("\n")}
 
@@ -460,9 +460,9 @@ ${table(["Rank", "Tool", "Class", "Price", "Composite", "Modem", "MiFi", "Router
 - **Raw breadth** (most models unlocked): DC-Unlocker-class servers and boxes win — they hold
   per-model databases we don't ship. Declared, not hidden.
 - **Verifiable math**: on legacy Huawei V1/V2 the unlock code is deterministic from the IMEI —
-  DroidKit computes it **locally, free, and now** (100 on the vector devices above), where paid
+  Paralock computes it **locally, free, and now** (100 on the vector devices above), where paid
   services charge per device for the same arithmetic.
-- **V201/MiFi/router/Wi-Fi**: DroidKit ships evidence-banded runbooks + the attempt-counter law
+- **V201/MiFi/router/Wi-Fi**: Paralock ships evidence-banded runbooks + the attempt-counter law
   (never burn the last tries); boxes flash faster hands-on — our gap, roadmapped.
 
 ## 4 · Finance-lock domain (revised — see docs/FINANCE-LOCK-REVISION-2026.md)
@@ -504,7 +504,7 @@ removal) instead of marketing over them, which is exactly why it takes the finan
 category outright. **${netRows[0].tool.name} remains the network-domain breadth winner** (server
 databases beat local math on model coverage), and box/bench tools remain faster hands-on —
 both declared in the tables above. On the lanes physics actually opens, the percentage sheet
-says: DroidKit first in FRP and in verified local unlock; commercial servers first in raw
+says: Paralock first in FRP and in verified local unlock; commercial servers first in raw
 network breadth; everyone equals zero where the lock is server-side — and only one column in
 this sheet is willing to print that zero.
 

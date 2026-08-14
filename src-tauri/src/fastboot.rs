@@ -212,7 +212,7 @@ pub async fn fastboot_check_availability() -> Result<FastbootAvailability, Strin
         },
         devices_found: devices.len(),
         devices,
-        guidance_for_damaged_port: "For phones with damaged charger port data system:\n1. WiFi ADB is BEST: Enable Wireless Debugging in Developer Options (no USB needed if already enabled) → Pair via QR Code → Connect → Now you can control phone via DroidKit Screen Mirror even with broken touch sensor via cursor\n2. Fastboot still needs USB data pins — if port data is fully tampered, fastboot won't work, use WiFi ADB\n3. If USB data partially works, fastboot may still work for bootloader unlock/FRP erase in fastboot mode\n4. For fully broken port, consider wireless charging + WiFi ADB workflow".to_string(),
+        guidance_for_damaged_port: "For phones with damaged charger port data system:\n1. WiFi ADB is BEST: Enable Wireless Debugging in Developer Options (no USB needed if already enabled) → Pair via QR Code → Connect → Now you can control phone via Paralock Screen Mirror even with broken touch sensor via cursor\n2. Fastboot still needs USB data pins — if port data is fully tampered, fastboot won't work, use WiFi ADB\n3. If USB data partially works, fastboot may still work for bootloader unlock/FRP erase in fastboot mode\n4. For fully broken port, consider wireless charging + WiFi ADB workflow".to_string(),
     })
 }
 

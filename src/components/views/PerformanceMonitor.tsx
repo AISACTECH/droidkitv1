@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { DeviceInfo, executeShellCommand } from "@/tauri-commands"
+import { usePageVisible } from "@/hooks/usePageVisible"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
@@ -15,7 +16,7 @@ interface PerformanceMonitorProps {
 }
 
 interface PerfStats {
-  cpuUsage: number
+  cpuUsage: number | null
   memory: { total: string; available: string; usedPercent: number }
   battery: { level: number; temp: number; voltage: number; status: string } | null
   uptime: string
@@ -27,6 +28,7 @@ export function PerformanceMonitor({ selectedDevice }: PerformanceMonitorProps) 
   const [stats, setStats] = useState<PerfStats | null>(null)
   const [loading, setLoading] = useState(false)
   const [autoRefresh, setAutoRefresh] = useState(true)
+  const pageVisible = usePageVisible()
 
   const fetchStats = async () => {
     setLoading(true)
@@ -64,8 +66,8 @@ export function PerformanceMonitor({ selectedDevice }: PerformanceMonitorProps) 
         }
       }
 
-      // CPU estimate from 0-100
-      let cpuUsage = Math.round(Math.random() * 30 + 10) // fallback synthetic for mock mode
+      // CPU from dumpsys only — never invent a random load number
+      let cpuUsage: number | null = null
       if (cpuInfo) {
         const loadMatch = cpuInfo.match(/(\d+)%\s*TOTAL/i)
         if (loadMatch) cpuUsage = parseInt(loadMatch[1], 10)
@@ -92,10 +94,7 @@ export function PerformanceMonitor({ selectedDevice }: PerformanceMonitorProps) 
         memory: { total, available, usedPercent },
         battery: batteryParsed,
         uptime: uptime.trim() || "Unknown",
-        topProcesses: topProcesses.length ? topProcesses : [
-          { pid: "1234", cpu: "12%", mem: "3.1%", name: "com.android.systemui" },
-          { pid: "2345", cpu: "8%", mem: "2.4%", name: "com.google.android.gms" }
-        ],
+        topProcesses,
         lastUpdated: new Date().toLocaleTimeString()
       })
     } catch (e) {
@@ -107,10 +106,10 @@ export function PerformanceMonitor({ selectedDevice }: PerformanceMonitorProps) 
 
   useEffect(() => {
     fetchStats()
-    if (!autoRefresh) return
+    if (!autoRefresh || !pageVisible) return
     const id = setInterval(fetchStats, 8000)
     return () => clearInterval(id)
-  }, [selectedDevice.serial_no, autoRefresh])
+  }, [selectedDevice.serial_no, autoRefresh, pageVisible])
 
   return (
     <div className="flex flex-col gap-4 h-full">
@@ -141,10 +140,10 @@ export function PerformanceMonitor({ selectedDevice }: PerformanceMonitorProps) 
             <Card>
               <CardHeader className="pb-2">
                 <CardDescription className="flex items-center gap-2"><Cpu className="h-4 w-4" /> CPU Load</CardDescription>
-                <CardTitle className="text-3xl">{stats.cpuUsage}%</CardTitle>
+                <CardTitle className="text-3xl">{stats.cpuUsage === null ? "—" : `${stats.cpuUsage}%`}</CardTitle>
               </CardHeader>
               <CardContent>
-                <Progress value={stats.cpuUsage} className="h-2" />
+                <Progress value={stats.cpuUsage ?? 0} className="h-2" />
                 <p className="text-xs text-muted-foreground mt-2">{stats.uptime}</p>
               </CardContent>
             </Card>
@@ -193,7 +192,9 @@ export function PerformanceMonitor({ selectedDevice }: PerformanceMonitorProps) 
                   <span>PID</span><span>CPU</span><span>MEM</span><span>Process</span>
                 </div>
                 <div className="divide-y max-h-[240px] overflow-y-auto">
-                  {stats.topProcesses.map((p, i) => (
+                  {stats.topProcesses.length === 0 ? (
+                    <div className="p-3 text-xs text-muted-foreground">No process snapshot available from this device.</div>
+                  ) : stats.topProcesses.map((p, i) => (
                     <div key={i} className="grid grid-cols-4 gap-2 p-2 text-xs font-mono">
                       <span>{p.pid}</span><span>{p.cpu}</span><span>{p.mem}</span><span className="truncate">{p.name}</span>
                     </div>

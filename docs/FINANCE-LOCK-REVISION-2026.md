@@ -46,9 +46,9 @@
 
 ---
 
-## DroidKit's position (unchanged repo law, now with citations)
+## Paralock's position (unchanged repo law, now with citations)
 
-DroidKit **refuses to defeat lender locks** (Rescue Lab carrier lane: Kenya lender-MDM distinction
+Paralock **refuses to defeat lender locks** (Rescue Lab carrier lane: Kenya lender-MDM distinction
 with refusal-to-defeat policy — defeating a financing lock on an unpaid device is unlawful
 handling of someone else's property). What it ships instead:
 
@@ -60,5 +60,5 @@ handling of someone else's property). What it ships instead:
 3. **Post-release verification** — after the lender de-enrolls: reset → FRP journey continues
    with the owner's own Google account, exactly as for a normal device.
 
-This is why the comparison sheet scores DroidKit 100 in the finance-lock *honesty* category and
+This is why the comparison sheet scores Paralock 100 in the finance-lock *honesty* category and
 every "we remove M-KOPA" tool 0 — the sheet measures truth, not claims.

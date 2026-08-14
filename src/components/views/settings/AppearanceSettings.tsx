@@ -10,7 +10,7 @@ export function AppearanceSettings() {
       <div>
         <h3 className="text-lg font-medium mb-2">Theme</h3>
         <p className="text-sm text-muted-foreground mb-4">
-          Choose how DroidKit looks to you. Select a single theme, or sync with your system.
+          Choose how Paralock looks to you. Select a single theme, or sync with your system.
         </p>
         
         <div className="space-y-4">

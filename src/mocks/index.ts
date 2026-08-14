@@ -126,7 +126,7 @@ const MOCK_TECNO_METHODS = [
 
 export function initMocks() {
   if (typeof window !== 'undefined' && !('__TAURI_INTERNALS__' in window)) {
-    console.log('[DroidKit Mocks] Initializing browser-only mock Tauri API — full model catalogues loaded.');
+    console.log('[Paralock Mocks] Initializing browser-only mock Tauri API — full model catalogues loaded.');
     mockIPC((cmd: string, payload?: Record<string, any>) => {
       switch (cmd) {
         // Device Info & Basics

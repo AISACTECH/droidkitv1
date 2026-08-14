@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { MonitorSmartphone, MousePointer2, Type, RefreshCw, Smartphone, Zap, Maximize2, Play, Square, Wifi, Usb, Cpu, Activity, RotateCcw, Home, ArrowLeft, Menu } from "lucide-react"
 import { createLogger } from "@/lib/logger"
+import { usePageVisible } from "@/hooks/usePageVisible"
 
 const logger = createLogger("ScreenMirror")
 
@@ -29,6 +30,7 @@ export function ScreenControl({ selectedDevice }: ScreenControlProps) {
   const [inputText, setInputText] = useState("")
   const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(null)
   const [fastbootInfo, setFastbootInfo] = useState<any>(null)
+  const pageVisible = usePageVisible()
   const imgRef = useRef<HTMLImageElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   // audit fix (2026-08-12): the poll interval was cleaned up on unmount, but
@@ -65,11 +67,11 @@ export function ScreenControl({ selectedDevice }: ScreenControlProps) {
   }, [selectedDevice.serial_no, mirrorActive])
 
   useEffect(() => {
-    if (!mirrorActive) return
+    if (!mirrorActive || !pageVisible) return
     const id = setInterval(captureFrame, refreshInterval)
     captureFrame() // immediate first frame
     return () => clearInterval(id)
-  }, [mirrorActive, refreshInterval, captureFrame])
+  }, [mirrorActive, refreshInterval, captureFrame, pageVisible])
 
   // All follow-up captures go through ONE tracked scheduler so unmount
   // clears every pending timer (and none can outlive the view).

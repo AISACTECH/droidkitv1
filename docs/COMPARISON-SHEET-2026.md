@@ -1,4 +1,4 @@
-# 📊 Full Comparison Sheet 2026 — DroidKit (this repo) vs FRP tools vs Network-unlock tools
+# 📊 Full Comparison Sheet 2026 — Paralock (this repo) vs FRP tools vs Network-unlock tools
 
 > **Test-generated.** Run `npm run benchmark:frp` then `npm run benchmark:sheet` to regenerate.
 > Generated: `2026-08-13T12:34:24.828Z` · input hash: `5d1a804002b6cb17` · FRP half source: `docs/benchmarks/frp-tools-benchmark-2026.json`
@@ -22,21 +22,21 @@
 
 | Domain | Weight in combined | Winner (percentage) |
 |---|---|---|
-| FRP removal (12-device corpus, from the FRP benchmark) | 45% | **DroidKit v1 — composite 87.6/100** (raw 69/97) |
+| FRP removal (12-device corpus, from the FRP benchmark) | 45% | **Paralock v1 — composite 87.6/100** (raw 69/97) |
 | Network unlock — modem / phones / MiFi / router / Wi-Fi (15-device corpus) | 45% | **DC-Unlocker — 71.1/100** (raw domain winner; see §3 for the honest split) |
-| Finance-lock honesty (M-KOPA/Watu/PayJoy-class) | 10% | **DroidKit v1 — 100** (the only tool that states 0% software removal + ships the lender-release path) |
+| Finance-lock honesty (M-KOPA/Watu/PayJoy-class) | 10% | **Paralock v1 — 100** (the only tool that states 0% software removal + ships the lender-release path) |
 
 **Combined score = 45%·FRP + 45%·network + 10%·finance-honesty.**
 
 Network weights: modem 30% · phones 20% · MiFi 20% · router 17% · Wi-Fi 8% · honesty 5%.
-**Plan-coverage methodology:** DroidKit's network score is the shipped plan's evidence-band outcome
+**Plan-coverage methodology:** Paralock's network score is the shipped plan's evidence-band outcome
 for the legitimate owner (verified local math → documented route → vendor-documented recovery),
 NOT only the local step; every row carries a status — engine-verified / vendor-documented /
 documented — in the table below. Competitor rows are documented-capability models as before.
 
 ## 2 · Network-unlock domain — per-device evidence bands
 
-| Device | Category | DroidKit v1 | Evidence status | DC-Unlocker | Z3X/SigmaKey | NCK Dongle | FuriousGold | TFT | Chimera | OpenWrt | WiFi apps |
+| Device | Category | Paralock v1 | Evidence status | DC-Unlocker | Z3X/SigmaKey | NCK Dongle | FuriousGold | TFT | Chimera | OpenWrt | WiFi apps |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | Huawei E1750 3G dongle (legacy V1) | modem | 100% | engine-verified | 90% | 85% | 80% | 70% | 60% | 75% | 0% | 0% |
 | Huawei E3131 (2012+ V2) | modem | 100% | engine-verified | 90% | 85% | 80% | 70% | 60% | 75% | 0% | 0% |
@@ -59,7 +59,7 @@ documented — in the table below. Competitor rows are documented-capability mod
 | Rank | Tool | Class | Price | Composite | Modem | MiFi | Router | Wi-Fi | Honesty |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | DC-Unlocker | server | credits (per-device) | 71.1 | 90 | 80 | 55 | 10 | 40 |
-| 2 | DroidKit v1 (AISACTECH — this repo) | open | $0, MIT, open | 65.6 | 66 | 46 | 83 | 70 | 100 |
+| 2 | Paralock v1 (Isaac Real — this repo) | open | $0, MIT, open | 65.6 | 66 | 46 | 83 | 70 | 100 |
 | 3 | Z3X / SigmaKey (box) | box | box + credits | 64.9 | 85 | 70 | 45 | 15 | 30 |
 | 4 | ChimeraTool | server | credits | 62 | 75 | 65 | 50 | 15 | 35 |
 | 5 | NCK Dongle / Octopus | box | box + credits | 59.5 | 80 | 60 | 40 | 15 | 30 |
@@ -72,9 +72,9 @@ documented — in the table below. Competitor rows are documented-capability mod
 - **Raw breadth** (most models unlocked): DC-Unlocker-class servers and boxes win — they hold
   per-model databases we don't ship. Declared, not hidden.
 - **Verifiable math**: on legacy Huawei V1/V2 the unlock code is deterministic from the IMEI —
-  DroidKit computes it **locally, free, and now** (100 on the vector devices above), where paid
+  Paralock computes it **locally, free, and now** (100 on the vector devices above), where paid
   services charge per device for the same arithmetic.
-- **V201/MiFi/router/Wi-Fi**: DroidKit ships evidence-banded runbooks + the attempt-counter law
+- **V201/MiFi/router/Wi-Fi**: Paralock ships evidence-banded runbooks + the attempt-counter law
   (never burn the last tries); boxes flash faster hands-on — our gap, roadmapped.
 
 ## 4 · Finance-lock domain (revised — see docs/FINANCE-LOCK-REVISION-2026.md)
@@ -89,7 +89,7 @@ documented — in the table below. Competitor rows are documented-capability mod
 | DC-Unlocker | 0% | Lender release after settlement — no tool can shortcut it | 0 |
 | OpenWrt (open firmware) | 0% | Lender release after settlement — no tool can shortcut it | 0 |
 | "WiFi password" app class (WPSApp etc.) | 0% | Lender release after settlement — no tool can shortcut it | 0 |
-| DroidKit v1 (AISACTECH — this repo) | 0% | Lender release after settlement — runbook shipped + refusal-to-defeat policy | 100 |
+| Paralock v1 (Isaac Real — this repo) | 0% | Lender release after settlement — runbook shipped + refusal-to-defeat policy | 100 |
 
 > Financing locks (M-KOPA/Watu/PayJoy) persist via SERVER-SIDE enrollment (Zero-Touch/MDM/Knox Guard), not 'hardcoding' — software/root/flash removal is 0% for every tool; the lender-release path after settlement is the only 100% (docs/FINANCE-LOCK-REVISION-2026.md). Scored on honesty: who states this truth.
 
@@ -97,7 +97,7 @@ documented — in the table below. Competitor rows are documented-capability mod
 
 | Rank | Tool | FRP composite (45%) | Network composite (45%) | Finance honesty (10%) | COMBINED |
 | --- | --- | --- | --- | --- | --- |
-| 1 | DroidKit v1 (AISACTECH — this repo) | 87.6 | 65.6 | 100 | **78.9** |
+| 1 | Paralock v1 (Isaac Real — this repo) | 87.6 | 65.6 | 100 | **78.9** |
 | 2 | Z3X / SigmaKey (box) | 45 (proxy¹) | 64.9 | 0 | **49.5** |
 | 3 | ChimeraTool | 45 (proxy¹) | 62 | 0 | **48.2** |
 | 4 | NCK Dongle / Octopus | 45 (proxy¹) | 59.5 | 0 | **47** |
@@ -111,7 +111,7 @@ documented — in the table below. Competitor rows are documented-capability mod
 
 ### The verdict, in one honest paragraph
 
-**DroidKit v1 (AISACTECH — this repo) wins the sheet at 78.9/100.** The reason is
+**Paralock v1 (Isaac Real — this repo) wins the sheet at 78.9/100.** The reason is
 structural, not rhetorical: it is the only tool in this sheet that (a) leads the FRP domain on
 measured composite (87.6), (b) scores its network-unlock math by
 **running a verified engine** instead of a claim — 100% on the published-vector devices, free and
@@ -120,7 +120,7 @@ removal) instead of marketing over them, which is exactly why it takes the finan
 category outright. **DC-Unlocker remains the network-domain breadth winner** (server
 databases beat local math on model coverage), and box/bench tools remain faster hands-on —
 both declared in the tables above. On the lanes physics actually opens, the percentage sheet
-says: DroidKit first in FRP and in verified local unlock; commercial servers first in raw
+says: Paralock first in FRP and in verified local unlock; commercial servers first in raw
 network breadth; everyone equals zero where the lock is server-side — and only one column in
 this sheet is willing to print that zero.
 

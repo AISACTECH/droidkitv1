@@ -35,7 +35,8 @@ import {
   Folder, 
   FileText,
   RotateCcw,
-  Shield
+  Shield,
+  User,
 } from "lucide-react"
 import { AppearanceSettings } from "./AppearanceSettings"
 import { AndroidSettings } from "./AndroidSettings"
@@ -43,6 +44,7 @@ import { DeviceSettings } from "./DeviceSettings"
 import { FileSettings } from "./FileSettings"
 import { LogcatSettings } from "./LogcatSettings"
 import { AdvancedSettings } from "./AdvancedSettings"
+import { AboutSettings } from "./AboutSettings"
 
 interface SettingsDialogProps {
   children: React.ReactNode
@@ -55,6 +57,7 @@ const settingsSections = [
   { id: 'files', name: 'File Operations', icon: Folder },
   { id: 'logcat', name: 'Logcat & Debugging', icon: FileText },
   { id: 'advanced', name: 'Advanced & Developer', icon: Shield },
+  { id: 'about', name: 'About & Developer', icon: User },
 ] as const
 
 type SettingsSection = typeof settingsSections[number]['id']
@@ -100,7 +103,7 @@ export function SettingsDialog({ children }: SettingsDialogProps) {
       <DialogContent className="overflow-hidden p-0 md:max-h-[600px] md:max-w-[900px] lg:max-w-[1000px]">
         <DialogTitle className="sr-only">Settings</DialogTitle>
         <DialogDescription className="sr-only">
-          Customize your DroidKit settings here.
+          Customize your Paralock settings here.
         </DialogDescription>
         <SidebarProvider className="items-start min-h-0">
           <Sidebar collapsible="none" className="hidden md:flex">
@@ -109,7 +112,7 @@ export function SettingsDialog({ children }: SettingsDialogProps) {
                 <SidebarGroupContent>
                   <SidebarMenu>
                     {settingsSections.map((section) => {
-                      const hasError = section.id !== 'advanced' ? hasCategoryErrors(section.id as any) : false
+                      const hasError = section.id === 'advanced' || section.id === 'about' ? false : hasCategoryErrors(section.id as any)
                       return (
                         <SidebarMenuItem key={section.id}>
                           <SidebarMenuButton
@@ -171,6 +174,7 @@ export function SettingsDialog({ children }: SettingsDialogProps) {
               {activeSection === 'files' && <FileSettings />}
               {activeSection === 'logcat' && <LogcatSettings />}
               {activeSection === 'advanced' && <AdvancedSettings />}
+              {activeSection === 'about' && <AboutSettings />}
             </div>
           </main>
         </SidebarProvider>

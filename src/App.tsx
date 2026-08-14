@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense } from "react"
+import { useState, useEffect, useRef, Suspense } from "react"
 import { AppSidebar } from "@/components/AppSidebar"
 import { MainContent } from "@/components/MainContent"
 import { StatusBar } from "@/components/StatusBar"
@@ -30,6 +30,8 @@ function App() {
   const { devices: pairedDevices, updateLastConnected } = usePairedDevices()
   const { data: devices = [], isLoading, addDevice, refetch } = useConnectedDevices()
   const { tryAutoReconnect } = useAutoReconnect()
+  const selectedDeviceRef = useRef(selectedDevice)
+  selectedDeviceRef.current = selectedDevice
 
   const refreshDevices = async () => {
     logger.info("Manual refresh triggered")
@@ -53,11 +55,12 @@ function App() {
   }, [devices, selectedDevice])
 
   useEffect(() => {
+    let cancelled = false
     const initializeApp = async () => {
       try {
         logger.info("Attempting auto-reconnect", { pairedCount: pairedDevices.length })
         const reconnectedDevice = await tryAutoReconnect(pairedDevices, updateLastConnected)
-        if (reconnectedDevice && !selectedDevice) {
+        if (reconnectedDevice && !selectedDeviceRef.current && !cancelled) {
           logger.info("Auto-reconnected", { model: reconnectedDevice.model })
           setSelectedDevice(reconnectedDevice)
         }
@@ -69,6 +72,7 @@ function App() {
     if (pairedDevices.length > 0) {
       initializeApp()
     }
+    return () => { cancelled = true }
   }, [pairedDevices])
 
   return (
@@ -92,6 +96,7 @@ function App() {
                     devices={devices}
                     onDeviceSelect={setSelectedDevice}
                     onWirelessDeviceConnected={handleWirelessDeviceConnected}
+                    onViewChange={setActiveView}
                   />
                 </Suspense>
               </SidebarInset>

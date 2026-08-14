@@ -438,7 +438,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                           const url = URL.createObjectURL(blob);
                           const a = document.createElement("a");
                           a.href = url;
-                          a.download = `droidkit-frp-audit-${selectedDevice.serial_no || "device"}.json`;
+                          a.download = `paralock-frp-audit-${selectedDevice.serial_no || "device"}.json`;
                           a.click();
                         }}
                       >

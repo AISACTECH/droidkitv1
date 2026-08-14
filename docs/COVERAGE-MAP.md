@@ -4,7 +4,7 @@ Solves the #1 market pain: "my device category isn't covered." One symptom
 per row → the exact lane or doc. Honest rows included: where NOBODY on
 Earth has a software fix, we say who does (the official route).
 
-| Symptom you see | Device | Where in DroidKit | Honest ceiling |
+| Symptom you see | Device | Where in Paralock | Honest ceiling |
 |---|---|---|---|
 | Google account lock after reset, Android 11–14 | Samsung/Tecno/Infinix/Itel/others | **FRP Removal** + **FRP Lab 🧪** (escalation + verdict loop) | Strong on ≤13; patch-level decides 14 |
 | Google lock, Android 15/16 | Any | **FRP Lab → Reality Check / Patch Oracle 🔮** for the truthful band + below-OS runbooks | Server-side: **0% software for everyone** → `docs/OFFICIAL-ROUTES.md` |

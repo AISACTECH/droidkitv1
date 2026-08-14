@@ -53,10 +53,10 @@ export function buildDumpManifest(chipset: ChipsetFamily, blockDevices: string[]
         role: p.role,
         backupRecommended: p.backupRecommended,
         commands: [
-          `adb shell mkdir -p /sdcard/droidkit-backup`,
-          `adb shell dd if=${devicePath} of=/sdcard/droidkit-backup/${name}.img bs=4096`,
-          `adb pull /sdcard/droidkit-backup/${name}.img`,
-          `sha256sum ${name}.img | tee droidkit-backup/${name}.img.sha256`,
+          `adb shell mkdir -p /sdcard/paralock-backup`,
+          `adb shell dd if=${devicePath} of=/sdcard/paralock-backup/${name}.img bs=4096`,
+          `adb pull /sdcard/paralock-backup/${name}.img`,
+          `sha256sum ${name}.img | tee paralock-backup/${name}.img.sha256`,
         ],
       };
     });
@@ -217,17 +217,17 @@ export function generateRecoveryScript(manifest: DumpManifest): RecoveryScript {
   ];
   for (const item of manifest.items) {
     steps.push({
-      line: `# verify backup hash before writing: sha256sum droidkit-backup/${item.partition}.img`,
+      line: `# verify backup hash before writing: sha256sum paralock-backup/${item.partition}.img`,
       write: false,
       note: "Hash check",
     });
     steps.push({
-      line: `adb push droidkit-backup/${item.partition}.img /sdcard/droidkit-backup/${item.partition}.img`,
+      line: `adb push paralock-backup/${item.partition}.img /sdcard/paralock-backup/${item.partition}.img`,
       write: false,
       note: "Stage backup",
     });
     steps.push({
-      line: `adb shell dd if=/sdcard/droidkit-backup/${item.partition}.img of=/dev/block/by-name/${item.partition} bs=4096`,
+      line: `adb shell dd if=/sdcard/paralock-backup/${item.partition}.img of=/dev/block/by-name/${item.partition} bs=4096`,
       write: true,
       note: `WRITE ${item.partition} — restore original (the only sanctioned write path)`,
     });

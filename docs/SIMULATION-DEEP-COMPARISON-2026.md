@@ -1,4 +1,4 @@
-# DroidKit vs the market — deep comparison + 30k-agent simulation + pain-point fixes (2026-08-12)
+# Paralock vs the market — deep comparison + 30k-agent simulation + pain-point fixes (2026-08-12)
 
 > **Honesty label (repo law):** the simulation agents are **modelled, not real
 > people**. Probabilities are physics-grounded assumptions (server-side
@@ -14,7 +14,7 @@
 
 | Tool group | Sessions | Categories covered | Success where it plays | Avg rating |
 |---|---|---|---|---|
-| **DroidKit (this app)** | 10,266 | **100.0%** | 65.8% | **4.15 ★** |
+| **Paralock (this app)** | 10,266 | **100.0%** | 65.8% | **4.15 ★** |
 | Paid FRP apps (PassFab/4uKey/iMobie/Dr.Fone/MagFone) | 7,885 | 45.5% | 41.0% | **1.93 ★** |
 | Free native tools (mtkclient/forums) | 5,953 | 100.0%* | 44.5% | 3.43 ★ |
 | Bench boxes (UnlockTool/Miracle/CM2) | 5,896 | 87.7% | **68.7%** | 3.51 ★ |
@@ -78,7 +78,7 @@ With this round's shipped pain-fixes feeding back into the model
 (`npm run simulate:market` prints both scenarios; every delta names its
 artifact):
 
-| Metric (DroidKit) | A — today | B — projected |
+| Metric (Paralock) | A — today | B — projected |
 |---|---|---|
 | Categories covered | 100.0% | 100.0% (already at ceiling) |
 | Raw success where covered | 65.8% | 65.3% (same physics — no pretending) |

@@ -300,7 +300,7 @@ export function DeveloperLab({ selectedDevice }: DeveloperLabProps) {
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = `droidkit-lab-${selectedDevice.serial_no}-${Date.now()}.json`
+    a.download = `paralock-lab-${selectedDevice.serial_no}-${Date.now()}.json`
     a.click()
     URL.revokeObjectURL(url)
   }

@@ -1,0 +1,1 @@
+Huawei E5573 — era=v201 — code 12345678 — attempts-before 10 — RESULT accepted — 2026-08-13

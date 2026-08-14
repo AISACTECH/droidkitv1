@@ -2,12 +2,50 @@ name: publish
 
 on:
   workflow_dispatch:
+    inputs:
+      reason:
+        description: Why this installer matrix is being built
+        required: false
+        default: manual dispatch
   push:
     tags:
       - 'v*'
 
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
+  preflight:
+    name: Preflight (lockfile + schema)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: refuse bun.lock (tauri-action lockfile detect)
+        run: |
+          if [ -f bun.lock ] || [ -f bun.lockb ]; then
+            echo "::error::bun.lock present — tauri-action will run bun, not npm. One lockfile = one truth."
+            exit 1
+          fi
+
+      - name: install frontend dependencies
+        run: npm ci
+
+      - name: environment doctor + release preflight
+        run: |
+          npm run doctor
+          npm run release:prepare
+
   build:
+    needs: preflight
     permissions:
       contents: write
     strategy:
@@ -20,24 +58,25 @@ jobs:
           - platform: windows-latest
             os_name: windows
             args: ''
-          - platform: 'macos-latest'
+          - platform: macos-latest
             os_name: macos (ARM)
-            args: '--target aarch64-apple-darwin'
-          - platform: 'macos-latest'
+            args: --target aarch64-apple-darwin
+          - platform: macos-latest
             os_name: macos (Intel)
-            args: '--target x86_64-apple-darwin'
+            args: --target x86_64-apple-darwin
 
     name: Building for ${{ matrix.os_name }}
     runs-on: ${{ matrix.platform }}
-    
+    timeout-minutes: 60
+
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev libsoup-3.0-dev libappindicator3-dev librsvg2-dev patchelf libudev-dev libusb-1.0-0-dev
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -49,49 +88,41 @@ jobs:
         with:
           workspaces: './src-tauri -> target'
 
+      # npm world == the world the app is verified green in (package-lock.json).
+      # Deliberately NOT bun: bun.lock resolves different dep versions, which is
+      # how the 4-runner TS2345 failure happened. One lockfile = one truth.
+      # tauriScript below is belt-and-suspenders in case a bun.lock sneaks back.
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: install frontend dependencies
         run: npm ci
 
-      - name: TypeScript check
-        run: npx tsc --noEmit
-
-      - name: Build frontend (production)
-        run: npm run build
-
-      - name: Production audit
-        run: node scripts/production-audit.js || true
-               
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          tauriScript: npm run tauri
           tagName: v__VERSION__
-          releaseName: 'DroidKit v__VERSION__ — Production Ready'
+          releaseName: v__VERSION__
           releaseBody: |
-            ## DroidKit v1.0.0 — Production Release
+            See the assets to download this version and install.
 
-            Enterprise-grade Android toolkit.
-
-            ### ✅ Production Highlights
-            - Version aligned 1.0.0 across package.json, tauri.conf.json, Cargo.toml
-            - Hardened CSP, ErrorBoundary, production logger
-            - Bundle code-split: vendor-react, vendor-radix, vendor-tauri, vendor-query
-            - Real components verified: 170+ FRP models (Samsung 35, Tecno 70, Infinix 35, Itel 35, Q3 60, Q4 33)
-            - PerformanceMonitor & ScreenControl fully implemented (not stubs)
-            - Storage: dist ~2.5MB, gz 196kb main, binary est 15-22MB with LTO+s
-            - Reliability: adaptive polling, React Query offlineFirst, atomic store writes
-
-            ### 🧪 Simulation Tested
-            - 20,000 developers + 20,000 users simulated
-            - Reliability score 8.2/10, consistency 9.0/10
-
-            See assets to download.
-
-          releaseDraft: false
+            Built because: ${{ github.event.inputs.reason || github.ref }}
+          releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
+
+      - name: upload unsigned artifacts (backup if the Release step is skipped)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paralock-${{ matrix.os_name }}
+          path: |
+            src-tauri/target/release/bundle
+            src-tauri/target/*/release/bundle
+          if-no-files-found: ignore
+          retention-days: 14

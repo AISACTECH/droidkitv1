@@ -1,7 +1,7 @@
 # Windows Ecosystem + Competitive Audit — 2026-08-12
 
 **Honesty preface (the law):** no application — Tenorshare 4uKey, iMobie
-DroidKit-for-PC, Wondershare Dr.Fone, or this one — can *guarantee a 100%
+Paralock-for-PC, Wondershare Dr.Fone, or this one — can *guarantee a 100%
 FRP bypass across all supported devices*. Server-enforced locks answer to a
 server, full stop. What a serious engineering team CAN maximize — and what
 this round actually did — is: protocol robustness, speed, install reliability,
@@ -12,7 +12,7 @@ either measured in this repo or explicitly labelled as estimate.
 
 ## 1 · Competitive feature gap: architecture level
 
-| Axis | DroidKit (this app) | 4uKey / Dr.Fone / iMobie-pc (typical) |
+| Axis | Paralock (this app) | 4uKey / Dr.Fone / iMobie-pc (typical) |
 |---|---|---|
 | Runtime | Tauri 2 + system WebView2 — **no bundled browser** | Electron / bundled Chromium (typical for this product class) |
 | Web wire size | **271 kB gzip** (measured, `perf:report`) | Chromium bundle alone ≈ 70–90 MB (typical, not this-sandbox verified) |

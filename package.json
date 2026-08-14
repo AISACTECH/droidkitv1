@@ -1,11 +1,11 @@
 {
-  "name": "droidkit",
+  "name": "paralock",
   "private": true,
   "version": "1.1.0",
   "description": "Enterprise-grade cross-platform Android toolkit — device management, FRP removal, system diagnostics, and developer utilities powered by Tauri + React",
   "author": {
-    "name": "AISACTECH",
-    "email": "support@droidkit.tech"
+    "name": "Isaac Real",
+    "email": "isaacreal2026@gmail.com"
   },
   "license": "MIT",
   "type": "module",
@@ -35,6 +35,11 @@
   "packageManager": "npm@10.9.0",
   "scripts": {
     "doctor": "node --experimental-strip-types scripts/doctor.mts",
+    "ci": "node --experimental-strip-types scripts/ci-local.mts",
+    "ci:fast": "node --experimental-strip-types scripts/ci-local.mts --fast",
+    "test:bench": "node --experimental-strip-types scripts/verify-bench.mts",
+    "release:prepare": "node --experimental-strip-types scripts/prepare-release.mts",
+    "bench:ingest": "node --experimental-strip-types scripts/ingest-bench-log.mts",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
@@ -65,7 +70,7 @@
     "simulate:devs": "node scripts/simulate-large-scale.js --devs=20000",
     "simulate:users": "node scripts/simulate-large-scale.js --users=20000",
     "simulate:full": "node scripts/simulate-large-scale.js --devs=20000 --users=20000",
-    "postinstall": "echo 'DroidKit v1.1.0 installed. Run npm run tauri:dev for desktop or npm run dev for browser mock mode.'",
+    "postinstall": "echo 'Paralock v1.1.0 installed. Run npm run tauri:dev for desktop or npm run dev for browser mock mode.'",
     "simulate:frp-mock": "node scripts/sim-harness.mjs"
   },
   "dependencies": {

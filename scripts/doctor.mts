@@ -1,5 +1,5 @@
 // =====================================================================
-// DroidKit environment doctor — `npm run doctor`
+// Paralock environment doctor — `npm run doctor`
 // ---------------------------------------------------------------------
 // One command that diagnoses EXACTLY why "the app won't launch/build"
 // on any machine, bot or human. Prints a verdict table and the precise
@@ -35,7 +35,7 @@ function sh(cmd: string): string | null {
 const REQ_NODE = [22, 6] // major.minor — matches package.json engines
 const REQ_NPM = 10
 
-console.log("🩺 DroidKit environment doctor\n==============================")
+console.log("🩺 Paralock environment doctor\n==============================")
 
 // ---- 1. Node ---------------------------------------------------------
 const nodeMajor = Number(process.versions.node.split(".")[0])
@@ -72,6 +72,27 @@ if (cargo) log("ok", "Rust", `${cargo.split(" ")[0]} present → \`npm run tauri
 else {
   log("warn", "Rust", "no cargo on PATH — the desktop app cannot build, but the FULL UI still runs in browser mock mode")
   fixes.push("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh    # then: npm run tauri:dev")
+}
+
+// ---- 5b. lockfile truth (the publish-matrix bun detect) ---------------
+if (existsSync("bun.lock") || existsSync("bun.lockb")) {
+  log("fail", "Lockfile", "bun.lock present — tauri-action will run bun, not npm, and the publish matrix will go red")
+  fixes.push("rm -f bun.lock bun.lockb     # npm ci is the one truth (package-lock.json)")
+} else {
+  log("ok", "Lockfile", "no bun.lock — tauri-action will pick npm")
+}
+
+// ---- 5c. macOS icns must be a real icns (not a PNG renamed) ----------
+try {
+  const icns = execSync("node -e \"const fs=require('fs');process.stdout.write(fs.readFileSync('src-tauri/icons/icon.icns').subarray(0,4).toString('ascii'))\"", { encoding: "utf8" }).trim()
+  if (icns === "icns") log("ok", "icon.icns", "real Apple icon container — macOS tauri build can read it")
+  else {
+    log("fail", "icon.icns", `magic is '${icns}' (need 'icns') — macOS publish dies if this is a PNG renamed to .icns`)
+    fixes.push("npx tauri icon src-tauri/icons/icon.png    # regenerates a real icon.icns")
+  }
+} catch {
+  log("fail", "icon.icns", "missing or unreadable — macOS tauri build will fail")
+  fixes.push("npx tauri icon src-tauri/icons/icon.png")
 }
 
 // ---- 6. Android tools (device features) ------------------------------

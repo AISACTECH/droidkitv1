@@ -16,7 +16,7 @@ import {
 // =====================================================================
 // Help & Policies — always available (no device needed).
 // Renders the SAME data module (src/lib/help-content.ts) that builds
-// docs/DROIDKIT-HELP-GUIDE.pdf, so the app and the printable guide can
+// docs/PARALOCK-HELP-GUIDE.pdf, so the app and the printable guide can
 // never drift apart. Additive view: sends zero device commands.
 // =====================================================================
 
@@ -73,11 +73,11 @@ export function HelpCenter() {
     try {
       const a = document.createElement("a")
       a.href = HELP_META.pdfInApp
-      a.download = "DroidKit-Help-Guide.pdf"
+      a.download = "Paralock-Help-Guide.pdf"
       document.body.appendChild(a)
       a.click()
       a.remove()
-    } catch { /* webview blocked it — the PDF also lives at docs/DROIDKIT-HELP-GUIDE.pdf */ }
+    } catch { /* webview blocked it — the PDF also lives at docs/PARALOCK-HELP-GUIDE.pdf */ }
   }
 
   return (
