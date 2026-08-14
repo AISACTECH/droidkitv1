@@ -59,7 +59,7 @@ The three-algorithm brief (Adaptive Exploit Automation · UI & Behavior Interact
   - **Phase Runbook** — chipset hardware paths (EDL/Brom/Odin/SPD) driven by real `algorithm.rs` phase weights as an interactive checklist
   - **Session journal + JSON export** for developer artifacts
 - 📊 **Research Reality Check panel** in FRP Removal — computes a feasibility band per scanned device from Android version + security patch + chipset, and routes to the method class the 2026 evidence supports (ADB window / test-mode / Odin / Brom / EDL / official recovery)
-- 🔗 **Evidence dossiers committed** — `RESEARCH-2026-FRP.md`, `DEBATE-AI-VS-GOOGLE.md`, `docs/PHYSICS-LAYER-RESEARCH.md`, `docs/RESCUE-LAB-RESEARCH.md`, `docs/COMPARISON-2026-FINAL.md` (experimental lanes: FRP Lab 🧪 Patch Oracle 🔮 + Rescue Lab 🛠️ multi-device repair bench — both under the bands-not-promises honesty law; user-runnable verification: `npm run test:lab` 111 checks + `test:nck` + `test:rescue`)
+- 🔗 **Evidence dossiers committed** — `RESEARCH-2026-FRP.md`, `DEBATE-AI-VS-GOOGLE.md`, `docs/PHYSICS-LAYER-RESEARCH.md`, `docs/RESCUE-LAB-RESEARCH.md`, `docs/COMPARISON-2026-FINAL.md`, the peer-reviewed Top-3 comparison (`COMPARISON_ANALYSIS_2026.md`), and the genuine Top-4 benchmark (`BENCHMARK_2026.md`, regenerate via `npm run benchmark` → `benchmark-report.json`) (experimental lanes: FRP Lab 🧪 Patch Oracle 🔮 + Rescue Lab 🛠️ multi-device repair bench — both under the bands-not-promises honesty law; user-runnable verification: `npm run test:lab` 111 checks + `test:nck` + `test:rescue`)
 - ❓ **Help & Info view + full-colour PDF guide** — searchable in-app Help Center (policies, setup, every tool, FAQ, glossary; works with no device connected) rendered from one shared content module, plus the printable 16-page `docs/PARALOCK-HELP-GUIDE.pdf` (`npm run build:help-pdf` regenerates it; a bundled copy ships in-app as `/help-guide.pdf`)
 - 🧹 **Fresh-clone polish** — removed noisy `husky` prepare hook, synced lockfile, replaced unverified third-party APK mirror URLs with neutral web-search launches, corrected research-outdated instruction text (browser-APK/TalkBack patch era, combination firmware reframed as legacy Android 6–9)
 
@@ -130,6 +130,9 @@ npm run ci:fast             # doctor, tsc, bench desk, adaptive, research, relea
 npm run test:bench          # 12 virtual A15/16 donors + promotion law (no hardware)
 npm run lint                # tsc --noEmit — must be clean
 npm run audit:prod          # versions aligned, CSP hardened, components present, build health
+npm run benchmark           # genuine 2026 benchmark: measured build/FRP/privacy/simulation audit
+                            #   + desk-audited Top-4 competitors + verified feature audit
+                            #   → benchmark-report.json (documented in BENCHMARK_2026.md)
 npm run simulate            # quick 1k+1k agent smoke simulation
 npm run simulate:full       # full 20k devs + 20k users simulation
 ```

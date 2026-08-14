@@ -1,0 +1,433 @@
+{
+  "meta": {
+    "tool": "Paralock",
+    "version": "1.1.0",
+    "commit": "5298644",
+    "date": "2026-08-14T10:34:22.689Z",
+    "node": "v22.22.3",
+    "harness": "scripts/benchmark-top4.js",
+    "wall_seconds": 25.7
+  },
+  "measured": {
+    "typecheck": {
+      "errors": 0,
+      "seconds": 9.45,
+      "first_errors": []
+    },
+    "build": {
+      "ok": true,
+      "seconds": 13.39,
+      "modules_transformed": 2072,
+      "dist_files": 20,
+      "dist_raw_mb": 1.6,
+      "dist_gzip_kb_text": 314
+    },
+    "frp_coverage": {
+      "models_total": 268,
+      "models_per_database": {
+        "samsung": 35,
+        "tecno": 70,
+        "infinix": 35,
+        "itel": 35,
+        "q3_xiaomi_oppo_vivo_honor": 60,
+        "q4_nokia_moto_huawei_sony_pixel_finance": 33
+      },
+      "brand_families": 16,
+      "frp_methods": [
+        "SetupWizardDisable",
+        "DeviceProvisioning",
+        "ContentProviderBypass",
+        "SetupWizardUninstall",
+        "BrowserDownloadBypass",
+        "AccountManagerLaunch",
+        "EmergencyDialerBypass",
+        "TalkBackBypass",
+        "SimPinBypass",
+        "CombinationFirmware",
+        "AllianceShieldBypass",
+        "HacktmBypass",
+        "SmartSwitchBypass",
+        "SettingsAccess",
+        "QuickShortcutMaker"
+      ],
+      "chipset_branches": {
+        "exynos_download_mode": true,
+        "qualcomm_edl_9008": true,
+        "mediatek_brom": true,
+        "samsung_test_mode": true,
+        "adb_provisioning": true,
+        "spd_bootloader": true
+      },
+      "reset_modes": 4,
+      "knox_packages": 16,
+      "knox_guard_packages": 4,
+      "models_with_patch_ceiling_sampled": 95
+    },
+    "privacy_security": {
+      "telemetry_sdk_hits": [],
+      "csp_external_origins": [
+        "https://*"
+      ],
+      "capability_permissions": 16
+    },
+    "simulation": {
+      "agents": 40000,
+      "seconds": 2.76,
+      "avg_errors_per_dev": "17.02",
+      "avg_errors_per_user": "1.89"
+    },
+    "platform_ci": {
+      "linux": true,
+      "windows": true,
+      "macos": true,
+      "macos_arm": true
+    },
+    "license": "MIT License",
+    "lockfile_present": true
+  },
+  "competitors": [
+    {
+      "name": "Dr.Fone – Screen Unlock (Wondershare)",
+      "source": "desk audit",
+      "pricing": {
+        "monthly_usd": 24.95,
+        "yearly_usd": 39.95,
+        "perpetual_usd": 49.95,
+        "note": "official offers schema"
+      },
+      "provenance": [
+        "https://drfone.wondershare.com/unlock-android-screen.html",
+        "https://toolbox.iskysoft.com/reference/android-lock-screen-removal.html"
+      ],
+      "facts": {
+        "open_source": false,
+        "linux_build": false,
+        "platforms": [
+          "Windows",
+          "macOS"
+        ],
+        "frp_brand_claim": "32 brands unlocked / FRP for 19 brands (vendor claim)",
+        "success_claim": "\"100% on Samsung Snapdragon\" (vendor marketing, unaudited)",
+        "trial": "7-day",
+        "money_back": "varies by region",
+        "hardware_routes": "executes EDL/Brom/Odin + online server routes (proprietary)",
+        "no_data_loss_mode": "select older Samsung/LG"
+      }
+    },
+    {
+      "name": "Tenorshare 4uKey for Android",
+      "source": "desk audit",
+      "pricing": {
+        "monthly_usd": 24.95,
+        "yearly_usd": 39.95,
+        "perpetual_usd": 49.95,
+        "note": "1 PC / 5 devices"
+      },
+      "provenance": [
+        "https://www.filehorse.com/download-4ukey-android-unlocker/",
+        "https://www.tenorshare.com/unlock-android/4ukey-android-frp-bypass.html",
+        "https://tickcoupon.com/coupons/tenorshare-4ukey-for-android-review"
+      ],
+      "facts": {
+        "open_source": false,
+        "linux_build": false,
+        "platforms": [
+          "Windows",
+          "macOS"
+        ],
+        "frp_brand_claim": "~9 brands, Samsung-centric (vendor guide; review: inconsistent on non-Samsung)",
+        "success_claim": "\"up to 99% in 3 minutes\" (vendor marketing, unaudited)",
+        "trial": "free download, feature-limited",
+        "money_back": "30-day",
+        "hardware_routes": "guided PDA/combination flows; limited low-level",
+        "no_data_loss_mode": "early Samsung"
+      }
+    },
+    {
+      "name": "iToolab UnlockGo for Android",
+      "source": "desk audit",
+      "pricing": {
+        "monthly_usd": 29.95,
+        "yearly_usd": 39.95,
+        "perpetual_usd": 49.95,
+        "business_yearly_usd": 399.95,
+        "note": "5 devices / 1 PC"
+      },
+      "provenance": [
+        "https://www.softwaresuggest.com/itoolab-unlockgo",
+        "https://www.softwaretestinghelp.com/best-frp-bypass-tool/",
+        "https://itoolab.com/unlock-android/top-frp-bypass-tools/"
+      ],
+      "facts": {
+        "open_source": false,
+        "linux_build": false,
+        "platforms": [
+          "Windows",
+          "macOS"
+        ],
+        "frp_brand_claim": "~11 FRP brands; 6000+ models suite-wide (vendor claim)",
+        "success_claim": "~98% (vendor marketing, unaudited)",
+        "trial": "detection-only free tier",
+        "money_back": "listed on site",
+        "hardware_routes": "ADB-based + no-emergency-call flows",
+        "no_data_loss_mode": "early Samsung"
+      }
+    },
+    {
+      "name": "iMobie DroidKit (proprietary namesake)",
+      "source": "desk audit",
+      "pricing": {
+        "frp_module_usd": 39.99,
+        "note": "FRP module one-time; suites priced higher"
+      },
+      "provenance": [
+        "https://unlock-android.wondershare.com/learn/online-frp-bypass-tools.html",
+        "https://www.imobie.com/android-unlock/samsung-frp-tool.htm"
+      ],
+      "facts": {
+        "open_source": false,
+        "linux_build": false,
+        "platforms": [
+          "Windows",
+          "macOS"
+        ],
+        "frp_brand_claim": "broad Android claim; exact model list gated (vendor claim)",
+        "success_claim": "high (vendor marketing, unaudited)",
+        "trial": "free scan",
+        "money_back": "60-day",
+        "hardware_routes": "all-in-one toolkit; FRP module ADB/setup-focused",
+        "no_data_loss_mode": "not for FRP module"
+      }
+    }
+  ],
+  "verified_audit": {
+    "note": "A check scores 1 only with verified evidence; vendor claims/partials score 0.",
+    "total_checks": 16,
+    "checks": [
+      {
+        "check": "Source code publicly available (open source)",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Zero license cost",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Native Linux build",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Named per-model FRP database",
+        "droidkit": true,
+        "drfone": true,
+        "fourkey": true,
+        "unlockgo": true,
+        "imobie": "claim (list gated)"
+      },
+      {
+        "check": "Per-model security-patch ceilings published",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Transsion coverage (Tecno/Infinix/Itel)",
+        "droidkit": true,
+        "drfone": "claim",
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Finance-lock device coverage (M-Kopa/Watu/PayJoy)",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Post-method verification loop",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Auto-escalation method ladder",
+        "droidkit": true,
+        "drfone": "claim (AI-branded)",
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Hardware-path runbook (EDL/Brom/Odin/SPD)",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Native hardware execution (EDL/Brom/Odin)",
+        "droidkit": false,
+        "drfone": "claim",
+        "fourkey": "claim",
+        "unlockgo": "claim",
+        "imobie": false
+      },
+      {
+        "check": "No-data-loss mode (older Samsung/LG)",
+        "droidkit": false,
+        "drfone": true,
+        "fourkey": true,
+        "unlockgo": true,
+        "imobie": false
+      },
+      {
+        "check": "Knox/MDM package removal",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Session JSON export / audit trail",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Feasibility pre-screen per device",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      },
+      {
+        "check": "Published failure modes & evidence docs",
+        "droidkit": true,
+        "drfone": false,
+        "fourkey": false,
+        "unlockgo": false,
+        "imobie": false
+      }
+    ],
+    "verified_yes": {
+      "droidkit": 14,
+      "drfone": 2,
+      "fourkey": 2,
+      "unlockgo": 2,
+      "imobie": 0
+    }
+  },
+  "rubric": {
+    "weights": {
+      "transparency_auditability": 20,
+      "cost_of_ownership_3yr": 20,
+      "feature_depth_verifiable": 20,
+      "coverage_quality": 15,
+      "platform_reach": 10,
+      "privacy_posture": 10,
+      "reproducibility_build_health": 5
+    },
+    "note": "Verifiable criteria only. Device-bench success rates excluded until measured per protocol.",
+    "scores": {
+      "Paralock (Isaac Real)": {
+        "basis": "measured in this repo",
+        "transparency_auditability": 10,
+        "cost_of_ownership_3yr": 10,
+        "feature_depth_verifiable": 9,
+        "coverage_quality": 8.5,
+        "platform_reach": 10,
+        "privacy_posture": 8,
+        "reproducibility_build_health": 10
+      },
+      "Dr.Fone – Screen Unlock": {
+        "basis": "desk audit (closed source)",
+        "transparency_auditability": 2,
+        "cost_of_ownership_3yr": 6,
+        "feature_depth_verifiable": 8.5,
+        "coverage_quality": 8,
+        "platform_reach": 7,
+        "privacy_posture": 5,
+        "reproducibility_build_health": 1
+      },
+      "Tenorshare 4uKey": {
+        "basis": "desk audit (closed source)",
+        "transparency_auditability": 2,
+        "cost_of_ownership_3yr": 6.5,
+        "feature_depth_verifiable": 6,
+        "coverage_quality": 6,
+        "platform_reach": 7,
+        "privacy_posture": 5,
+        "reproducibility_build_health": 1
+      },
+      "iToolab UnlockGo": {
+        "basis": "desk audit (closed source)",
+        "transparency_auditability": 2,
+        "cost_of_ownership_3yr": 6,
+        "feature_depth_verifiable": 6.5,
+        "coverage_quality": 6.5,
+        "platform_reach": 7,
+        "privacy_posture": 5,
+        "reproducibility_build_health": 1
+      },
+      "iMobie DroidKit": {
+        "basis": "desk audit (closed source)",
+        "transparency_auditability": 2,
+        "cost_of_ownership_3yr": 5.5,
+        "feature_depth_verifiable": 7,
+        "coverage_quality": 7,
+        "platform_reach": 7,
+        "privacy_posture": 5,
+        "reproducibility_build_health": 1
+      }
+    },
+    "totals": {
+      "Paralock (Isaac Real)": 9.38,
+      "Dr.Fone – Screen Unlock": 5.75,
+      "Tenorshare 4uKey": 5.05,
+      "iToolab UnlockGo": 5.13,
+      "iMobie DroidKit": 5.2
+    },
+    "sensitivity_breakeven_if_fully_auditable": {
+      "Dr.Fone – Screen Unlock": {
+        "total_if_fully_auditable": 7.35,
+        "overtakes_droidkit": false
+      },
+      "Tenorshare 4uKey": {
+        "total_if_fully_auditable": 6.65,
+        "overtakes_droidkit": false
+      },
+      "iToolab UnlockGo": {
+        "total_if_fully_auditable": 6.72,
+        "overtakes_droidkit": false
+      },
+      "iMobie DroidKit": {
+        "total_if_fully_auditable": 6.8,
+        "overtakes_droidkit": false
+      }
+    }
+  }
+}
