@@ -37,7 +37,7 @@ We publish our evidence, not just our claims. Independent 2026 research (see [`R
   - **Phase Runbook** — chipset hardware paths (EDL/Brom/Odin/SPD) driven by real `algorithm.rs` phase weights as an interactive checklist
   - **Session journal + JSON export** for developer artifacts
 - 📊 **Research Reality Check panel** in FRP Removal — computes a feasibility band per scanned device from Android version + security patch + chipset, and routes to the method class the 2026 evidence supports (ADB window / test-mode / Odin / Brom / EDL / official recovery)
-- 🔗 **Evidence dossiers committed** — `RESEARCH-2026-FRP.md`, `DEBATE-AI-VS-GOOGLE.md`, the peer-reviewed 2026 competitor comparison (`COMPARISON_ANALYSIS_2026.md`), and the genuine benchmark (`BENCHMARK_2026.md` + `scripts/benchmark-top4.js` → `benchmark-report.json`, reproducible with one command)
+- 🔗 **Evidence dossiers committed** — `RESEARCH-2026-FRP.md`, `DEBATE-AI-VS-GOOGLE.md`, the peer-reviewed 2026 competitor comparison (`COMPARISON_ANALYSIS_2026.md`), and the genuine benchmark (`BENCHMARK_2026.md`, regenerate via `npm run benchmark` → `benchmark-report.json`)
 - 🧹 **Fresh-clone polish** — removed noisy `husky` prepare hook, synced lockfile, replaced unverified third-party APK mirror URLs with neutral web-search launches, corrected research-outdated instruction text (browser-APK/TalkBack patch era, combination firmware reframed as legacy Android 6–9)
 
 ---
@@ -103,6 +103,9 @@ npm run tauri:build         # native bundles → src-tauri/target/release/bundle
 ```bash
 npm run lint                # tsc --noEmit — must be clean
 npm run audit:prod          # versions aligned, CSP hardened, components present, build health
+npm run benchmark           # genuine 2026 benchmark: measured build/FRP/privacy/simulation audit
+                            #   + desk-audited Top-4 competitors + verified feature audit
+                            #   → benchmark-report.json (documented in BENCHMARK_2026.md)
 npm run simulate            # quick 1k+1k agent smoke simulation
 npm run simulate:full       # full 20k devs + 20k users simulation
 ```

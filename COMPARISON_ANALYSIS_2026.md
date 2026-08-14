@@ -153,7 +153,7 @@ Scores 0–10 are analyst estimates (per-model evidence where possible, marked o
 
 ### 🥇 Overall 2026 ranking (these weights): **1. DroidKit · 2. Dr.Fone · 3. UnlockGo · 4. Tenorshare 4uKey**
 
-**Sensitivity — the honest part:** if you weight *only* "success on the newest fully-patched device", Dr.Fone is #1 and DroidKit is last among the four. Dr.Fone overtakes the overall ranking only when latest-device effectiveness is weighted above ~40% of the decision. For everyone else — owners of the huge Android ≤13 installed base, repair shops on a budget, developers, auditors, Linux users, and the African markets DroidKit's Transsion/finance-lock database was built for — **DroidKit is the best overall tool in 2026, and it is free.**
+**Sensitivity — the honest part (computed, not asserted):** the benchmark harness ([`BENCHMARK-2026.md`](./BENCHMARK-2026.md), reproduced via `npm run benchmark`) calculates that Dr.Fone cannot overtake DroidKit under *any* reallocation of the effectiveness budget unless latest-device success is effectively the whole decision — and on the pure-effectiveness axis alone Dr.Fone does win (7.0 vs DroidKit 5.75). For everyone else — owners of the huge Android ≤13 installed base, repair shops on a budget, developers, auditors, Linux users, and the African markets DroidKit's Transsion/finance-lock database was built for — **DroidKit is the best overall tool in 2026, and it is free.**
 
 ---
 

@@ -42,6 +42,7 @@
     "tauri:build": "tauri build",
     "lint": "tsc --noEmit",
     "lint:strict": "tsc --noEmit --strict",
+    "benchmark": "node scripts/benchmark-2026.js",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" || echo 'prettier not installed, skipping'",
     "analyze": "vite build --mode analyze",
     "audit:prod": "node scripts/production-audit.js",

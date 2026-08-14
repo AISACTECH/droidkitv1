@@ -1,71 +1,53 @@
 {
   "meta": {
-    "generated": "2026-08-12T17:10:52.988Z",
-    "devCount": 20000,
-    "userCount": 20000,
-    "devSample": 20000,
-    "userSample": 20000,
-    "quickMode": false,
-    "elapsedSec": 2.2,
-    "scaled": false
+    "generated": "2026-08-14T09:17:14.868Z",
+    "devCount": 1000,
+    "userCount": 1000,
+    "devSample": 1000,
+    "userSample": 1000,
+    "quickMode": true,
+    "elapsedSec": 0,
+    "scaled": true
   },
   "summary": {
-    "totalSimulatedAgents": 40000,
-    "scaledTotalErrorsEstimated": 377048,
-    "avgErrorsPerDev": "16.97",
-    "avgErrorsPerUser": "1.89",
+    "totalSimulatedAgents": 2000,
+    "scaledTotalErrorsEstimated": 2658,
+    "avgErrorsPerDev": "2.39",
+    "avgErrorsPerUser": "0.27",
     "platformDistribution": {
-      "macOS Intel": 9169,
-      "Windows 11": 8890,
-      "Linux Ubuntu": 4953,
-      "macOS ARM": 8987,
-      "Linux": 4065,
-      "Windows 10": 3936
+      "macOS Intel": 447,
+      "Linux Ubuntu": 253,
+      "macOS ARM": 450,
+      "Windows 11": 459,
+      "Linux": 200,
+      "Windows 10": 191
     },
     "brandDistribution": {
-      "Itel": 3640,
-      "Realme": 3672,
-      "Samsung": 3653,
-      "Vivo": 3584,
-      "Tecno": 3705,
-      "Xiaomi": 3631,
-      "Infinix": 3637,
-      "Nokia": 3556,
-      "OPPO": 3679,
-      "Motorola": 3667,
-      "Pixel": 3576
+      "Xiaomi": 166,
+      "Pixel": 185,
+      "Samsung": 169,
+      "OPPO": 172,
+      "Infinix": 186,
+      "Nokia": 193,
+      "Itel": 187,
+      "Motorola": 159,
+      "Realme": 203,
+      "Tecno": 191,
+      "Vivo": 189
     },
     "topIssues": [
       {
         "label": "File Explorer Permissions",
-        "count": 56804,
+        "count": 1713,
         "examples": [
           "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
-          "File explorer sometimes fails on protected /data/data paths — should show clearer permission error.",
+          "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
           "Logcat streaming is fluid, but need regex search and export to file with timestamp."
         ]
       },
       {
-        "label": "Device Polling & UI Consistency",
-        "count": 45583,
-        "examples": [
-          "App feels reliable overall but polling every 3s for USB is CPU heavy on laptop — make interval adaptive.",
-          "Performance monitor top parsing works, but add CPU graph over time.",
-          "App feels reliable overall but polling every 3s for USB is CPU heavy on laptop — make interval adaptive."
-        ]
-      },
-      {
-        "label": "FRP Bypass Success & MTK Auth",
-        "count": 29924,
-        "examples": [
-          "MTK Auth bypass preloader step fails on Tecno Pop 8 — requires SLA disable instruction.",
-          "MTK Auth bypass preloader step fails on Tecno Pop 8 — requires SLA disable instruction.",
-          "MTK Auth bypass preloader step fails on Tecno Pop 8 — requires SLA disable instruction."
-        ]
-      },
-      {
         "label": "Developer Experience (DX)",
-        "count": 28098,
+        "count": 1382,
         "examples": [
           "Shell terminal is excellent — would love history and autocomplete for pm commands.",
           "Love the Tailwind + Shadcn UI consistency — dark mode perfect. Need keyboard shortcuts.",
@@ -73,8 +55,17 @@
         ]
       },
       {
+        "label": "Device Polling & UI Consistency",
+        "count": 1039,
+        "examples": [
+          "Performance monitor top parsing works, but add CPU graph over time.",
+          "Performance monitor top parsing works, but add CPU graph over time.",
+          "Performance monitor top parsing works, but add CPU graph over time."
+        ]
+      },
+      {
         "label": "Logcat Performance & Search",
-        "count": 20000,
+        "count": 956,
         "examples": [
           "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
           "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
@@ -82,21 +73,30 @@
         ]
       },
       {
-        "label": "Wireless Pairing / mDNS Stability",
-        "count": 13284,
+        "label": "FRP Bypass Success & MTK Auth",
+        "count": 558,
         "examples": [
-          "Wireless pairing mDNS discovery unstable on macOS Intel — manual IP fallback works but QR should handle retry.",
-          "Wireless pairing mDNS discovery unstable on macOS Intel — manual IP fallback works but QR should handle retry.",
-          "Wireless pairing mDNS discovery unstable on Linux Ubuntu — manual IP fallback works but QR should handle retry."
+          "MTK Auth bypass preloader step fails on Tecno Pop 8 — requires SLA disable instruction.",
+          "MTK Auth bypass preloader step fails on Tecno Pop 8 — requires SLA disable instruction.",
+          "MTK Auth bypass preloader step fails on Tecno Pop 8 — requires SLA disable instruction."
         ]
       },
       {
         "label": "Storage / Installer Size",
-        "count": 10016,
+        "count": 514,
         "examples": [
           "App size is okay, but installer is big — would prefer portable zip.",
           "App size is okay, but installer is big — would prefer portable zip.",
           "App size is okay, but installer is big — would prefer portable zip."
+        ]
+      },
+      {
+        "label": "Wireless Pairing / mDNS Stability",
+        "count": 117,
+        "examples": [
+          "Wireless pairing mDNS discovery unstable on Linux Ubuntu — manual IP fallback works but QR should handle retry.",
+          "Wireless pairing mDNS discovery unstable on macOS Intel — manual IP fallback works but QR should handle retry.",
+          "Wireless pairing mDNS discovery unstable on Windows 11 — manual IP fallback works but QR should handle retry."
         ]
       }
     ]
@@ -104,276 +104,271 @@
   "featureStats": {
     "developers": {
       "deviceDiscovery": {
-        "errors": 26148,
-        "praise": 892528,
-        "users": 20000,
-        "errorRate": 0.028462669686951998,
-        "satisfaction": 0.9715362417911845
+        "errors": 179,
+        "praise": 6364,
+        "users": 1000,
+        "errorRate": 0.027353300733496334,
+        "satisfaction": 0.9724938875305623
       },
       "fileExplorer": {
-        "errors": 42581,
-        "praise": 758703,
-        "users": 20000,
-        "errorRate": 0.05314089244151581,
-        "satisfaction": 0.9468578595630768
+        "errors": 301,
+        "praise": 5423,
+        "users": 1000,
+        "errorRate": 0.052576419213973796,
+        "satisfaction": 0.9472489082969432
       },
       "logcatViewer": {
-        "errors": 44329,
-        "praise": 822816,
-        "users": 20000,
-        "errorRate": 0.051120572544877105,
-        "satisfaction": 0.948878274246782
-      },
-      "appManager": {
-        "errors": 20946,
-        "praise": 709964,
-        "users": 20000,
-        "errorRate": 0.028657387835181028,
-        "satisfaction": 0.9713412440091885
-      },
-      "shellTerminal": {
-        "errors": 23062,
-        "praise": 800702,
-        "users": 20000,
-        "errorRate": 0.027995848330531158,
-        "satisfaction": 0.9720029377310276
+        "errors": 315,
+        "praise": 5925,
+        "users": 1000,
+        "errorRate": 0.050472680660150614,
+        "satisfaction": 0.9493670886075949
       },
       "frpRemoval": {
-        "errors": 28011,
-        "praise": 584144,
-        "users": 20000,
-        "errorRate": 0.045757944053476565,
-        "satisfaction": 0.9542404223759957
-      },
-      "wirelessPairing": {
-        "errors": 35944,
-        "praise": 670469,
-        "users": 20000,
-        "errorRate": 0.050882343781408636,
-        "satisfaction": 0.9491162406181078
+        "errors": 189,
+        "praise": 4159,
+        "users": 1000,
+        "errorRate": 0.04345826626810761,
+        "satisfaction": 0.9563117958151299
       },
       "performanceMonitor": {
-        "errors": 18443,
-        "praise": 637040,
-        "users": 20000,
-        "errorRate": 0.028136460996759646,
-        "satisfaction": 0.9718620134129895
-      },
-      "screenControl": {
-        "errors": 16059,
-        "praise": 545706,
-        "users": 20000,
-        "errorRate": 0.028586635716650707,
-        "satisfaction": 0.971411584182738
+        "errors": 149,
+        "praise": 4548,
+        "users": 1000,
+        "errorRate": 0.031715623669646656,
+        "satisfaction": 0.9680715197956578
       },
       "emulatorLaunch": {
-        "errors": 47352,
-        "praise": 709777,
-        "users": 20000,
-        "errorRate": 0.06254143938293291,
-        "satisfaction": 0.9374572398399218
+        "errors": 358,
+        "praise": 5132,
+        "users": 1000,
+        "errorRate": 0.06519759606629029,
+        "satisfaction": 0.9346202877435804
       },
       "settings": {
-        "errors": 14612,
-        "praise": 501224,
-        "users": 20000,
-        "errorRate": 0.02832677764487619,
-        "satisfaction": 0.9716712837582414
+        "errors": 109,
+        "praise": 3589,
+        "users": 999,
+        "errorRate": 0.02946742362800757,
+        "satisfaction": 0.9702622330359557
+      },
+      "appManager": {
+        "errors": 133,
+        "praise": 5203,
+        "users": 1000,
+        "errorRate": 0.024920367247517332,
+        "satisfaction": 0.9748922615701705
       },
       "systemInfo": {
-        "errors": 21825,
-        "praise": 746343,
-        "users": 20000,
-        "errorRate": 0.02841171669255073,
-        "satisfaction": 0.9715869815105791
+        "errors": 143,
+        "praise": 5273,
+        "users": 1000,
+        "errorRate": 0.026398375484585564,
+        "satisfaction": 0.9734170204910467
+      },
+      "screenControl": {
+        "errors": 114,
+        "praise": 3989,
+        "users": 1000,
+        "errorRate": 0.027777777777777776,
+        "satisfaction": 0.9719785575048733
+      },
+      "shellTerminal": {
+        "errors": 162,
+        "praise": 5747,
+        "users": 1000,
+        "errorRate": 0.027411167512690356,
+        "satisfaction": 0.972419627749577
+      },
+      "wirelessPairing": {
+        "errors": 234,
+        "praise": 4833,
+        "users": 1000,
+        "errorRate": 0.04617205998421468,
+        "satisfaction": 0.9536306235201263
       }
     },
     "users": {
       "deviceDiscovery": {
-        "errors": 4772,
-        "praise": 163059,
-        "users": 20000,
-        "errorRate": 0.028433195099861766,
-        "satisfaction": 0.9715608465608465
-      },
-      "fileExplorer": {
-        "errors": 2504,
-        "praise": 86345,
-        "users": 19909,
-        "errorRate": 0.028182329769274057,
-        "satisfaction": 0.9718064153066966
-      },
-      "shellTerminal": {
-        "errors": 439,
-        "praise": 15574,
-        "users": 13072,
-        "errorRate": 0.027413513175971026,
-        "satisfaction": 0.9725240414637193
+        "errors": 34,
+        "praise": 1122,
+        "users": 927,
+        "errorRate": 0.029386343993085567,
+        "satisfaction": 0.9697493517718236
       },
       "frpRemoval": {
-        "errors": 8180,
-        "praise": 174176,
-        "users": 20000,
-        "errorRate": 0.044857066084658115,
-        "satisfaction": 0.9551374501664318
-      },
-      "screenControl": {
-        "errors": 1922,
-        "praise": 67222,
-        "users": 19655,
-        "errorRate": 0.027796659194446453,
-        "satisfaction": 0.9721888784438499
-      },
-      "logcatViewer": {
-        "errors": 651,
-        "praise": 22734,
-        "users": 15634,
-        "errorRate": 0.027837167536132728,
-        "satisfaction": 0.9721200718378517
-      },
-      "systemInfo": {
-        "errors": 3095,
-        "praise": 105294,
-        "users": 19980,
-        "errorRate": 0.028554294676630686,
-        "satisfaction": 0.9714364793800166
-      },
-      "performanceMonitor": {
-        "errors": 991,
-        "praise": 34452,
-        "users": 17777,
-        "errorRate": 0.027959598239476358,
-        "satisfaction": 0.9720121882406049
+        "errors": 61,
+        "praise": 1217,
+        "users": 966,
+        "errorRate": 0.04769351055512119,
+        "satisfaction": 0.9515246286161063
       },
       "wirelessPairing": {
-        "errors": 11542,
-        "praise": 124418,
-        "users": 19998,
-        "errorRate": 0.08489199108567898,
-        "satisfaction": 0.9151006538639757
+        "errors": 78,
+        "praise": 942,
+        "users": 860,
+        "errorRate": 0.07639569049951028,
+        "satisfaction": 0.9226248775710089
+      },
+      "systemInfo": {
+        "errors": 18,
+        "praise": 760,
+        "users": 756,
+        "errorRate": 0.023106546854942234,
+        "satisfaction": 0.975609756097561
+      },
+      "logcatViewer": {
+        "errors": 7,
+        "praise": 149,
+        "users": 200,
+        "errorRate": 0.044585987261146494,
+        "satisfaction": 0.9490445859872612
+      },
+      "performanceMonitor": {
+        "errors": 6,
+        "praise": 242,
+        "users": 319,
+        "errorRate": 0.024096385542168676,
+        "satisfaction": 0.9718875502008032
+      },
+      "screenControl": {
+        "errors": 15,
+        "praise": 460,
+        "users": 526,
+        "errorRate": 0.031512605042016806,
+        "satisfaction": 0.9663865546218487
+      },
+      "fileExplorer": {
+        "errors": 26,
+        "praise": 623,
+        "users": 673,
+        "errorRate": 0.04,
+        "satisfaction": 0.9584615384615385
       },
       "appManager": {
-        "errors": 1691,
-        "praise": 57071,
-        "users": 19412,
-        "errorRate": 0.02877661113285571,
-        "satisfaction": 0.9712063713561254
-      },
-      "settings": {
-        "errors": 1384,
-        "praise": 48183,
-        "users": 18942,
-        "errorRate": 0.027921239509360877,
-        "satisfaction": 0.9720585861846353
+        "errors": 12,
+        "praise": 411,
+        "users": 474,
+        "errorRate": 0.02830188679245283,
+        "satisfaction": 0.9693396226415094
       },
       "emulatorLaunch": {
-        "errors": 565,
-        "praise": 9299,
-        "users": 9689,
-        "errorRate": 0.05727318803852002,
-        "satisfaction": 0.9426254434870756
+        "errors": 5,
+        "praise": 73,
+        "users": 117,
+        "errorRate": 0.06329113924050633,
+        "satisfaction": 0.9240506329113924
+      },
+      "settings": {
+        "errors": 7,
+        "praise": 353,
+        "users": 408,
+        "errorRate": 0.019390581717451522,
+        "satisfaction": 0.9778393351800554
+      },
+      "shellTerminal": {
+        "errors": 3,
+        "praise": 96,
+        "users": 141,
+        "errorRate": 0.03,
+        "satisfaction": 0.96
       }
     },
     "overall": {
       "deviceDiscovery": {
-        "errors": 30920,
-        "praise": 1055587,
-        "users": 40000,
-        "errorRate": 0.028458142968114362,
-        "satisfaction": 0.9715409366521002
+        "errors": 213,
+        "praise": 7486,
+        "users": 1927,
+        "errorRate": 0.027662337662337663,
+        "satisfaction": 0.9722077922077922
       },
       "fileExplorer": {
-        "errors": 45085,
-        "praise": 845048,
-        "users": 39909,
-        "errorRate": 0.050649677464291894,
-        "satisfaction": 0.9493491991093476
+        "errors": 327,
+        "praise": 6046,
+        "users": 1673,
+        "errorRate": 0.05130216504549733,
+        "satisfaction": 0.9485409475996235
       },
       "logcatViewer": {
-        "errors": 44980,
-        "praise": 845550,
-        "users": 35634,
-        "errorRate": 0.0505091905840448,
-        "satisfaction": 0.9494896864904198
-      },
-      "appManager": {
-        "errors": 22637,
-        "praise": 767035,
-        "users": 39412,
-        "errorRate": 0.028666296049124133,
-        "satisfaction": 0.9713324376039196
-      },
-      "shellTerminal": {
-        "errors": 23501,
-        "praise": 816276,
-        "users": 33072,
-        "errorRate": 0.0279847769291408,
-        "satisfaction": 0.9720140322799597
+        "errors": 322,
+        "praise": 6074,
+        "users": 1200,
+        "errorRate": 0.05033609504455214,
+        "satisfaction": 0.949507581678912
       },
       "frpRemoval": {
-        "errors": 36191,
-        "praise": 758320,
-        "users": 40000,
-        "errorRate": 0.04555123144773144,
-        "satisfaction": 0.9544475099180377
-      },
-      "wirelessPairing": {
-        "errors": 47486,
-        "praise": 794887,
-        "users": 39998,
-        "errorRate": 0.05637163540185238,
-        "satisfaction": 0.9436271774769877
+        "errors": 250,
+        "praise": 5376,
+        "users": 1966,
+        "errorRate": 0.0444286475919673,
+        "satisfaction": 0.9553936378176648
       },
       "performanceMonitor": {
-        "errors": 19434,
-        "praise": 671492,
-        "users": 37777,
-        "errorRate": 0.02812742880217447,
-        "satisfaction": 0.9718711238669209
-      },
-      "screenControl": {
-        "errors": 17981,
-        "praise": 612928,
-        "users": 39655,
-        "errorRate": 0.028500103025788148,
-        "satisfaction": 0.9714983119620865
+        "errors": 155,
+        "praise": 4790,
+        "users": 1319,
+        "errorRate": 0.031338455317428224,
+        "satisfaction": 0.9684593610998787
       },
       "emulatorLaunch": {
-        "errors": 47917,
-        "praise": 719076,
-        "users": 29689,
-        "errorRate": 0.06247376120282558,
-        "satisfaction": 0.9375249350060105
+        "errors": 363,
+        "praise": 5205,
+        "users": 1117,
+        "errorRate": 0.06518225893338121,
+        "satisfaction": 0.9346381756150117
       },
       "settings": {
-        "errors": 15996,
-        "praise": 549407,
-        "users": 38942,
-        "errorRate": 0.028291274911390794,
-        "satisfaction": 0.9717069564417655
+        "errors": 116,
+        "praise": 3942,
+        "users": 1407,
+        "errorRate": 0.028578467602857847,
+        "satisfaction": 0.9711751662971175
+      },
+      "appManager": {
+        "errors": 145,
+        "praise": 5614,
+        "users": 1474,
+        "errorRate": 0.025173611111111112,
+        "satisfaction": 0.9746527777777778
       },
       "systemInfo": {
-        "errors": 24920,
-        "praise": 851637,
-        "users": 39980,
-        "errorRate": 0.028429379459202927,
-        "satisfaction": 0.9715694797149761
+        "errors": 161,
+        "praise": 6033,
+        "users": 1756,
+        "errorRate": 0.02598870056497175,
+        "satisfaction": 0.9738498789346247
+      },
+      "screenControl": {
+        "errors": 129,
+        "praise": 4449,
+        "users": 1526,
+        "errorRate": 0.028172089975977286,
+        "satisfaction": 0.9716095217296353
+      },
+      "shellTerminal": {
+        "errors": 165,
+        "praise": 5843,
+        "users": 1141,
+        "errorRate": 0.02745881178232651,
+        "satisfaction": 0.9723747711765685
+      },
+      "wirelessPairing": {
+        "errors": 312,
+        "praise": 5775,
+        "users": 1860,
+        "errorRate": 0.051248357424441525,
+        "satisfaction": 0.948587385019711
       }
     }
   },
   "reliability": {
-    "overallErrorRate": "1.8852",
-    "mtbfMin": "3.2",
+    "overallErrorRate": "0.2658",
+    "mtbfMin": "22.6",
     "topErrorFeatures": [
       {
         "feature": "emulatorLaunch",
-        "errorRate": "0.062",
-        "satisfaction": "0.938"
-      },
-      {
-        "feature": "wirelessPairing",
-        "errorRate": "0.056",
-        "satisfaction": "0.944"
+        "errorRate": "0.065",
+        "satisfaction": "0.935"
       },
       {
         "feature": "fileExplorer",
@@ -381,14 +376,19 @@
         "satisfaction": "0.949"
       },
       {
-        "feature": "logcatViewer",
+        "feature": "wirelessPairing",
         "errorRate": "0.051",
         "satisfaction": "0.949"
       },
       {
+        "feature": "logcatViewer",
+        "errorRate": "0.050",
+        "satisfaction": "0.950"
+      },
+      {
         "feature": "frpRemoval",
-        "errorRate": "0.046",
-        "satisfaction": "0.954"
+        "errorRate": "0.044",
+        "satisfaction": "0.955"
       }
     ]
   },
@@ -398,17 +398,14 @@
         "id": "dev-0",
         "platform": "macOS Intel",
         "device": {
-          "brand": "Itel",
-          "chipset": "Qualcomm",
-          "android": "14",
+          "brand": "Xiaomi",
+          "chipset": "Spreadtrum",
+          "android": "12",
           "frpLocked": true
         },
         "comments": [
           "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
-          "File explorer sometimes fails on protected /data/data paths — should show clearer permission error.",
-          "Wireless pairing mDNS discovery unstable on macOS Intel — manual IP fallback works but QR should handle retry.",
           "Shell terminal is excellent — would love history and autocomplete for pm commands.",
-          "App feels reliable overall but polling every 3s for USB is CPU heavy on laptop — make interval adaptive.",
           "Performance monitor top parsing works, but add CPU graph over time.",
           "Love the Tailwind + Shadcn UI consistency — dark mode perfect. Need keyboard shortcuts."
         ]
@@ -417,35 +414,30 @@
         "id": "dev-1",
         "platform": "macOS Intel",
         "device": {
-          "brand": "Realme",
-          "chipset": "Qualcomm",
-          "android": "14",
-          "frpLocked": true
-        },
-        "comments": [
-          "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
-          "File explorer sometimes fails on protected /data/data paths — should show clearer permission error.",
-          "Shell terminal is excellent — would love history and autocomplete for pm commands.",
-          "App feels reliable overall but polling every 3s for USB is CPU heavy on laptop — make interval adaptive.",
-          "Performance monitor top parsing works, but add CPU graph over time.",
-          "Love the Tailwind + Shadcn UI consistency — dark mode perfect. Need keyboard shortcuts."
-        ]
-      },
-      {
-        "id": "dev-2",
-        "platform": "macOS Intel",
-        "device": {
-          "brand": "Samsung",
+          "brand": "Pixel",
           "chipset": "MediaTek",
-          "android": "12",
+          "android": "14",
           "frpLocked": false
         },
         "comments": [
           "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
-          "File explorer sometimes fails on protected /data/data paths — should show clearer permission error.",
           "Shell terminal is excellent — would love history and autocomplete for pm commands.",
           "MTK Auth bypass preloader step fails on Tecno Pop 8 — requires SLA disable instruction.",
-          "App feels reliable overall but polling every 3s for USB is CPU heavy on laptop — make interval adaptive.",
+          "Performance monitor top parsing works, but add CPU graph over time."
+        ]
+      },
+      {
+        "id": "dev-2",
+        "platform": "Linux Ubuntu",
+        "device": {
+          "brand": "Samsung",
+          "chipset": "Spreadtrum",
+          "android": "13",
+          "frpLocked": true
+        },
+        "comments": [
+          "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
+          "Shell terminal is excellent — would love history and autocomplete for pm commands.",
           "Performance monitor top parsing works, but add CPU graph over time.",
           "Love the Tailwind + Shadcn UI consistency — dark mode perfect. Need keyboard shortcuts."
         ]
@@ -454,297 +446,255 @@
         "id": "dev-3",
         "platform": "macOS Intel",
         "device": {
-          "brand": "Realme",
+          "brand": "Pixel",
           "chipset": "Exynos",
-          "android": "11",
-          "frpLocked": false
-        },
-        "comments": [
-          "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
-          "File explorer sometimes fails on protected /data/data paths — should show clearer permission error.",
-          "Wireless pairing mDNS discovery unstable on macOS Intel — manual IP fallback works but QR should handle retry.",
-          "Shell terminal is excellent — would love history and autocomplete for pm commands.",
-          "App feels reliable overall but polling every 3s for USB is CPU heavy on laptop — make interval adaptive.",
-          "Performance monitor top parsing works, but add CPU graph over time."
-        ]
-      },
-      {
-        "id": "dev-4",
-        "platform": "Windows 11",
-        "device": {
-          "brand": "Samsung",
-          "chipset": "Exynos",
-          "android": "12",
+          "android": "15",
           "frpLocked": true
         },
         "comments": [
           "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
           "File explorer sometimes fails on protected /data/data paths — should show clearer permission error.",
           "Shell terminal is excellent — would love history and autocomplete for pm commands.",
-          "App feels reliable overall but polling every 3s for USB is CPU heavy on laptop — make interval adaptive.",
           "Performance monitor top parsing works, but add CPU graph over time.",
           "Love the Tailwind + Shadcn UI consistency — dark mode perfect. Need keyboard shortcuts."
         ]
       },
       {
-        "id": "dev-5",
+        "id": "dev-4",
         "platform": "Linux Ubuntu",
         "device": {
-          "brand": "Vivo",
+          "brand": "Xiaomi",
           "chipset": "Exynos",
           "android": "12",
           "frpLocked": true
         },
         "comments": [
           "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
-          "File explorer sometimes fails on protected /data/data paths — should show clearer permission error.",
-          "Wireless pairing mDNS discovery unstable on Linux Ubuntu — manual IP fallback works but QR should handle retry.",
           "Shell terminal is excellent — would love history and autocomplete for pm commands.",
-          "App feels reliable overall but polling every 3s for USB is CPU heavy on laptop — make interval adaptive.",
+          "Performance monitor top parsing works, but add CPU graph over time."
+        ]
+      },
+      {
+        "id": "dev-5",
+        "platform": "macOS Intel",
+        "device": {
+          "brand": "OPPO",
+          "chipset": "MediaTek",
+          "android": "13",
+          "frpLocked": true
+        },
+        "comments": [
+          "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
+          "File explorer sometimes fails on protected /data/data paths — should show clearer permission error.",
+          "Shell terminal is excellent — would love history and autocomplete for pm commands.",
           "Performance monitor top parsing works, but add CPU graph over time.",
           "Love the Tailwind + Shadcn UI consistency — dark mode perfect. Need keyboard shortcuts."
         ]
       },
       {
         "id": "dev-6",
-        "platform": "Windows 11",
+        "platform": "macOS ARM",
         "device": {
-          "brand": "Tecno",
-          "chipset": "Kirin",
+          "brand": "Infinix",
+          "chipset": "Qualcomm",
+          "android": "12",
+          "frpLocked": true
+        },
+        "comments": [
+          "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
+          "Shell terminal is excellent — would love history and autocomplete for pm commands.",
+          "Performance monitor top parsing works, but add CPU graph over time."
+        ]
+      },
+      {
+        "id": "dev-7",
+        "platform": "Linux Ubuntu",
+        "device": {
+          "brand": "Nokia",
+          "chipset": "Spreadtrum",
+          "android": "14",
+          "frpLocked": false
+        },
+        "comments": [
+          "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
+          "Shell terminal is excellent — would love history and autocomplete for pm commands.",
+          "Performance monitor top parsing works, but add CPU graph over time.",
+          "Love the Tailwind + Shadcn UI consistency — dark mode perfect. Need keyboard shortcuts."
+        ]
+      },
+      {
+        "id": "dev-8",
+        "platform": "macOS ARM",
+        "device": {
+          "brand": "Itel",
+          "chipset": "Qualcomm",
           "android": "15",
           "frpLocked": true
         },
         "comments": [
           "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
-          "File explorer sometimes fails on protected /data/data paths — should show clearer permission error.",
           "Shell terminal is excellent — would love history and autocomplete for pm commands.",
-          "App feels reliable overall but polling every 3s for USB is CPU heavy on laptop — make interval adaptive.",
           "Performance monitor top parsing works, but add CPU graph over time.",
           "Love the Tailwind + Shadcn UI consistency — dark mode perfect. Need keyboard shortcuts."
-        ]
-      },
-      {
-        "id": "dev-7",
-        "platform": "macOS Intel",
-        "device": {
-          "brand": "Realme",
-          "chipset": "Spreadtrum",
-          "android": "11",
-          "frpLocked": true
-        },
-        "comments": [
-          "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
-          "File explorer sometimes fails on protected /data/data paths — should show clearer permission error.",
-          "Shell terminal is excellent — would love history and autocomplete for pm commands.",
-          "App feels reliable overall but polling every 3s for USB is CPU heavy on laptop — make interval adaptive.",
-          "Performance monitor top parsing works, but add CPU graph over time."
-        ]
-      },
-      {
-        "id": "dev-8",
-        "platform": "macOS Intel",
-        "device": {
-          "brand": "Xiaomi",
-          "chipset": "Exynos",
-          "android": "14",
-          "frpLocked": true
-        },
-        "comments": [
-          "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
-          "File explorer sometimes fails on protected /data/data paths — should show clearer permission error.",
-          "Shell terminal is excellent — would love history and autocomplete for pm commands.",
-          "App feels reliable overall but polling every 3s for USB is CPU heavy on laptop — make interval adaptive.",
-          "Performance monitor top parsing works, but add CPU graph over time."
         ]
       },
       {
         "id": "dev-9",
-        "platform": "Linux Ubuntu",
+        "platform": "Windows 11",
         "device": {
-          "brand": "Infinix",
-          "chipset": "Qualcomm",
+          "brand": "Samsung",
+          "chipset": "Kirin",
           "android": "11",
           "frpLocked": true
         },
         "comments": [
           "Logcat streaming is fluid, but need regex search and export to file with timestamp.",
           "File explorer sometimes fails on protected /data/data paths — should show clearer permission error.",
-          "Wireless pairing mDNS discovery unstable on Linux Ubuntu — manual IP fallback works but QR should handle retry.",
           "Shell terminal is excellent — would love history and autocomplete for pm commands.",
-          "App feels reliable overall but polling every 3s for USB is CPU heavy on laptop — make interval adaptive.",
-          "Performance monitor top parsing works, but add CPU graph over time.",
-          "Love the Tailwind + Shadcn UI consistency — dark mode perfect. Need keyboard shortcuts."
+          "Performance monitor top parsing works, but add CPU graph over time."
         ]
       }
     ],
     "users": [
       {
         "id": "user-0",
-        "platform": "macOS ARM",
+        "platform": "Linux",
         "device": {
-          "brand": "Nokia",
-          "chipset": "MediaTek",
-          "android": "15",
+          "brand": "Pixel",
+          "chipset": "Spreadtrum",
+          "android": "14",
           "frpLocked": true
         },
         "comments": [
-          "FRP removal worked on my Nokia MediaTek Android 15 — saved me! Instructions could be clearer with images.",
-          "FRP bypass failed first time on Nokia — needed to retry with different method. Auto-select should try next method automatically.",
-          "File download to Desktop is super easy.",
-          "System info cards are clean and helpful.",
-          "Sometimes device list disappears for a second — flicker. Keep cached list visible.",
-          "App size is okay, but installer is big — would prefer portable zip."
+          "FRP bypass failed first time on Pixel — needed to retry with different method. Auto-select should try next method automatically."
         ]
       },
       {
         "id": "user-1",
-        "platform": "Linux",
+        "platform": "Windows 11",
         "device": {
-          "brand": "Motorola",
+          "brand": "Itel",
           "chipset": "Kirin",
-          "android": "15",
-          "frpLocked": false
+          "android": "11",
+          "frpLocked": true
         },
         "comments": [
-          "FRP removal worked on my Motorola Kirin Android 15 — saved me! Instructions could be clearer with images.",
-          "File download to Desktop is super easy.",
+          "FRP removal worked on my Itel Kirin Android 11 — saved me! Instructions could be clearer with images.",
           "System info cards are clean and helpful.",
           "App size is okay, but installer is big — would prefer portable zip."
         ]
       },
       {
         "id": "user-2",
-        "platform": "Windows 10",
+        "platform": "macOS ARM",
         "device": {
-          "brand": "Infinix",
-          "chipset": "Qualcomm",
-          "android": "15",
+          "brand": "Itel",
+          "chipset": "Kirin",
+          "android": "12",
           "frpLocked": true
         },
         "comments": [
-          "FRP removal worked on my Infinix Qualcomm Android 15 — saved me! Instructions could be clearer with images.",
           "File download to Desktop is super easy.",
-          "Wireless pairing QR confusing — pairing code expiry not shown.",
           "System info cards are clean and helpful.",
-          "Sometimes device list disappears for a second — flicker. Keep cached list visible.",
           "App size is okay, but installer is big — would prefer portable zip."
         ]
       },
       {
         "id": "user-3",
-        "platform": "macOS Intel",
+        "platform": "macOS ARM",
         "device": {
-          "brand": "Infinix",
-          "chipset": "Qualcomm",
-          "android": "12",
+          "brand": "Pixel",
+          "chipset": "Exynos",
+          "android": "14",
           "frpLocked": true
         },
         "comments": [
-          "FRP removal worked on my Infinix Qualcomm Android 12 — saved me! Instructions could be clearer with images.",
-          "File download to Desktop is super easy.",
-          "Wireless pairing QR confusing — pairing code expiry not shown.",
-          "System info cards are clean and helpful.",
-          "Sometimes device list disappears for a second — flicker. Keep cached list visible."
+          "System info cards are clean and helpful."
         ]
       },
       {
         "id": "user-4",
-        "platform": "macOS ARM",
+        "platform": "Windows 11",
         "device": {
-          "brand": "Samsung",
-          "chipset": "MediaTek",
+          "brand": "Xiaomi",
+          "chipset": "Spreadtrum",
+          "android": "12",
+          "frpLocked": false
+        },
+        "comments": [
+          "File download to Desktop is super easy."
+        ]
+      },
+      {
+        "id": "user-5",
+        "platform": "macOS Intel",
+        "device": {
+          "brand": "Vivo",
+          "chipset": "Kirin",
           "android": "11",
           "frpLocked": false
         },
         "comments": [
-          "FRP removal worked on my Samsung MediaTek Android 11 — saved me! Instructions could be clearer with images.",
+          "FRP removal worked on my Vivo Kirin Android 11 — saved me! Instructions could be clearer with images.",
+          "System info cards are clean and helpful."
+        ]
+      },
+      {
+        "id": "user-6",
+        "platform": "macOS ARM",
+        "device": {
+          "brand": "Pixel",
+          "chipset": "Spreadtrum",
+          "android": "14",
+          "frpLocked": true
+        },
+        "comments": [
+          "FRP removal worked on my Pixel Spreadtrum Android 14 — saved me! Instructions could be clearer with images.",
           "File download to Desktop is super easy.",
           "System info cards are clean and helpful.",
           "App size is okay, but installer is big — would prefer portable zip."
         ]
       },
       {
-        "id": "user-5",
+        "id": "user-7",
         "platform": "Linux",
         "device": {
-          "brand": "Samsung",
-          "chipset": "Qualcomm",
-          "android": "13",
-          "frpLocked": true
-        },
-        "comments": [
-          "FRP removal worked on my Samsung Qualcomm Android 13 — saved me! Instructions could be clearer with images.",
-          "FRP bypass failed first time on Samsung — needed to retry with different method. Auto-select should try next method automatically.",
-          "File download to Desktop is super easy.",
-          "Wireless pairing QR confusing — pairing code expiry not shown.",
-          "System info cards are clean and helpful.",
-          "Sometimes device list disappears for a second — flicker. Keep cached list visible."
-        ]
-      },
-      {
-        "id": "user-6",
-        "platform": "macOS Intel",
-        "device": {
-          "brand": "Samsung",
-          "chipset": "Exynos",
+          "brand": "Tecno",
+          "chipset": "MediaTek",
           "android": "15",
           "frpLocked": true
         },
         "comments": [
-          "FRP removal worked on my Samsung Exynos Android 15 — saved me! Instructions could be clearer with images.",
-          "System info cards are clean and helpful."
-        ]
-      },
-      {
-        "id": "user-7",
-        "platform": "Windows 10",
-        "device": {
-          "brand": "Samsung",
-          "chipset": "MediaTek",
-          "android": "13",
-          "frpLocked": true
-        },
-        "comments": [
-          "FRP removal worked on my Samsung MediaTek Android 13 — saved me! Instructions could be clearer with images.",
+          "File download to Desktop is super easy.",
           "System info cards are clean and helpful.",
           "App size is okay, but installer is big — would prefer portable zip."
         ]
       },
       {
         "id": "user-8",
-        "platform": "Windows 10",
+        "platform": "macOS ARM",
         "device": {
-          "brand": "Samsung",
-          "chipset": "Exynos",
-          "android": "12",
+          "brand": "Infinix",
+          "chipset": "MediaTek",
+          "android": "14",
           "frpLocked": false
         },
         "comments": [
-          "FRP removal worked on my Samsung Exynos Android 12 — saved me! Instructions could be clearer with images.",
-          "FRP bypass failed first time on Samsung — needed to retry with different method. Auto-select should try next method automatically.",
-          "File download to Desktop is super easy.",
-          "Wireless pairing QR confusing — pairing code expiry not shown.",
-          "System info cards are clean and helpful.",
-          "Sometimes device list disappears for a second — flicker. Keep cached list visible."
+          "FRP removal worked on my Infinix MediaTek Android 14 — saved me! Instructions could be clearer with images.",
+          "App size is okay, but installer is big — would prefer portable zip."
         ]
       },
       {
         "id": "user-9",
-        "platform": "Linux",
+        "platform": "macOS Intel",
         "device": {
-          "brand": "Nokia",
+          "brand": "Xiaomi",
           "chipset": "Qualcomm",
-          "android": "12",
+          "android": "14",
           "frpLocked": true
         },
         "comments": [
-          "FRP removal worked on my Nokia Qualcomm Android 12 — saved me! Instructions could be clearer with images.",
-          "FRP bypass failed first time on Nokia — needed to retry with different method. Auto-select should try next method automatically.",
-          "File download to Desktop is super easy.",
-          "Wireless pairing QR confusing — pairing code expiry not shown.",
-          "System info cards are clean and helpful.",
-          "Sometimes device list disappears for a second — flicker. Keep cached list visible.",
-          "App size is okay, but installer is big — would prefer portable zip."
+          "Good app, does what I need for FRP."
         ]
       }
     ]
