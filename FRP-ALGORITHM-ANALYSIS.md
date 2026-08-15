@@ -1,16 +1,22 @@
 # 🔬 FRP Algorithm Comparison: Top Tools vs Paralock v1
 
+> **Evidence-banded correction (2026-08-15):** the success numbers in this document's
+> original draft (90%/95%/98%/100%) were not sourced and contradicted the repo's own
+> research. They are corrected below to **lab-gated evidence bands** from
+> `docs/ANDROID-15-16-PATCH-RESEARCH.md` §5. A band is *not* a promised success percentage.
+> See `docs/FRP-CLAIMS-FACT-CHECK-2026.md` for the full audit.
+
 ## Executive Summary
 
-After deep analysis of **Paralock (iMobie)**, **MobiKin**, **Tenorshare 4uKey**, **Dr.Fone**, **SamFW Tool**, and **TSM Tool**, the core finding is:
+Compared against **iMobie (Android Unlocker — not "Paralock")**, **MobiKin**, **Tenorshare 4uKey**, **Dr.Fone**, **SamFW Tool**, and **TSM Tool**, the finding is:
 
-> **Our current Paralock v1 FRP module is only ~30% accurate** because it relies on a single-path ADB-only approach. Top tools achieve 95-100% by using **chipset-branching multi-path algorithms** that automatically select the correct method based on processor type, Android version, binary/bit version, and security patch.
+> **Our current Paralock v1 FRP module has no measured per-model success percentage yet** — and neither does any competitor, because real rates are device/patch dependent. What the top tools *do* have that we needed: **chipset-branching multi-path routing** (Exynos Download-Mode / Qualcomm EDL / MTK Brom / SPD) that picks the lane by processor, Android version, binary/bit version and security patch. Those lanes are rated as **evidence bands** (Brom ~80, SPD ~75, Exynos DL ~70, EDL ~65, test-mode ~55, pre-authorized ADB ~88) — never 100%.
 
 ---
 
 ## 🏆 How Top Tools Actually Work (The Real Algorithms)
 
-### Paralock (iMobie) — Algorithm Flow
+### iMobie Android Unlocker (not "Paralock") — Algorithm Flow
 ```
 CONNECT DEVICE
   → Auto-detect brand, model, chipset, Android version
@@ -108,7 +114,7 @@ OPPO/Vivo/Realme/Xiaomi:
 
 ## 🆚 Comparison Table: What We're Missing
 
-| Feature | Paralock (iMobie) | 4uKey | Dr.Fone | SamFW | TSM | **Our Paralock v1** |
+| Feature | iMobie | 4uKey | Dr.Fone | SamFW | TSM | **Our Paralock v1** |
 |---------|:-:|:-:|:-:|:-:|:-:|:-:|
 | **Chipset Detection** | ✅ Auto | ✅ Auto | ✅ Auto | ✅ Auto | ✅ Auto | ❌ **None** |
 | **Exynos Path** | ✅ DL Mode | ✅ DL Mode | ✅ DL Mode | ✅ DL Mode | ✅ DL Mode | ❌ **None** |
@@ -126,9 +132,13 @@ OPPO/Vivo/Realme/Xiaomi:
 | **Verify FRP Removed** | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ **None** |
 | **Auto Firmware Download** | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ **None** |
 
+> **Caveat on the "✅ Built-in" cells:** signed firehose programmers / firmware are per-device,
+> per-bit-version vendor binaries, not features that ship inside a consumer app. These cells are
+> our *inference* from tool marketing, not verified facts — treat them as directional only.
+
 ---
 
-## 🎯 The 100% Algorithm (What We Need to Build)
+## 🎯 The Chipset-Branched Algorithm (evidence-banded — no promised %)
 
 The key insight from all top tools is the **3-PHASE CHIPSET-BRANCHED ALGORITHM**:
 
@@ -152,22 +162,22 @@ The key insight from all top tools is the **3-PHASE CHIPSET-BRANCHED ALGORITHM**
 ### Phase 2: CHIPSET-BRANCHED METHOD SELECTION
 ```
 IF chipset == Exynos:
-    → METHOD A: Download Mode + Enable-ADB file + ADB removal (90% success)
-    → METHOD B: Download Mode + Combination firmware + ADB removal (95% success)
-    → FALLBACK: Test Mode *#0*# + USB Debug + ADB removal (70% on older patches)
+    → METHOD A: Download Mode + Enable-ADB file + ADB removal (evidence band 70)
+    → METHOD B: Download Mode + Combination firmware + ADB removal (evidence band 70, legacy 6-9)
+    → FALLBACK: Test Mode *#0*# + USB Debug + ADB removal (band 55; ~10 on patched A15/16)
 
 IF chipset == Qualcomm/Snapdragon:
-    → METHOD A: EDL Mode (9008) + Firehose loader + Erase FRP partition (95% success)
-    → METHOD B: EDL Engineering Cable + Flash firmware (98% success)
+    → METHOD A: EDL Mode (9008) + Firehose loader + Erase FRP partition (band 65 — firehose-loader gated)
+    → METHOD B: EDL Engineering Cable + Flash firmware (band 65, same gate)
     → FALLBACK: Download Mode + Combination firmware (if available)
 
 IF chipset == MediaTek:
-    → METHOD A: Brom/Preloader Mode + Erase FRP partition (90% success)
-    → METHOD B: SP Flash Tool + Format FRP partition (85% success)
+    → METHOD A: Brom/Preloader Mode + Erase FRP partition (band 80 — open mtkclient protocol class)
+    → METHOD B: SP Flash Tool + Format FRP partition (band 80, SLA/DAA caveat on newer chips)
     → FALLBACK: ADB mode if USB debug enabled
 
 IF chipset == SPD/Unisoc:
-    → METHOD A: SPD Bootloader Mode + Erase FRP (80% success)
+    → METHOD A: SPD Bootloader Mode + Erase FRP (band 75 — SPD bootrom auto-ADB class)
 ```
 
 ### Phase 3: EXECUTE + VERIFY + REPORT
@@ -180,15 +190,17 @@ IF chipset == SPD/Unisoc:
    - Wait for boot
    - Verify FRP is removed (check setup wizard state)
    - Show success/failure with confidence %
-5. FRP Removal Confidence:
-   - 100% = Device boots to home screen / setup with NO Google verification
-   - 70% = FRP bypassed but device may re-lock on next reset
-   - 30% = Partial bypass, some Knox components still active
+5. FRP Outcome verification (measured, never assumed):
+   - removed_verified = reboot + re-detect reports FRP Inactive
+   - flags_set = provisioning flags set, but re-lock possible on a patched device
+   - failed = no measured change; escalate to the next lane or official recovery
 ```
 
 ---
 
-## 📊 Why Current Paralock v1 Only Achieves ~30%
+## 📊 What the original Paralock v1 FRP module was missing
+
+(No percentage claim — the honest framing is *capability gaps*, not an invented rate.)
 
 1. **Single-path ADB approach**: We only try ADB commands, which fail if USB debugging isn't authorized
 2. **No chipset branching**: We treat all Samsung devices the same, but Exynos/Qualcomm/MTK need completely different approaches
@@ -203,24 +215,19 @@ IF chipset == SPD/Unisoc:
 
 ## ✅ The Fix: Universal Multi-Path Algorithm
 
-### Reset Modes We Must Support:
+### Reset Modes We Support (honest scope)
 
-| Mode | Description | FRP Removal % | Result |
-|------|-------------|:---:|--------|
-| **Factory Reset + Remove FRP 100%** | Full wipe + complete FRP partition erase + Knox reset | 100% | Phone is like brand new — boots to initial setup screen, no Google account verification |
-| **Factory Reset + Remove FRP 70%** | Full wipe + bypass FRP verification (provisioning flags only) | 70% | Phone boots past FRP screen but FRP partition data remains — may re-lock on next reset |
-| **Remove FRP 100% (No Data Wipe)** | Erase FRP partition only, keep user data | 100% | Phone keeps all data but FRP is permanently removed — like removing the Google account lock |
-| **Remove FRP 70% (No Data Wipe)** | Bypass FRP flags only, keep data + FRP partition | 70% | Quick bypass but not permanent |
+| Mode (UI label) | What it actually does | Result |
+|------|-------------|--------|
+| **Factory Reset + Provisioning Bypass (full wipe)** | Factory reset + clear setup/provisioning flags via ADB | Data erased; flags cleared — but the encrypted FRP partition is NOT erased. Reboot + re-check required. |
+| **Factory Reset + Temporary Bypass (full wipe)** | Factory reset + flag bypass only | Data erased; FRP partition untouched — may re-lock on next reset. |
+| **Provisioning Bypass (Keep Data)** | Clear flags only, no data wipe | Keeps data; does NOT remove the FRP partition — temporary, not permanent. |
+| **Quick Bypass (Keep Data)** | Flag bypass only, no data wipe | Temporary; FRP partition untouched. |
 
-### 100% FRP Removal = Brand New Phone State
-This means:
-- FRP partition (`/dev/block/by-name/frp` or equivalent) is wiped
-- `ro.frp.pst` is cleared
-- Google account is removed from account manager
-- `device_provisioned` is reset
-- Setup wizard runs fresh (like first boot)
-- No previous Google account is remembered
-- Knox counter may be tripped (warranty void) but FRP is gone
+> **Key correction:** a *true* FRP partition erase (`/dev/block/by-name/frp`) is a **below-OS**
+> operation (EDL/Brom/Odin/SPD) and it **destroys the ability to decrypt /data**. You cannot
+> "erase FRP and keep all user data" — those two goals conflict. The ADB ladder clears flags only.
+> `ro.frp.pst` is read-only and only reflects a real below-OS erase; it is not a setting.
 
 ---
 

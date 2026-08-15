@@ -65,7 +65,7 @@ const MOCK_ALGORITHMS: FrpAlgorithmInfo[] = [
     id: 'mediatek_brom',
     label: 'MediaTek Brom Erase FRP',
     description: 'Directly erase FRP partition via Brom/Preloader exploit using MediaTek Client protocol.',
-    success_rate: 90,
+    success_rate: 80,
     requires_hardware: false,
     is_adb_only: false,
     requires_boot_mode: true,
@@ -80,32 +80,32 @@ const MOCK_ALGORITHMS: FrpAlgorithmInfo[] = [
 const MOCK_RESET_MODES: FrpResetModeInfo[] = [
   {
     id: 'factory_reset_frp100',
-    label: 'Factory Reset + FRP 100% Remove',
-    description: 'Complete data wipe and FRP removal for supported builds.',
+    label: 'Factory Reset + Provisioning Bypass (full wipe)',
+    description: 'Factory reset + clear setup/provisioning flags. Data erased; FRP partition NOT erased.',
     frp_removal_percent: 100,
     wipes_data: true,
     erases_frp_partition: true,
   },
   {
     id: 'factory_reset_frp70',
-    label: 'Factory Reset + FRP 70% Remove',
-    description: 'Partial FRP bypass with factory reset for newer patches.',
+    label: 'Factory Reset + Temporary Bypass (full wipe)',
+    description: 'Factory reset + flag bypass only. Data erased; may re-lock on next reset.',
     frp_removal_percent: 70,
     wipes_data: true,
     erases_frp_partition: false,
   },
   {
     id: 'remove_frp100_no_wipe',
-    label: 'FRP 100% Remove (No Wipe)',
-    description: '100% FRP bypass without wiping user data.',
+    label: 'Provisioning Bypass (Keep Data)',
+    description: 'Flag bypass without wiping data. Does not erase the FRP partition — temporary.',
     frp_removal_percent: 100,
     wipes_data: false,
     erases_frp_partition: true,
   },
   {
     id: 'remove_frp70_no_wipe',
-    label: 'FRP 70% Remove (No Wipe)',
-    description: '70% FRP bypass without wiping user data.',
+    label: 'Quick Bypass (Keep Data)',
+    description: 'Flag bypass only, no data wipe. Temporary — FRP partition untouched.',
     frp_removal_percent: 70,
     wipes_data: false,
     erases_frp_partition: false,
@@ -294,7 +294,7 @@ export function initMocks() {
             developer_options_enabled: true,
             usb_state: 'adb',
             usb_config: 'mtp,adb',
-            message: '✅ Handshake confirmed: USB Debugging enabled, Developer Options allowed, RSA authorized. App can now run reset 100%/70% and Knox removal. Phone will be brand new at Hi there home page after reset 100%.'
+            message: '✅ Handshake confirmed: USB Debugging enabled, Developer Options allowed, RSA authorized. You can now run the reset/bypass and Knox flows. Back up data first, and reboot + re-check the lock state after any reset.'
           };
         case 'frp_partition_survey':
           // Read-only survey mock — getprop samples + by-name listing.
@@ -332,8 +332,8 @@ export function initMocks() {
               { command: 'content insert --uri content://settings/secure --bind name:s:user_setup_complete --bind value:s:1', success: true, output: '', error: null },
               ...(wipes ? [{ command: 'am broadcast -a android.intent.action.MASTER_CLEAR', success: true, output: 'Broadcast completed', error: null }] : [])
             ],
-            message: percent === 100 && wipes ? '✅ SUCCESS: Factory Reset + Remove FRP 100% — Phone is now brand new like at Hi there home page. FRP 100% removed, data wiped, boots to welcome setup.' : `✅ ${modeId} executed. FRP ${percent}% removed.`,
-            device_state_after: wipes && percent === 100 ? 'Brand new — like out of box. Boots to Hi there / Welcome initial setup screen. No Google verification. All data erased. FRP permanently removed 100%. Like new phone at home page.' : `${percent}% FRP removal executed.`,
+            message: percent === 100 && wipes ? '✅ Factory reset + ADB provisioning bypass executed. Reboot the device and re-run detection to confirm the lock state.' : `✅ ${modeId} executed — reboot and re-verify before treating this as resolved.`,
+            device_state_after: wipes && percent === 100 ? 'Factory reset + provisioning bypass. Flags cleared via ADB; the encrypted FRP partition was NOT erased. Reboot and re-check.' : 'Temporary flag bypass executed — FRP partition untouched, may re-lock on next reset.',
             requires_reboot: wipes,
             frp_removed_percent: percent,
             data_wiped: wipes
@@ -349,7 +349,7 @@ export function initMocks() {
               { command: 'pm disable-user --user 0 com.samsung.android.knox.attestation', success: true, output: '', error: null },
               { command: 'pm list packages | grep -i knox', success: true, output: '', error: null },
             ],
-            message: '✅ Knox Removal SUCCESS: Disabled 6 Knox packages. Knox security, KG (Knox Guard), Secure Folder, Knox attestation disabled. Device now boots without Knox verification. Alliance Shield method available as fallback for Exynos.',
+            message: '✅ Knox Removal SUCCESS: Disabled 6 Knox packages via ADB. Note: the Knox Warranty bit and Knox Guard fuse state are NOT reset by this.',
             knox_disabled: true,
             knox_packages_disabled: [
               'com.samsung.knox.knoxsetupwizardclient',

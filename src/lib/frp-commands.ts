@@ -291,15 +291,16 @@ export interface HandshakeVerification {
   message: string;
 }
 
-// Confirms USB debugging + developer options handshake allows app to run reset 100%/70%
+// Verifies USB debugging + developer options handshake before running reset/bypass flows
 export const frpVerifyHandshake = (deviceSerial: string): Promise<HandshakeVerification> =>
   invoke('frp_verify_handshake', { deviceSerial });
 
-// Confirms reset 100% makes phone brand new at Hi there home page
+// Runs the ADB provisioning ladder (flag clear + optional data wipe). Honest scope:
+// this is not a block-level FRP partition erase; reboot + re-check afterwards.
 export const frpExecuteResetMode = (deviceSerial: string, resetModeId: string): Promise<ResetExecutionResult> =>
   invoke('frp_execute_reset_mode', { deviceSerial, resetModeId });
 
-// Confirms Knox remove feature exists and works 100%
+// Disables Knox packages via ADB (pm disable-user). Does not reset the Knox Warranty bit or KG fuse.
 export const frpRemoveKnox = (deviceSerial: string): Promise<KnoxRemovalResult> =>
   invoke('frp_remove_knox', { deviceSerial });
 

@@ -202,7 +202,7 @@ pub fn get_q4_database() -> Vec<TecnoModel> {
                 TecnoFrpMethod::SettingsAccess,
             ],
             max_security_patch: Some("2023-10".into()),
-            notes: Some("Unisoc T606 Android 11 Go. SPD Bootloader mode FRP erase is 100% effective.".into()),
+            notes: Some("Unisoc T606 Android 11 Go. SPD Bootloader mode FRP erase is supported (evidence band 75, lab-gated).".into()),
             requires_preauthorized_adb: false,
             has_mtk_auth: false,
             available_in_kenya: true,
