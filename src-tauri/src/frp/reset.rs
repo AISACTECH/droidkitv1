@@ -10,7 +10,7 @@ pub struct ResetExecutionResult {
     pub success: bool,
     pub steps: Vec<BypassStepResult>,
     pub message: String,
-    pub device_state_after: String, // e.g., "Brand new - boots to Hi there screen"
+    pub device_state_after: String, // honest post-run state description (reboot re-check advised)
     pub requires_reboot: bool,
     pub frp_removed_percent: u8,
     pub data_wiped: bool,
@@ -37,8 +37,12 @@ fn exec(device: &mut Device, cmd: &str) -> BypassStepResult {
     }
 }
 
-/// Execute Factory Reset + FRP removal based on selected reset mode
-/// This is the core 100% / 70% functionality that makes phone "brand new like at Hi there home page"
+/// Execute Factory Reset + FRP removal based on selected reset mode.
+/// Honest scope: this runs the ADB provisioning ladder (setup-wizard disable,
+/// provisioning flags, content-provider inserts). It does NOT erase the
+/// encrypted FRP partition — that requires a below-OS lane (EDL/Brom/Odin/SPD)
+/// which is not part of this ADB path. Success must be confirmed by a reboot
+/// re-check, never assumed from the command output alone.
 pub fn execute_reset_mode(device: &mut Device, mode: &FrpResetMode) -> ResetExecutionResult {
     let mut steps = Vec::new();
 
@@ -54,7 +58,7 @@ pub fn execute_reset_mode(device: &mut Device, mode: &FrpResetMode) -> ResetExec
     let erases_partition = mode.erases_frp_partition();
 
     if frp_percent >= 70 {
-        // Core FRP bypass — disables setup wizard (works for both 70% and 100%)
+        // Core provisioning bypass — disables setup wizard + sets flags
         steps.push(exec(device, "pm disable-user --user 0 com.google.android.setupwizard"));
         steps.push(exec(device, "pm disable-user --user 0 com.samsung.android.app.setupwizard"));
         steps.push(exec(device, "pm disable-user --user 0 com.samsung.android.app.setupwizarddefault"));
@@ -71,8 +75,9 @@ pub fn execute_reset_mode(device: &mut Device, mode: &FrpResetMode) -> ResetExec
     }
 
     if erases_partition {
-        // 100% mode — erases FRP partition data entirely (permanent)
-        // These commands simulate frp partition wipe via secure settings + persistent properties
+        // "full" mode — clears the provisioning/credential flags visible over ADB.
+        // Honest note: these are settings-level commands, NOT a block-level FRP
+        // partition erase (that requires a below-OS lane: EDL/Brom/Odin/SPD).
         steps.push(exec(device, "content delete --uri content://settings/secure --where 'name=\"frp_credential_enabled\"'"));
         steps.push(exec(device, "content delete --uri content://settings/global --where 'name=\"frp_credential_enabled\"'"));
         steps.push(exec(device, "settings put global frp_credential_enabled 0"));
@@ -83,16 +88,18 @@ pub fn execute_reset_mode(device: &mut Device, mode: &FrpResetMode) -> ResetExec
         steps.push(exec(device, "pm clear com.samsung.knox.knoxsetupwizardclient"));
         steps.push(exec(device, "pm clear com.sec.knox.knoxsetupwizardclient"));
     } else {
-        // 70% mode — only bypasses flags, does NOT erase partition (may re-lock on next reset)
+        // temporary mode — only bypasses flags, does NOT touch the FRP partition
+        // (may re-lock on next reset)
         steps.push(exec(device, "settings put global frp_credential_enabled 0"));
     }
 
-    // === Phase 3: Factory Reset if mode wipes data (makes phone brand new at Hi there) ===
+    // === Phase 3: Factory Reset if mode wipes data ===
     if wipes_data {
-        // These make phone become brand new like out of box — boots to "Hi there" home page
-        // We use multiple fallback methods for maximum compatibility across Android 11-15
+        // Multiple fallback reset broadcasts for cross-version compatibility (Android 11-15).
+        // CAUTION: a factory reset re-triggers the very FRP check it is meant to clear —
+        // only the pre-authorized ADB window or a below-OS erase survives that.
         if frp_percent == 100 {
-            // 100% new phone experience — full wipe
+            // full wipe path
             steps.push(exec(device, "am broadcast -a android.intent.action.MASTER_CLEAR")); // classic factory reset broadcast
             steps.push(exec(device, "am broadcast -a android.intent.action.FACTORY_RESET"));
             // Alternative for newer Android
@@ -111,20 +118,20 @@ pub fn execute_reset_mode(device: &mut Device, mode: &FrpResetMode) -> ResetExec
     let overall_success = success_count >= 8; // at least core steps succeeded
 
     let device_state = if wipes_data && frp_percent == 100 {
-        "Brand new — like out of box. Boots to 'Hi there' / 'Welcome' initial setup screen. No Google verification. All data erased. FRP permanently removed 100%. Like new phone at home page.".to_string()
+        "Factory reset + provisioning bypass executed. Boots to initial setup. FRP flag state was cleared via ADB, but the encrypted FRP partition was NOT erased — re-lock possible on a fully-patched device. Reboot and re-run detection to confirm.".to_string()
     } else if wipes_data && frp_percent == 70 {
-        "Factory reset — boots to 'Hi there' but FRP partition remains. 70% bypass. May re-lock if reset again.".to_string()
+        "Factory reset with a temporary provisioning-flag bypass. The FRP partition remains — expect re-lock on the next reset. Reboot and re-verify.".to_string()
     } else if !wipes_data && frp_percent == 100 {
-        "FRP permanently removed 100% — keeps all user data, apps, photos. No Google lock. Like removing Google account lock only.".to_string()
+        "Provisioning flags cleared (no data wipe). This does NOT remove the FRP partition and cannot keep encrypted data intact while truly erasing FRP — treat as a temporary bypass, not permanent removal.".to_string()
     } else {
-        "Quick FRP bypass 70% — keeps everything, bypasses verification now but FRP partition not wiped, may re-lock next reset.".to_string()
+        "Quick provisioning-flag bypass (no data wipe). Temporary — the FRP partition is untouched and may re-lock on the next reset.".to_string()
     };
 
     let message = if overall_success {
         if wipes_data && frp_percent == 100 {
-            format!("✅ SUCCESS: {} — Phone is now brand new like at Hi there home page. FRP 100% removed, data wiped, boots to welcome setup.", mode.label())
+            format!("✅ {} executed. Factory reset + ADB provisioning bypass applied. Reboot the device and re-run detection to confirm the lock state.", mode.label())
         } else {
-            format!("✅ {} executed. {} — FRP {}% removed.", mode.label(), device_state, frp_percent)
+            format!("✅ {} executed. {} — reboot and re-verify before treating this as resolved.", mode.label(), device_state)
         }
     } else {
         format!("⚠️ Partial success ({} / {} steps). Some commands blocked by Knox. Try Content Provider or Emergency Dialer method. {}", success_count, steps.len(), device_state)
@@ -142,8 +149,10 @@ pub fn execute_reset_mode(device: &mut Device, mode: &FrpResetMode) -> ResetExec
     }
 }
 
-/// Knox removal — disables Knox and related security packages
-/// Confirms Knox remove feature exists and works
+/// Knox removal — disables Knox and related security packages via ADB.
+/// Honest scope: `pm disable-user` affects the current user's app state only;
+/// it does NOT reset the Knox Warranty bit or KG (Knox Guard) state, which are
+/// hardware/fuse-level. Guarded by the same handshake + consent flow as reset.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct KnoxRemovalResult {
     pub success: bool,

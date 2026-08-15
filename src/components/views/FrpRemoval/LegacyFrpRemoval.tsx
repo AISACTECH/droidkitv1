@@ -87,9 +87,10 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
     Unknown: "bg-gray-500/20 text-gray-400 border-gray-500/30",
   }
 
+  // Evidence-band color scale (lab-gated band, NOT a success promise).
   const successRateColor = (rate: number) => {
-    if (rate >= 90) return "text-green-400"
-    if (rate >= 70) return "text-yellow-400"
+    if (rate >= 80) return "text-green-400"
+    if (rate >= 60) return "text-yellow-400"
     return "text-orange-400"
   }
 
@@ -217,10 +218,10 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
       {/* Warning */}
       <Card className="border-yellow-500/30 bg-yellow-500/5">
         <CardContent className="p-3">
-          <div className="flex items-start gap-2">
+            <div className="flex items-start gap-2">
             <AlertTriangle className="h-4 w-4 text-yellow-400 mt-0.5 shrink-0" />
             <div className="text-xs text-yellow-300/80">
-              <strong>Important:</strong> FRP removal algorithms are chipset-specific. Exynos uses Download Mode, Qualcomm uses EDL 9008, MediaTek uses Brom mode. The tool auto-detects your chipset and selects the highest-success-rate method. For legitimate device recovery only.
+              <strong>Important:</strong> FRP removal algorithms are chipset-specific. Exynos uses Download Mode, Qualcomm uses EDL 9008, MediaTek uses Brom mode. The tool auto-detects your chipset and ranks methods by evidence band (lab-gated, not a promised %). For legitimate device recovery only — back up before any wipe/flash.
             </div>
           </div>
         </CardContent>
@@ -315,7 +316,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                               ? "bg-green-500/20 text-green-400 border-green-500/30"
                               : "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
                           }>
-                            {mode.frp_removal_percent}% FRP
+                            {mode.frp_removal_percent === 100 ? "Full wipe" : "Temporary"}
                           </Badge>
                         </div>
                         <p className="text-xs text-muted-foreground">{mode.description}</p>
@@ -327,7 +328,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                             <Badge variant="outline" className="text-xs bg-green-500/10 text-green-400">Data Kept</Badge>
                           )}
                           {mode.erases_frp_partition && (
-                            <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-400">Partition Erased</Badge>
+                            <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-400">Flags cleared (not partition)</Badge>
                           )}
                         </div>
                       </button>
@@ -348,7 +349,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                       {deviceProfile?.chipset_family || "Unknown"}
                     </Badge>
                   </CardTitle>
-                  <CardDescription>Methods ordered by success rate for your chipset</CardDescription>
+                  <CardDescription>Methods ranked by evidence band (lab-gated, not a success promise)</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {algorithms.map((algo, idx) => (
@@ -357,7 +358,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                         <div className="flex items-center gap-2">
                           {idx === 0 && <Badge className="bg-green-500 text-white text-xs">RECOMMENDED</Badge>}
                           <span className="text-sm font-medium">{algo.label}</span>
-                          <span className={`text-sm font-bold ${successRateColor(algo.success_rate)}`}>{algo.success_rate}%</span>
+                          <span className={`text-sm font-bold ${successRateColor(algo.success_rate)}`} title="Evidence band (lab-gated)">{algo.success_rate}% band</span>
                         </div>
                         <div className="flex items-center gap-2">
                           {algo.requires_hardware && (
@@ -497,7 +498,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium">{mode.label}</span>
                         <Badge variant="outline" className={mode.frp_removal_percent === 100 ? "bg-green-500/20 text-green-400 border-green-500/30" : "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"}>
-                          {mode.frp_removal_percent}% FRP Removal
+                          {mode.frp_removal_percent === 100 ? "Full wipe" : "Temporary"}
                         </Badge>
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">{mode.description}</p>
@@ -520,9 +521,9 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                       <Badge variant="outline" className={chipsetColors[chipset]}>{chipset}</Badge>
                     </CardTitle>
                     <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-400">
-                      {chipset === "Exynos" ? "95% Success Rate" :
-                       chipset === "Qualcomm" ? "97% Success Rate" :
-                       chipset === "MediaTek" ? "90% Success Rate" : "80% Success Rate"}
+                      {chipset === "Exynos" ? "Evidence band 70" :
+                       chipset === "Qualcomm" ? "Evidence band 65" :
+                       chipset === "MediaTek" ? "Evidence band 80" : "Evidence band 75"}
                     </Badge>
                   </div>
                 </CardHeader>

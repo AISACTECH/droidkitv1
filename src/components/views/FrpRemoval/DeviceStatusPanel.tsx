@@ -172,7 +172,7 @@ export function DeviceStatusPanel({ selectedDevice, deviceProfile, algorithms, i
                     {algorithms.slice(0, 4).map(algo => (
                       <div key={algo.id} className="flex items-center justify-between text-[11px]">
                         <span className="truncate">{algo.label}</span>
-                        <Badge variant="outline" className="text-[10px] ml-2">{algo.success_rate}%</Badge>
+                        <Badge variant="outline" className="text-[10px] ml-2">{algo.success_rate}% band</Badge>
                       </div>
                     ))}
                   </div>

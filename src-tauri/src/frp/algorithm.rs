@@ -46,34 +46,36 @@ impl ChipsetFamily {
         }
     }
 
-    /// All methods available for this chipset, in order of reliability
+    /// All methods available for this chipset, in evidence-ranked order.
+    /// The inline numbers are lab-gated evidence bands (docs/ANDROID-15-16-PATCH-RESEARCH.md §5),
+    /// NOT promised success percentages.
     pub fn available_methods(&self) -> Vec<FrpAlgorithm> {
         match self {
             ChipsetFamily::Exynos => vec![
-                FrpAlgorithm::ExynosDownloadMode,       // 95%
-                FrpAlgorithm::SamsungTestMode,           // 70% on older patches
-                FrpAlgorithm::ADBProvisioning,           // 40% if ADB pre-authorized
+                FrpAlgorithm::ExynosDownloadMode,       // band 70
+                FrpAlgorithm::SamsungTestMode,           // band 55 (contested; ~10 on A15/16)
+                FrpAlgorithm::ADBProvisioning,           // band 88 only when ADB pre-authorized
             ],
             ChipsetFamily::Qualcomm => vec![
-                FrpAlgorithm::QualcommEDL,               // 95-98%
-                FrpAlgorithm::SamsungTestMode,           // 70% on older patches
-                FrpAlgorithm::ADBProvisioning,           // 40% if ADB pre-authorized
+                FrpAlgorithm::QualcommEDL,               // band 65 (firehose-loader gated)
+                FrpAlgorithm::SamsungTestMode,           // band 55 (contested)
+                FrpAlgorithm::ADBProvisioning,           // band 88 only when ADB pre-authorized
             ],
             ChipsetFamily::MediaTek => vec![
-                FrpAlgorithm::MediaTekBrom,              // 90%
-                FrpAlgorithm::SamsungTestMode,           // 70% on older patches
-                FrpAlgorithm::ADBProvisioning,           // 40% if ADB pre-authorized
+                FrpAlgorithm::MediaTekBrom,              // band 80 (open mtkclient protocol class)
+                FrpAlgorithm::SamsungTestMode,           // band 55 (contested)
+                FrpAlgorithm::ADBProvisioning,           // band 88 only when ADB pre-authorized
             ],
             ChipsetFamily::Spreadtrum => vec![
-                FrpAlgorithm::SPDBootloader,             // 80%
-                FrpAlgorithm::ADBProvisioning,           // 40%
+                FrpAlgorithm::SPDBootloader,             // band 75 (SPD bootrom auto-ADB class)
+                FrpAlgorithm::ADBProvisioning,           // band 88 only when ADB pre-authorized
             ],
             ChipsetFamily::Kirin => vec![
-                FrpAlgorithm::ADBProvisioning,           // 40%
+                FrpAlgorithm::ADBProvisioning,           // band 88 only when ADB pre-authorized
             ],
             ChipsetFamily::Unknown => vec![
-                FrpAlgorithm::SamsungTestMode,           // Try test mode first
-                FrpAlgorithm::ADBProvisioning,           // Then ADB
+                FrpAlgorithm::SamsungTestMode,           // Try test mode first (probe-budgeted)
+                FrpAlgorithm::ADBProvisioning,           // Then ADB (window-gated)
             ],
         }
     }
@@ -176,39 +178,43 @@ impl FrpAlgorithm {
             FrpAlgorithm::ExynosDownloadMode =>
                 "Put device in Download Mode (Vol Down + Power). Flash Enable-ADB file via Odin/Heimdall. \
                  ADB enables automatically. Execute FRP removal commands. Reflash stock firmware. \
-                 95% success rate. Works on all Exynos Samsung devices.",
+                 Evidence band 70 (lab-gated): gated by bit/version matching and KG-Prenormal USB state on recent binaries.",
             FrpAlgorithm::QualcommEDL =>
-                "Force device into EDL 9008 mode. Use firehose loader to gain low-level access. \
-                 Erase FRP partition directly at block level. Factory reset if needed. \
-                 95-98% success rate. May require EDL engineering cable on newer devices.",
+                "Force device into EDL 9008 mode. Use a chipset-specific firehose loader for low-level access. \
+                 Erase FRP partition at block level. Evidence band 65 (lab-gated): requires a signed firehose \
+                 programmer (model/bit specific) and often an EDL cable.",
             FrpAlgorithm::MediaTekBrom =>
                 "Boot device into Brom/Preloader mode (hold Vol keys while connecting USB). \
-                 Use MTK exploit to erase FRP partition. \
-                 90% success rate. Does not require opening the phone.",
+                 Use the open-source MTK client protocol class to erase the FRP partition. \
+                 Evidence band 80 (lab-gated): newer secured chips may demand a signed Download Agent (SLA/DAA).",
             FrpAlgorithm::SPDBootloader =>
-                "Enter Spreadtrum Bootloader mode. Erase FRP partition. \
-                 80% success rate. Less common chipset.",
+                "Enter Spreadtrum Bootloader mode. Erase FRP partition via SPD bootrom protocol \
+                 (community tools auto-enable ADB on Tecno/Infinix/Itel class devices). Evidence band 75 (lab-gated).",
             FrpAlgorithm::SamsungTestMode =>
                 "On FRP-locked screen, open Emergency Dialer, dial *#0*#. \
                  Test mode menu appears. Use it to enable USB debugging. \
                  Accept USB debugging prompt. Execute ADB FRP removal commands. \
-                 70% success rate. Patched on Android 12+ with recent security patches.",
+                 Evidence band 55 on Android 13-14 and lower on patched 15/16 (Binary 18 blocks the test menu).",
             FrpAlgorithm::ADBProvisioning =>
-                "If ADB is already authorized (USB debugging was enabled before FRP lock), \
-                 execute provisioning commands: settings put, content insert, pm disable. \
-                 40% success rate. Only works if ADB access is available.",
+                "Only if ADB is already authorized (USB debugging enabled + RSA-accepted BEFORE the reset). \
+                 Executes provisioning commands: settings put, content insert, pm disable. \
+                 Evidence band 88 when the pre-authorized window holds — near zero otherwise.",
         }
     }
 
-    /// Success rate percentage for this algorithm
+    /// Evidence-band upper bound for this algorithm (0-97, lab-gated).
+    /// This is NOT a promised success percentage: it is the strongest
+    /// evidence-supported rate from the Aug-2026 research ledger
+    /// (docs/ANDROID-15-16-PATCH-RESEARCH.md §5). Real outcomes are
+    /// device/patch dependent and are reported per-run by the verification loop.
     pub fn success_rate(&self) -> u8 {
         match self {
-            FrpAlgorithm::ExynosDownloadMode => 95,
-            FrpAlgorithm::QualcommEDL => 97,
-            FrpAlgorithm::MediaTekBrom => 90,
-            FrpAlgorithm::SPDBootloader => 80,
-            FrpAlgorithm::SamsungTestMode => 70,
-            FrpAlgorithm::ADBProvisioning => 40,
+            FrpAlgorithm::ExynosDownloadMode => 70,
+            FrpAlgorithm::QualcommEDL => 65,
+            FrpAlgorithm::MediaTekBrom => 80,
+            FrpAlgorithm::SPDBootloader => 75,
+            FrpAlgorithm::SamsungTestMode => 55,
+            FrpAlgorithm::ADBProvisioning => 88,
         }
     }
 
@@ -454,23 +460,23 @@ pub enum PhaseAction {
     Verify,
 }
 
-/// FRP reset mode — what the user wants to achieve
+/// FRP reset mode — what the user wants to achieve.
+/// Honest note: these modes run the ADB provisioning ladder. "Full" modes
+/// clear provisioning flags (not the encrypted FRP partition — that needs a
+/// below-OS lane). Labels carry no promised percentage.
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub enum FrpResetMode {
-    /// Full factory reset + 100% FRP removal
-    /// Phone becomes like brand new — boots to initial setup, no Google verification
-    /// Erases FRP partition + userdata + metadata
+    /// Full factory reset + provisioning bypass (full wipe).
+    /// Resets user data AND clears setup/provisioning flags.
     FactoryResetRemoveFrp100,
-    /// Full factory reset + 70% FRP removal
-    /// Phone boots past FRP but may re-lock on next reset
-    /// Erases userdata but only bypasses FRP flags (partition data remains)
+    /// Factory reset + temporary flag bypass (full wipe).
+    /// Resets user data; only bypasses provisioning flags (FRP partition untouched).
     FactoryResetRemoveFrp70,
-    /// 100% FRP removal without data wipe
-    /// Erases FRP partition only, keeps all user data
-    /// Phone keeps data but FRP is permanently removed
+    /// Provisioning bypass without data wipe.
+    /// Clears flags only — keeps user data; FRP partition is NOT erased.
     RemoveFrp100NoWipe,
-    /// 70% FRP removal without data wipe
-    /// Bypasses FRP flags only, keeps everything including FRP partition
+    /// Quick flag bypass without data wipe (temporary).
+    /// Bypasses provisioning flags only, keeps everything including the FRP partition.
     RemoveFrp70NoWipe,
 }
 
@@ -486,27 +492,28 @@ impl FrpResetMode {
 
     pub fn label(&self) -> &str {
         match self {
-            FrpResetMode::FactoryResetRemoveFrp100 => "Factory Reset + Remove FRP 100%",
-            FrpResetMode::FactoryResetRemoveFrp70 => "Factory Reset + Remove FRP 70%",
-            FrpResetMode::RemoveFrp100NoWipe => "Remove FRP 100% (Keep Data)",
-            FrpResetMode::RemoveFrp70NoWipe => "Remove FRP 70% (Keep Data)",
+            FrpResetMode::FactoryResetRemoveFrp100 => "Factory Reset + Provisioning Bypass (full wipe)",
+            FrpResetMode::FactoryResetRemoveFrp70 => "Factory Reset + Temporary Bypass (full wipe)",
+            FrpResetMode::RemoveFrp100NoWipe => "Provisioning Bypass (Keep Data)",
+            FrpResetMode::RemoveFrp70NoWipe => "Quick Bypass (Keep Data)",
         }
     }
 
     pub fn description(&self) -> &str {
         match self {
             FrpResetMode::FactoryResetRemoveFrp100 =>
-                "Complete reset. Phone becomes brand new — boots to initial setup screen like out of the box. \
-                 No Google account verification. All data erased. FRP partition wiped. Knox may be tripped.",
+                "Factory reset + full provisioning bypass. All data is erased and setup/provisioning flags are cleared. \
+                 Honest note: this is an ADB flag clear, not a block-level FRP partition erase — reboot and re-check, \
+                 and expect re-lock on a fully-patched device.",
             FrpResetMode::FactoryResetRemoveFrp70 =>
-                "Factory reset with partial FRP removal. Phone boots past Google verification \
-                 but FRP partition data remains. May re-lock on next factory reset. All data erased.",
+                "Factory reset with a temporary flag bypass. Data is erased, but the FRP partition is untouched — \
+                 the device may re-lock on the next factory reset.",
             FrpResetMode::RemoveFrp100NoWipe =>
-                "Permanently remove FRP lock without erasing data. FRP partition is wiped. \
-                 Phone keeps all apps, photos, messages. Like removing the Google account lock only.",
+                "Provisioning bypass without erasing data. Keeps apps/photos/messages, but does NOT erase the \
+                 encrypted FRP partition — treat as temporary, not permanent removal.",
             FrpResetMode::RemoveFrp70NoWipe =>
-                "Quick FRP bypass without erasing data. Only sets provisioning flags. \
-                 Phone keeps everything. FRP partition NOT wiped — may re-lock on next reset.",
+                "Quick flag bypass without erasing data. Only sets provisioning flags; the FRP partition is \
+                 untouched and the lock may return on the next reset.",
         }
     }
 

@@ -498,7 +498,7 @@ export function DeveloperLab({ selectedDevice }: DeveloperLabProps) {
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-medium">{algo.label}</span>
-                        <span className="text-xs font-bold text-green-400">{algo.success_rate}%</span>
+                        <span className="text-xs font-bold text-green-400" title="Evidence band (lab-gated)">{algo.success_rate}% band</span>
                       </div>
                       <p className="text-[11px] text-muted-foreground mt-1 line-clamp-2">{algo.description}</p>
                     </button>

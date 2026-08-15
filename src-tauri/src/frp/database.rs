@@ -1144,10 +1144,10 @@ impl TecnoFrpMethod {
             TecnoFrpMethod::MtkBromErase =>
                 "Boot into MediaTek Brom/Preloader mode (hold Vol keys, connect USB). \
                  Use MTK client exploit to erase FRP partition directly. \
-                 90% success rate. Most reliable method for all MediaTek Tecno devices.",
+                 Evidence band 80 (lab-gated) for MediaTek Tecno devices - the open mtkclient protocol class.",
             TecnoFrpMethod::SpdBootloaderErase =>
                 "Enter Spreadtrum/Unisoc Bootloader mode. Erase FRP partition \
-                 via SPD flash tool protocol. 80% success rate for Unisoc-based Tecno devices.",
+                 via SPD flash tool protocol. Evidence band 75 (lab-gated) for Unisoc-based Tecno devices.",
             TecnoFrpMethod::SetupWizardDisable =>
                 "Disable the Google setup wizard packages via 'pm disable-user --user 0' \
                  so the device skips the Google account verification screen after factory reset.",
@@ -1902,7 +1902,7 @@ pub fn get_tecno_database() -> Vec<TecnoModel> {
                 TecnoFrpMethod::HiosServiceMenu,
             ],
             max_security_patch: Some("2024-06-01".into()),
-            notes: Some("Helio G80. Android 13. MTK Brom is primary. Good success rate.".into()),
+            notes: Some("Helio G80. Android 13. MTK Brom is primary (evidence band 80, lab-gated).".into()),
             requires_preauthorized_adb: true,
             has_mtk_auth: false,
             available_in_kenya: true,

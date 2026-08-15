@@ -177,7 +177,7 @@ pub async fn frp_get_recommended_algorithm(chipset: ChipsetFamily) -> FrpAlgorit
     chipset.primary_method()
 }
 
-/// Get all available algorithms for a chipset, ordered by success rate
+/// Get all available algorithms for a chipset, ordered by evidence band
 #[tauri::command]
 pub async fn frp_get_chipset_algorithms(chipset: ChipsetFamily) -> Vec<FrpAlgorithmInfo> {
     chipset.available_methods().into_iter().map(|algo| {
@@ -475,8 +475,9 @@ pub async fn frp_get_q3_by_brand(brand: String) -> Vec<TecnoModel> {
 
 use crate::frp::reset::{execute_reset_mode, execute_knox_removal, KnoxRemovalResult, ResetExecutionResult};
 
-/// Execute full reset mode — Factory Reset + FRP 100% / 70% to make phone brand new at Hi there home page
-/// Confirms: USB debugging handshake + dev options enabled allows app to handshake and run reset 100% which makes phone new like brand new at home page
+/// Execute full reset mode (ADB provisioning bypass + optional factory reset).
+/// Honest scope: this is the ADB ladder only — it clears provisioning flags and
+/// disables setup wizards. The encrypted FRP partition is NOT erased here.
 #[tauri::command]
 pub async fn frp_execute_reset_mode(device_serial: String, reset_mode_id: String) -> Result<ResetExecutionResult, String> {
     let mut device = reconnect_device(&device_serial)
@@ -493,8 +494,8 @@ pub async fn frp_execute_reset_mode(device_serial: String, reset_mode_id: String
     Ok(execute_reset_mode(&mut device, &mode))
 }
 
-/// Knox Removal — disables Knox security, Knox Guard, Secure Folder, Knox attestation
-/// Confirms: Knox remove feature exists and works 100%
+/// Knox Removal — disables Knox packages via ADB (pm disable-user).
+/// Does NOT reset the Knox Warranty bit or Knox Guard fuse state.
 #[tauri::command]
 pub async fn frp_remove_knox(device_serial: String) -> Result<KnoxRemovalResult, String> {
     let mut device = reconnect_device(&device_serial)
@@ -522,7 +523,7 @@ pub async fn frp_verify_handshake(device_serial: String) -> Result<HandshakeVeri
         usb_state: adb_enabled,
         usb_config,
         message: if is_handshake_ok {
-            "✅ Handshake confirmed: USB Debugging enabled, Developer Options allowed, RSA authorized. App can now run reset 100%/70% and Knox removal. Phone will be brand new at Hi there home page after reset 100%.".to_string()
+            "✅ Handshake confirmed: USB Debugging enabled, Developer Options allowed, RSA authorized. You can now run the reset/bypass and Knox flows. Reminder: back up data first, and reboot + re-check the lock state after any reset.".to_string()
         } else {
             "⚠️ Handshake incomplete. Enable Developer Options: Settings > About Phone > Tap Build Number 7 times > Back to Settings > Developer Options > Enable USB Debugging > Connect USB > Allow RSA fingerprint.".to_string()
         },
