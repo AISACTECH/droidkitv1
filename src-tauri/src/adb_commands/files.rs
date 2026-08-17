@@ -19,10 +19,14 @@ pub(crate) struct FileInfo {
     permissions: String,
 }
 
+fn shell_quote(value: &str) -> String {
+    format!("'{}'", value.replace('\'', "'\\''"))
+}
+
 pub(crate) fn list_files(device: &mut Device, path: &str) -> Result<Vec<FileInfo>, String> {
     let mut buf: Vec<u8> = Vec::new();
 
-    let result = device.shell_command(&format!("ls -la {}", path), &mut buf);
+    let result = device.shell_command(&format!("ls -la -- {}", shell_quote(path)), &mut buf);
 
     match result {
         Ok(_) => {
@@ -97,7 +101,7 @@ pub(crate) fn pull_file(
 ) -> Result<(), String> {
     let mut buf: Vec<u8> = Vec::new();
 
-    let result = device.shell_command(&format!("cat {}", remote_path), &mut buf);
+    let result = device.shell_command(&format!("cat -- {}", shell_quote(remote_path)), &mut buf);
 
     match result {
         Ok(_) => {
@@ -105,5 +109,19 @@ pub(crate) fn pull_file(
             Ok(())
         }
         Err(e) => Err(format!("Failed to pull file: {:?}", e)),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::shell_quote;
+
+    #[test]
+    fn quotes_spaces_and_shell_metacharacters() {
+        assert_eq!(shell_quote("/sdcard/My File.txt"), "'/sdcard/My File.txt'");
+        assert_eq!(
+            shell_quote("/sdcard/a'; rm -rf /; echo 'b"),
+            "'/sdcard/a'\\''; rm -rf /; echo '\\''b'"
+        );
     }
 }

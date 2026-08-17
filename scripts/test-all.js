@@ -146,26 +146,45 @@ for (const m of methods) {
   else log(`FRP method ${m} missing`, 'fail');
 }
 
-// Reset modes 100%/70%
+// Reset-mode compatibility IDs remain, but the public contract must be honest:
+// ADB modes never claim block-level partition erasure or guaranteed completion.
 const algoContent = fs.readFileSync(path.join(root, 'src-tauri/src/frp/algorithm.rs'), 'utf8');
-if (algoContent.includes('FactoryResetRemoveFrp100') && algoContent.includes('frp_removal_percent') && algoContent.toLowerCase().includes('brand new') && algoContent.toLowerCase().includes('hi there') || algoContent.toLowerCase().includes('initial setup')) {
-  log('Reset modes 100%/70% — brand new at Hi there home page confirmed accurate', 'pass');
-} else log('Reset modes missing', 'fail');
+const resetContent = fs.readFileSync(path.join(root, 'src-tauri/src/frp/reset.rs'), 'utf8');
+if (
+  algoContent.includes('FactoryResetRemoveFrp100')
+  && algoContent.includes('pub fn erases_frp_partition')
+  && algoContent.includes('false')
+  && resetContent.includes('pending_post_reboot_verification')
+  && resetContent.includes('success: false')
+  && !resetContent.toLowerCase().includes('brand new at hi there')
+) {
+  log('Reset modes present with no partition-erase claim and post-reboot verification required', 'pass');
+} else log('Reset-mode safety contract missing or regressed', 'fail');
 
-// Knox removal
-if (fs.existsSync(path.join(root, 'src-tauri/src/frp/reset.rs')) && fs.readFileSync(path.join(root, 'src-tauri/src/frp/reset.rs'), 'utf8').includes('knox') && fs.readFileSync(path.join(root, 'src-tauri/src/frp/reset.rs'), 'utf8').includes('kgclient')) {
-  log('Knox removal feature exists, 16 packages + KG, accurate', 'pass');
-} else log('Knox removal missing', 'fail');
+// Knox package maintenance: semantic verification, no Knox Guard/finance-lock target.
+if (
+  resetContent.includes('pm list packages -d')
+  && resetContent.includes('packages_verified_disabled_user0')
+  && !resetContent.includes('"com.samsung.android.kgclient"')
+  && !resetContent.includes('"com.samsung.android.knoxguard"')
+) {
+  log('Knox package maintenance verifies user-0 state and excludes Knox Guard/finance locks', 'pass');
+} else log('Knox package safety contract missing', 'fail');
 
 // Handshake verification
 if (fs.readFileSync(path.join(root, 'src-tauri/src/frp/commands.rs'), 'utf8').includes('frp_verify_handshake')) {
   log('Handshake verification (USB debugging + Dev Options) exists accurate', 'pass');
 } else log('Handshake verification missing', 'fail');
 
-// Fastboot
-if (fs.existsSync(path.join(root, 'src-tauri/src/fastboot.rs')) && fs.readFileSync(path.join(root, 'src-tauri/src/lib.rs'), 'utf8').includes('fastboot_list_devices')) {
-  log('Fastboot support exists — for damaged charger port data system tampered', 'pass');
-} else log('Fastboot missing', 'fail');
+// Fastboot + backend permit safety
+const fastbootContent = fs.readFileSync(path.join(root, 'src-tauri/src/fastboot.rs'), 'utf8');
+const safetyContent = fs.readFileSync(path.join(root, 'src-tauri/src/operation_safety.rs'), 'utf8');
+if (fastbootContent.includes('FRP_ONLY') && !fastbootContent.includes('["frp", "frp_a", "frp_b", "persistent"') && !fastbootContent.includes('"config"]')) {
+  log('Fastboot erase allow-list is restricted to explicit FRP partition names', 'pass');
+} else log('Unsafe fastboot fallback partition detected', 'fail');
+if (safetyContent.includes('consume_permit') && safetyContent.includes('one-use') && safetyContent.includes('PERMIT_TTL')) {
+  log('Rust operation permits are expiring, one-use and device/operation bound', 'pass');
+} else log('Rust operation permit contract missing', 'fail');
 
 // Screen Mirror reflection window
 if (fs.existsSync(path.join(root, 'src-tauri/src/screen_mirror.rs')) && fs.readFileSync(path.join(root, 'src/components/views/ScreenControl.tsx'), 'utf8').includes('Reflection Window') && fs.readFileSync(path.join(root, 'src/components/views/ScreenControl.tsx'), 'utf8').includes('cursorControl')) {
@@ -299,8 +318,8 @@ try {
   } else log('Production audit has warnings', 'warn');
 } catch { log('Production audit failed', 'fail'); }
 
-// 7. Best World Recommended App Criteria
-console.log("\n--- 7. Best World Recommended App Criteria ---");
+// 7. Static release-readiness criteria (native builds and physical devices are separate gates)
+console.log("\n--- 7. Static Release-Readiness Criteria ---");
 const criteria = [
   { check: (() => {
       const pv = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version;
@@ -311,9 +330,9 @@ const criteria = [
   { check: fs.existsSync(path.join(root, 'LICENSE')), msg: 'License MIT exists' },
   { check: fs.existsSync(path.join(root, 'README.md')) && fs.readFileSync(path.join(root, 'README.md'), 'utf8').includes('Paralock'), msg: 'README exists with Paralock' },
   { check: fs.existsSync(path.join(root, 'docs/FEATURE_CONFIRMATION_USB_KNOX_RESET.md')), msg: 'Feature confirmation doc exists' },
-  { check: fs.existsSync(path.join(root, 'docs/COMPARISON_2026_TOP_FRP_APPS.md')), msg: 'Comparison with top 2026 apps exists — outperforms' },
-  { check: fs.existsSync(path.join(root, 'docs/screenshots/paralock-enhanced-frp-main.png')), msg: 'Screenshots exist for UI' },
-  { check: fs.readFileSync(path.join(root, 'src/components/views/ScreenControl.tsx'), 'utf8').includes('Reflection Window') && fs.readFileSync(path.join(root, 'src/components/views/ScreenControl.tsx'), 'utf8').includes('broken touch sensor'), msg: 'Best preview reflection window for broken sensor repair' },
+  { check: fs.existsSync(path.join(root, 'docs/bench/OBSERVED-EVIDENCE.md')), msg: 'Physical post-reboot benchmark evidence contract exists' },
+  { check: fs.existsSync(path.join(root, 'src/components/OperationSafetyGate.test.tsx')), msg: 'React safety-gate tests exist' },
+  { check: fs.readFileSync(path.join(root, 'src/components/views/ScreenControl.tsx'), 'utf8').includes('Reflection Window') && fs.readFileSync(path.join(root, 'src/components/views/ScreenControl.tsx'), 'utf8').includes('broken touch sensor'), msg: 'Reflection window control path is implemented' },
 ];
 
 for (const c of criteria) {
@@ -329,13 +348,10 @@ console.log(`⚠️ Warnings: ${warnings}`);
 console.log(`Total: ${passed + failed + warnings}`);
 
 if (failed === 0) {
-  console.log("\n🎉 ALL TESTS PASS — Ready to clone, install on GitHub, best world recommended app!");
-  console.log("   - Speed efficiency: bundle <5MB, code-split, offlineFirst");
-  console.log("   - Reliability: ErrorBoundary + logger + hardened CSP + adaptive polling");
-  console.log("   - Accuracy peak: 268 models, 6 algorithms 95-97%, reset 100% brand new at Hi there, Knox 100% 20 packages, handshake verification");
-  console.log("   - Windows support: NSIS, build-windows.ps1, forward slashes, 1280x800 window");
-  console.log("   - Connectivity: ADB/USB, WiFi QR/pairing code, Fastboot for damaged port");
-  console.log("   - Reflection window: phone screen mirrored, cursor control even when touch sensor broken, repair + control simultaneously");
+  console.log("\n✅ FRONTEND + STATIC CONTRACT GATES PASS");
+  console.log("   - Bundle, TypeScript, source contracts and browser-facing reliability checks are green");
+  console.log("   - Mutating FRP operations are permit-gated with semantic read-back and reboot verification required");
+  console.log("   - Native cargo tests/builds, signed installers and physical-device outcomes remain independent release gates");
   process.exit(0);
 } else {
   console.log("\n❌ Some tests failed — fix before release");

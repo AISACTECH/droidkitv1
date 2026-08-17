@@ -271,19 +271,36 @@ export function initMocks() {
         case 'frp_get_tecno_methods':
           return MOCK_TECNO_METHODS;
 
-        // Run method / auto bypass
+        // Backend operation authorization + mutating method mocks
+        case 'prepare_destructive_operation': {
+          const serial = payload?.deviceSerial || 'RF8M10XXXXX';
+          if (!payload?.ownershipConfirmed || !payload?.backupConfirmed || payload?.typedConfirmation !== `AUTHORIZE ${serial}`) {
+            throw new Error('Mock backend refused incomplete operation pre-flight');
+          }
+          return {
+            token: `mock-permit-${Date.now()}`,
+            operation: payload?.operation || 'unknown',
+            device_serial: serial,
+            device_model: payload?.expectedModel || 'SM-A155F',
+            expires_at_epoch_ms: Date.now() + 300_000,
+            one_time: true,
+          };
+        }
         case 'frp_run_method':
         case 'frp_auto_bypass':
           return {
             method: payload?.methodId || 'auto_bypass',
-            success: true,
+            success: false,
             steps: [
-              { command: 'adb devices', success: true, output: 'RF8M10XXXXX\tdevice', error: null },
-              { command: 'adb shell content insert --uri content://settings/secure --bind name:s:user_setup_complete --bind value:s:1', success: true, output: 'Success', error: null }
+              { command: 'settings put secure user_setup_complete 1', success: true, output: '', error: null },
+              { command: 'settings get secure user_setup_complete', success: true, output: '1', error: null }
             ],
-            message: 'FRP bypass completed successfully in mock mode.',
+            message: 'Mock writes read back; final success remains pending a post-reboot scan.',
             requires_manual_action: false,
             manual_action_instructions: null,
+            verification_status: 'current_boot_inactive_pending_reboot',
+            observed_frp_state: 'Inactive',
+            reboot_verification_required: true,
           };
 
         // === Advanced Reset & Knox (Confirmed Features) ===
@@ -324,7 +341,8 @@ export function initMocks() {
           const wipes = modeId.includes('factory_reset');
           return {
             reset_mode: MOCK_RESET_MODES.find(m => m.id === modeId) || MOCK_RESET_MODES[0],
-            success: true,
+            success: false,
+            operation_accepted: true,
             steps: [
               { command: 'getprop ro.build.version.release', success: true, output: '14', error: null },
               { command: 'pm disable-user --user 0 com.google.android.setupwizard', success: true, output: 'Success', error: null },
@@ -332,11 +350,12 @@ export function initMocks() {
               { command: 'content insert --uri content://settings/secure --bind name:s:user_setup_complete --bind value:s:1', success: true, output: '', error: null },
               ...(wipes ? [{ command: 'am broadcast -a android.intent.action.MASTER_CLEAR', success: true, output: 'Broadcast completed', error: null }] : [])
             ],
-            message: percent === 100 && wipes ? '✅ Factory reset + ADB provisioning bypass executed. Reboot the device and re-run detection to confirm the lock state.' : `✅ ${modeId} executed — reboot and re-verify before treating this as resolved.`,
-            device_state_after: wipes && percent === 100 ? 'Factory reset + provisioning bypass. Flags cleared via ADB; the encrypted FRP partition was NOT erased. Reboot and re-check.' : 'Temporary flag bypass executed — FRP partition untouched, may re-lock on next reset.',
-            requires_reboot: wipes,
+            message: 'Mock operation accepted at command/read-back level. Final success is pending a post-reboot scan.',
+            device_state_after: 'Mock provisioning flags read back; the FRP partition was not erased.',
+            requires_reboot: true,
             frp_removed_percent: percent,
-            data_wiped: wipes
+            data_wiped: wipes,
+            verification_status: 'pending_post_reboot_verification'
           };
         }
         case 'frp_remove_knox':
@@ -349,16 +368,31 @@ export function initMocks() {
               { command: 'pm disable-user --user 0 com.samsung.android.knox.attestation', success: true, output: '', error: null },
               { command: 'pm list packages | grep -i knox', success: true, output: '', error: null },
             ],
-            message: '✅ Knox Removal SUCCESS: Disabled 6 Knox packages via ADB. Note: the Knox Warranty bit and Knox Guard fuse state are NOT reset by this.',
-            knox_disabled: true,
+            message: 'Mock verified 4 Knox-related packages disabled for user 0. Knox and Knox Guard states were not reset.',
+            knox_disabled: false,
             knox_packages_disabled: [
               'com.samsung.knox.knoxsetupwizardclient',
               'com.sec.knox.knoxsetupwizardclient',
               'com.samsung.android.knox.attestation',
-              'com.samsung.android.knox.containerdesktop',
-              'com.samsung.android.kgclient',
-              'com.samsung.android.knoxguard'
-            ]
+              'com.samsung.android.knox.containerdesktop'
+            ],
+            verification_status: 'packages_verified_disabled_user0'
+          };
+
+        // Read-only host tool/driver preflight
+        case 'service_environment_preflight':
+          return {
+            operating_system: 'browser-mock',
+            architecture: 'n/a',
+            adb: { name: 'adb', available: false, version: null, detail: 'Browser mock does not inspect host tools' },
+            fastboot: { name: 'fastboot', available: false, version: null, detail: 'Browser mock does not inspect host tools' },
+            usb_driver: { state: 'mock', detail: 'Open the native desktop app to inspect drivers', detected_markers: [] },
+            write_operations_ready: false,
+            recovery_requirements: [
+              'Verify exact serial/model before writes',
+              'Capture backups and matching stock firmware',
+              'Use signed OEM/Google drivers',
+            ],
           };
 
         // Fastboot support
@@ -377,7 +411,14 @@ export function initMocks() {
         case 'fastboot_oem_unlock':
         case 'fastboot_getvar_all':
         case 'fastboot_erase_frp':
-          return { success: true, output: 'Mock fastboot success', error: null, device_serial: null };
+          return {
+            success: true,
+            output: 'Mock fastboot command accepted; verification still required',
+            error: null,
+            device_serial: payload?.deviceSerial || null,
+            operation_status: 'completed_unverified',
+            verification_required: true,
+          };
 
         // Screen Mirror reflection window
         case 'capture_screen_frame':

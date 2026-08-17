@@ -16,6 +16,7 @@ use crate::frp::itel_database::{get_itel_database, search_itel_models, get_itel_
 use crate::frp::q3_database::{get_q3_database, search_q3_models, get_q3_by_brand};
 use crate::frp::q4_database::{get_q4_database, search_q4_models, get_q4_by_brand};
 use crate::frp::detector::{detect_frp_state, FrpDetectionResult, FrpState};
+use crate::operation_safety::consume_permit;
 
 /// Detect FRP state on a connected device
 #[tauri::command]
@@ -28,23 +29,42 @@ pub async fn frp_detect(device_serial: String) -> Result<FrpDetectionResult, Str
 
 /// Run a specific FRP bypass method
 #[tauri::command]
-pub async fn frp_run_method(device_serial: String, method_id: String) -> Result<BypassResult, String> {
-    let mut device = reconnect_device(&device_serial)
-        .ok_or_else(|| "Failed to connect to device".to_string())?;
-
+pub async fn frp_run_method(
+    device_serial: String,
+    method_id: String,
+    permit_token: String,
+) -> Result<BypassResult, String> {
     let method = parse_method_id(&method_id)
         .ok_or_else(|| format!("Unknown FRP method: {}", method_id))?;
+    consume_permit(
+        &permit_token,
+        &format!("frp_method:{}", method_id),
+        &device_serial,
+    )?;
 
-    Ok(run_bypass_method(&mut device, &method))
+    let mut device = reconnect_device(&device_serial)
+        .ok_or_else(|| "Failed to connect to device after authorization".to_string())?;
+
+    let mut result = run_bypass_method(&mut device, &method);
+    let observed = detect_frp_state(&mut device);
+    result.finalize_with_detection(&observed);
+    Ok(result)
 }
 
 /// Run the automatic FRP bypass sequence (tries safest methods first)
 #[tauri::command]
-pub async fn frp_auto_bypass(device_serial: String) -> Result<BypassResult, String> {
+pub async fn frp_auto_bypass(
+    device_serial: String,
+    permit_token: String,
+) -> Result<BypassResult, String> {
+    consume_permit(&permit_token, "frp_auto_bypass", &device_serial)?;
     let mut device = reconnect_device(&device_serial)
-        .ok_or_else(|| "Failed to connect to device".to_string())?;
+        .ok_or_else(|| "Failed to connect to device after authorization".to_string())?;
 
-    Ok(run_auto_bypass(&mut device))
+    let mut result = run_auto_bypass(&mut device);
+    let observed = detect_frp_state(&mut device);
+    result.finalize_with_detection(&observed);
+    Ok(result)
 }
 
 /// Get the Samsung device compatibility database
@@ -149,16 +169,16 @@ pub async fn frp_build_device_profile(device_serial: String) -> Result<DevicePro
         chipset_name: chipname.clone(),
         android_version: get_prop(&mut device, "ro.build.version.release"),
         sdk_version: get_prop(&mut device, "ro.build.version.sdk"),
-        security_patch: Some_or_none(get_prop(&mut device, "ro.build.version.security_patch")),
-        binary_version: Some_or_none(extract_binary_version(&get_prop(&mut device, "ro.build.display.id"))),
-        bootloader_version: Some_or_none(get_prop(&mut device, "ro.bootloader")),
-        build_fingerprint: Some_or_none(get_prop(&mut device, "ro.build.fingerprint")),
+        security_patch: some_or_none(get_prop(&mut device, "ro.build.version.security_patch")),
+        binary_version: some_or_none(extract_binary_version(&get_prop(&mut device, "ro.build.display.id"))),
+        bootloader_version: some_or_none(get_prop(&mut device, "ro.bootloader")),
+        build_fingerprint: some_or_none(get_prop(&mut device, "ro.build.fingerprint")),
         knox_version: {
             let knox = get_prop(&mut device, "ro.knox.enhance.ztd");
             if knox.is_empty() {
-                Some_or_none(get_prop(&mut device, "ro.build.version.knox"))
+                some_or_none(get_prop(&mut device, "ro.build.version.knox"))
             } else {
-                Some_or_none(knox)
+                some_or_none(knox)
             }
         },
         frp_state: frp_detection.frp_state,
@@ -263,7 +283,15 @@ fn get_prop(device: &mut Device, prop: &str) -> String {
     }
 }
 
-fn Some_or_none(s: String) -> Option<String> {
+fn shell_value(device: &mut Device, command: &str) -> String {
+    let mut buf: Vec<u8> = Vec::new();
+    match device.shell_command(command, &mut buf) {
+        Ok(_) => String::from_utf8_lossy(&buf).trim().to_string(),
+        Err(_) => String::new(),
+    }
+}
+
+fn some_or_none(s: String) -> Option<String> {
     if s.is_empty() { None } else { Some(s) }
 }
 
@@ -479,10 +507,11 @@ use crate::frp::reset::{execute_reset_mode, execute_knox_removal, KnoxRemovalRes
 /// Honest scope: this is the ADB ladder only — it clears provisioning flags and
 /// disables setup wizards. The encrypted FRP partition is NOT erased here.
 #[tauri::command]
-pub async fn frp_execute_reset_mode(device_serial: String, reset_mode_id: String) -> Result<ResetExecutionResult, String> {
-    let mut device = reconnect_device(&device_serial)
-        .ok_or_else(|| "Failed to connect to device. Ensure USB Debugging is enabled in Developer Options and device is authorized.".to_string())?;
-
+pub async fn frp_execute_reset_mode(
+    device_serial: String,
+    reset_mode_id: String,
+    permit_token: String,
+) -> Result<ResetExecutionResult, String> {
     let mode = match reset_mode_id.as_str() {
         "factory_reset_frp100" => FrpResetMode::FactoryResetRemoveFrp100,
         "factory_reset_frp70" => FrpResetMode::FactoryResetRemoveFrp70,
@@ -490,6 +519,13 @@ pub async fn frp_execute_reset_mode(device_serial: String, reset_mode_id: String
         "frp70_no_wipe" => FrpResetMode::RemoveFrp70NoWipe,
         _ => return Err(format!("Unknown reset mode: {}", reset_mode_id)),
     };
+    consume_permit(
+        &permit_token,
+        &format!("frp_reset:{}", reset_mode_id),
+        &device_serial,
+    )?;
+    let mut device = reconnect_device(&device_serial)
+        .ok_or_else(|| "Failed to connect to device after authorization".to_string())?;
 
     Ok(execute_reset_mode(&mut device, &mode))
 }
@@ -497,9 +533,13 @@ pub async fn frp_execute_reset_mode(device_serial: String, reset_mode_id: String
 /// Knox Removal — disables Knox packages via ADB (pm disable-user).
 /// Does NOT reset the Knox Warranty bit or Knox Guard fuse state.
 #[tauri::command]
-pub async fn frp_remove_knox(device_serial: String) -> Result<KnoxRemovalResult, String> {
+pub async fn frp_remove_knox(
+    device_serial: String,
+    permit_token: String,
+) -> Result<KnoxRemovalResult, String> {
+    consume_permit(&permit_token, "knox_remove", &device_serial)?;
     let mut device = reconnect_device(&device_serial)
-        .ok_or_else(|| "Failed to connect to device. Ensure USB Debugging handshake is complete.".to_string())?;
+        .ok_or_else(|| "Failed to connect to device after authorization".to_string())?;
 
     Ok(execute_knox_removal(&mut device))
 }
@@ -510,17 +550,26 @@ pub async fn frp_verify_handshake(device_serial: String) -> Result<HandshakeVeri
     let mut device = reconnect_device(&device_serial)
         .ok_or_else(|| "No device handshake. Enable Developer Options (tap Build Number 7 times) + Enable USB Debugging + Authorize RSA key.".to_string())?;
 
-    let adb_enabled = get_prop(&mut device, "sys.usb.state");
-    let dev_options = get_prop(&mut device, "settings_global_development_settings_enabled");
+    let usb_state = get_prop(&mut device, "sys.usb.state");
     let usb_config = get_prop(&mut device, "sys.usb.config");
+    let adb_setting = shell_value(&mut device, "settings get global adb_enabled");
+    let dev_options = shell_value(
+        &mut device,
+        "settings get global development_settings_enabled",
+    );
 
-    let is_handshake_ok = !adb_enabled.is_empty() || usb_config.contains("adb");
+    // Reconnect proves the transport is authorized; explicit settings read-back
+    // proves ADB is enabled. A non-empty USB state such as `mtp` alone is not a
+    // valid handshake signal.
+    let adb_enabled = adb_setting == "1";
+    let developer_options_enabled = dev_options == "1";
+    let is_handshake_ok = adb_enabled && developer_options_enabled;
 
     Ok(HandshakeVerification {
         handshake_ok: is_handshake_ok,
-        adb_enabled: !adb_enabled.is_empty(),
-        developer_options_enabled: dev_options == "1" || !dev_options.is_empty(),
-        usb_state: adb_enabled,
+        adb_enabled,
+        developer_options_enabled,
+        usb_state,
         usb_config,
         message: if is_handshake_ok {
             "✅ Handshake confirmed: USB Debugging enabled, Developer Options allowed, RSA authorized. You can now run the reset/bypass and Knox flows. Reminder: back up data first, and reboot + re-check the lock state after any reset.".to_string()

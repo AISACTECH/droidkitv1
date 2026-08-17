@@ -295,6 +295,34 @@ export const getDeviceBuildInfo = (deviceSerial: string): Promise<BuildInfo> =>
 export const getDeviceNetworkInfo = (deviceSerial: string): Promise<NetworkInfo> => 
   invoke('get_device_network_info_cmd', { deviceSerial });
 
+// ==================== Host Service Environment (read-only) ====================
+
+export interface HostToolStatus {
+  name: string;
+  available: boolean;
+  version?: string;
+  detail: string;
+}
+
+export interface DriverStatus {
+  state: string;
+  detail: string;
+  detected_markers: string[];
+}
+
+export interface ServiceEnvironment {
+  operating_system: string;
+  architecture: string;
+  adb: HostToolStatus;
+  fastboot: HostToolStatus;
+  usb_driver: DriverStatus;
+  write_operations_ready: boolean;
+  recovery_requirements: string[];
+}
+
+export const serviceEnvironmentPreflight = (): Promise<ServiceEnvironment> =>
+  invoke('service_environment_preflight');
+
 // ==================== Fastboot Support (Damaged Charger Port) ====================
 
 export interface FastbootDevice {
@@ -307,6 +335,8 @@ export interface FastbootResult {
   output: string;
   error?: string;
   device_serial?: string;
+  operation_status: string;
+  verification_required: boolean;
 }
 
 export interface FastbootAvailability {
@@ -323,17 +353,17 @@ export const fastbootListDevices = (): Promise<FastbootDevice[]> =>
 export const fastbootRebootToBootloader = (deviceSerial: string): Promise<FastbootResult> =>
   invoke('fastboot_reboot_to_bootloader', { deviceSerial });
 
-export const fastbootRebootToSystem = (): Promise<FastbootResult> =>
-  invoke('fastboot_reboot_to_system');
+export const fastbootRebootToSystem = (deviceSerial: string): Promise<FastbootResult> =>
+  invoke('fastboot_reboot_to_system', { deviceSerial });
 
-export const fastbootOemUnlock = (): Promise<FastbootResult> =>
-  invoke('fastboot_oem_unlock');
+export const fastbootOemUnlock = (deviceSerial: string, permitToken: string): Promise<FastbootResult> =>
+  invoke('fastboot_oem_unlock', { deviceSerial, permitToken });
 
-export const fastbootGetvarAll = (): Promise<FastbootResult> =>
-  invoke('fastboot_getvar_all');
+export const fastbootGetvarAll = (deviceSerial: string): Promise<FastbootResult> =>
+  invoke('fastboot_getvar_all', { deviceSerial });
 
-export const fastbootEraseFrp = (): Promise<FastbootResult> =>
-  invoke('fastboot_erase_frp');
+export const fastbootEraseFrp = (deviceSerial: string, partition: 'frp' | 'frp_a' | 'frp_b', permitToken: string): Promise<FastbootResult> =>
+  invoke('fastboot_erase_frp', { deviceSerial, partition, permitToken });
 
 export const fastbootCheckAvailability = (): Promise<FastbootAvailability> =>
   invoke('fastboot_check_availability');
