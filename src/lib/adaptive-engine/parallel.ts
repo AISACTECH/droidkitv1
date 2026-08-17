@@ -433,18 +433,19 @@ function patchLane(fp: Fingerprint): LaneEvaluation {
  * higher the union — and where all lanes close (patched A16,
  * software-only), the union says so instead of pretending.
  */
-export function evaluateParallelLanes(
+/**
+ * Pure collapse step — merges the three lane evaluations into one GapReport.
+ * Shared by the synchronous and concurrent evaluation paths so that running
+ * the lanes in parallel can NEVER change the result: the merge is a single
+ * deterministic function of (fingerprint, protection map, lanes-in-order).
+ * Output is byte-identical to the pre-refactor implementation (locked by
+ * test:research regression snapshots and test:concurrency sync-vs-async).
+ */
+export function collapseLanes(
   fp: Fingerprint,
-  protectionInput: ProtectionInput = {},
-  seed = 7,
+  protection: ProtectionMap,
+  lanes: LaneEvaluation[],
 ): GapReport {
-  const protection = buildProtectionMap(fp, protectionInput);
-  const lanes: LaneEvaluation[] = [
-    exploitLane(fp),
-    uiLane(fp, seed),
-    patchLane(fp),
-  ];
-
   const rates = lanes.map((l) => (l.status === "refused" ? 0 : l.expectedRate) / 100);
   const unionRaw = 1 - rates.reduce((acc, r) => acc * (1 - r), 1);
   const unionCoverage = Math.min(97, Math.max(5, Math.round(unionRaw * 100)));
@@ -490,4 +491,46 @@ export function evaluateParallelLanes(
     collapseNote: QUANTUM_NOTE,
     labTable: LAB_LEDGER,
   };
+}
+
+/**
+ * Synchronous lane evaluation (kept for compatibility — used by tests and
+ * synchronous callers). Computes the protection map, evaluates the three
+ * lanes in order, and collapses them deterministically.
+ */
+export function evaluateParallelLanes(
+  fp: Fingerprint,
+  protectionInput: ProtectionInput = {},
+  seed = 7,
+): GapReport {
+  const protection = buildProtectionMap(fp, protectionInput);
+  const lanes: LaneEvaluation[] = [
+    exploitLane(fp),
+    uiLane(fp, seed),
+    patchLane(fp),
+  ];
+  return collapseLanes(fp, protection, lanes);
+}
+
+/**
+ * CONCURRENT lane evaluation — the lanes actually run in parallel
+ * (Promise.all), while the collapse stays the same pure function.
+ * Guarantee: for identical inputs, `await evaluateParallelLanesConcurrent(...)`
+ * deep-equals `evaluateParallelLanes(...)` — parallelism changes WHEN the
+ * work happens, never WHAT it produces (enforced by test:concurrency).
+ * The lanes are pure computations (fingerprint → lane verdict), so
+ * concurrency is safe by construction: no shared mutable state.
+ */
+export async function evaluateParallelLanesConcurrent(
+  fp: Fingerprint,
+  protectionInput: ProtectionInput = {},
+  seed = 7,
+): Promise<GapReport> {
+  const protection = buildProtectionMap(fp, protectionInput);
+  const lanes: LaneEvaluation[] = await Promise.all([
+    Promise.resolve(exploitLane(fp)),
+    Promise.resolve(uiLane(fp, seed)),
+    Promise.resolve(patchLane(fp)),
+  ]);
+  return collapseLanes(fp, protection, lanes);
 }

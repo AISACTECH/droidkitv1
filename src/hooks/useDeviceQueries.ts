@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useCallback } from 'react'
 import { useAppSettings } from '@/hooks/useAppSettings'
 import { usePageVisible, visibleRefetch } from '@/hooks/usePageVisible'
 import { PairedDevice } from '@/types/paired-device'
@@ -155,7 +156,8 @@ export function useConnectedDevices() {
     staleTime: 1000, // Consider data stale after 1 second
   })
 
-  const addDevice = (device: DeviceInfo) => {
+  // Stable identities (useCallback) so memoized consumers can depend on them
+  const addDevice = useCallback((device: DeviceInfo) => {
     queryClient.setQueryData<DeviceInfo[]>(deviceKeys.connected(), (prev = []) => {
       const existingDevice = prev.find(d => d.serial_no === device.serial_no)
       if (existingDevice) {
@@ -166,13 +168,13 @@ export function useConnectedDevices() {
         return [...prev, device]
       }
     })
-  }
+  }, [queryClient])
 
-  const removeDevice = (serialNo: string) => {
+  const removeDevice = useCallback((serialNo: string) => {
     queryClient.setQueryData<DeviceInfo[]>(deviceKeys.connected(), (prev = []) => 
       prev.filter(d => d.serial_no !== serialNo)
     )
-  }
+  }, [queryClient])
 
   return {
     ...query,

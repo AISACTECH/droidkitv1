@@ -75,6 +75,7 @@ export {
   buildProtectionMap,
   parseBinaryNumber,
   evaluateParallelLanes,
+  evaluateParallelLanesConcurrent,
   ledgerFor,
   QUANTUM_NOTE,
   NO_EVASION_NOTE,

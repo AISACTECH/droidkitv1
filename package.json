@@ -56,6 +56,7 @@
     "test:nck": "node --experimental-strip-types scripts/verify-nck.mts",
     "test:lab": "node --experimental-strip-types scripts/verify-rescue-lab.mts",
     "test:core": "node --experimental-strip-types scripts/verify-core-lib.mts",
+    "test:concurrency": "node --experimental-strip-types scripts/verify-concurrency.mts",
     "test:adaptive": "node --experimental-strip-types scripts/verify-adaptive-engine.mts",
     "test:research": "node --experimental-strip-types scripts/verify-parallel-research.mts",
     "benchmark:frp": "node --experimental-strip-types scripts/benchmark-frp-tools.mts",

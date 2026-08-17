@@ -21,6 +21,7 @@ const FAST: [string, string[]][] = [
   ["test:bench", ["npm", "run", "test:bench"]],
   ["test:adaptive", ["npm", "run", "test:adaptive"]],
   ["test:research", ["npm", "run", "test:research"]],
+  ["test:concurrency", ["npm", "run", "test:concurrency"]],
   ["release:prepare", ["npm", "run", "release:prepare"]],
 ]
 
@@ -32,6 +33,7 @@ const FULL: [string, string[]][] = [
   ["test:nck", ["npm", "run", "test:nck"]],
   ["test:rescue", ["npm", "run", "test:rescue"]],
   ["test:core", ["npm", "run", "test:core"]],
+  ["test:concurrency", ["npm", "run", "test:concurrency"]],
   ["test:matrix", ["npm", "run", "test:matrix"]],
   ["test:brands", ["npm", "run", "test:brands"]],
   ["benchmark:frp", ["npm", "run", "benchmark:frp"]],
