@@ -95,6 +95,58 @@ try {
   fixes.push("npx tauri icon src-tauri/icons/icon.png")
 }
 
+// ---- 5d. Tauri npm <-> Rust crate version sync (the publish blocker) --
+// `tauri build` runs check_mismatched_packages and HARD-FAILS (exit 1) when
+// the @tauri-apps/* npm packages and tauri/tauri-plugin-* crates differ on
+// major OR minor (tauri-cli src/info/plugins.rs). Symptom in CI: every
+// publish matrix job dies in ~1-2s at the tauri-action step with the opaque
+// "Command \"npm [\"run\",\"tauri\",\"build\",...]\" failed with exit code 1".
+// The npm ranges in package.json float (^2.x), the Rust side is frozen in
+// Cargo.lock — a fresh `npm ci` after a Tauri minor release drifts them apart.
+try {
+  const fs = await import("node:fs")
+  const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"))
+  const lockText = fs.readFileSync("src-tauri/Cargo.lock", "utf8")
+  const lockVersion = (crate: string): string | null => {
+    const m = lockText.match(
+      new RegExp(`\\[\\[package\\]\\]\\nname = "${crate}"\\nversion = "([^"]+)"`),
+    )
+    return m ? m[1] : null
+  }
+  const npmVersion = (name: string): string | null =>
+    pkg.dependencies?.[name] ?? pkg.devDependencies?.[name] ?? null
+  // @tauri-apps/api and @tauri-apps/cli must share the tauri crate's major.minor
+  const pairs: Array<[string, string]> = [
+    ["@tauri-apps/api", "tauri"],
+    ["@tauri-apps/cli", "tauri"],
+    ["@tauri-apps/plugin-opener", "tauri-plugin-opener"],
+    ["@tauri-apps/plugin-store", "tauri-plugin-store"],
+  ]
+  const mm = (v: string) => v.split(".").slice(0, 2).join(".")
+  let tauriDrift = false
+  for (const [npmName, crate] of pairs) {
+    const npm = npmVersion(npmName)
+    const cargo = lockVersion(crate)
+    if (!npm || !cargo) continue
+    if (mm(npm) !== mm(cargo)) {
+      tauriDrift = true
+      log(
+        "fail",
+        "Tauri version sync",
+        `${npmName} ${npm} (package.json) vs ${crate} crate ${cargo} (Cargo.lock) — tauri build hard-fails on any major/minor mismatch`,
+      )
+      fixes.push(
+        `Pin ${npmName} to the ${crate} crate's minor: "2.${mm(cargo).split(".")[1]}.x" (exact version) in package.json, then: npm install --package-lock-only && npm ci`,
+      )
+    }
+  }
+  if (!tauriDrift) {
+    log("ok", "Tauri version sync", "npm packages and Rust crates share major.minor — tauri build's mismatch gate will pass")
+  }
+} catch {
+  log("warn", "Tauri version sync", "could not verify — check package.json / src-tauri/Cargo.lock manually")
+}
+
 // ---- 6. Android tools (device features) ------------------------------
 const adb = sh("adb version")
 if (adb) log("ok", "ADB", adb.split("\n")[0])
