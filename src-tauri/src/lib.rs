@@ -7,7 +7,9 @@ use crate::adb_commands::discovery::{
     get_connection_port_for_device,
 };
 use crate::adb_commands::files::{FileInfo, list_files, pull_file};
-use crate::adb_commands::logcat::{execute_shell_command, get_device_info, get_logcat_output};
+use crate::adb_commands::logcat::{
+    execute_shell_command, get_device_info, get_device_model, get_logcat_output,
+};
 use crate::adb_commands::packages::get_installed_packages;
 use crate::adb_commands::pairing::{
     PairingData, PairingResult, generate_pairing_data, start_pairing_listener,
@@ -23,7 +25,9 @@ mod adb_commands;
 mod emulator;
 mod fastboot;
 mod frp;
+mod operation_safety;
 mod screen_mirror;
+mod service_preflight;
 mod system_info;
 mod utils;
 
@@ -215,6 +219,42 @@ async fn execute_shell_command_cmd(device_serial: String, command: String) -> Re
         .and_then(|mut device| execute_shell_command(&mut device, &command))
 }
 
+/// Prepare a destructive operation in the Rust trust boundary.
+///
+/// The permit is short-lived, one-use, and bound to the exact operation,
+/// connected serial and model. Read-only commands never need a permit.
+#[tauri::command]
+async fn prepare_destructive_operation(
+    device_serial: String,
+    expected_model: String,
+    operation: String,
+    ownership_confirmed: bool,
+    backup_confirmed: bool,
+    typed_confirmation: String,
+) -> Result<operation_safety::OperationPermit, String> {
+    let actual_model = if operation.starts_with("fastboot_") {
+        if !fastboot::fastboot_serial_present(&device_serial)? {
+            return Err("The selected fastboot serial is not connected".to_string());
+        }
+        fastboot::fastboot_product(&device_serial)?
+    } else {
+        let mut device = reconnect_device(&device_serial)
+            .ok_or_else(|| "Failed to connect to the selected authorized device".to_string())?;
+        get_device_model(&mut device)
+            .ok_or_else(|| "Connected device did not report a model identity".to_string())?
+    };
+
+    operation_safety::issue_permit(
+        &operation,
+        &device_serial,
+        &actual_model,
+        &expected_model,
+        ownership_confirmed,
+        backup_confirmed,
+        &typed_confirmation,
+    )
+}
+
 #[tauri::command]
 async fn get_device_hardware_info_cmd(device_serial: String) -> Result<HardwareInfo, String> {
     let device_serial_clone = device_serial.clone();
@@ -301,6 +341,8 @@ pub fn run() {
             discover_wireless_devices_detailed_cmd,
             connect_to_discovered_device_cmd,
             execute_shell_command_cmd,
+            prepare_destructive_operation,
+            service_preflight::service_environment_preflight,
             get_device_hardware_info_cmd,
             get_device_display_info_cmd,
             get_device_battery_info_cmd,

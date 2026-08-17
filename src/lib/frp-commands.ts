@@ -51,12 +51,41 @@ export interface BypassStepResult {
 
 export interface BypassResult {
   method: FrpMethod | string;
+  /** Final success is never inferred from command acceptance. */
   success: boolean;
   steps: BypassStepResult[];
   message: string;
   requires_manual_action: boolean;
   manual_action_instructions: string | null;
+  verification_status: string;
+  observed_frp_state: FrpState | null;
+  reboot_verification_required: boolean;
 }
+
+export interface OperationPermit {
+  token: string;
+  operation: string;
+  device_serial: string;
+  device_model: string;
+  expires_at_epoch_ms: number;
+  one_time: boolean;
+}
+
+export interface OperationPreflight {
+  deviceSerial: string;
+  expectedModel: string;
+  operation: string;
+  ownershipConfirmed: boolean;
+  backupConfirmed: boolean;
+  typedConfirmation: string;
+}
+
+/**
+ * Ask the Rust backend to verify the connected identity and issue a short-lived,
+ * operation-bound, one-use permit. Every mutating FRP call consumes one permit.
+ */
+export const prepareDestructiveOperation = (input: OperationPreflight): Promise<OperationPermit> =>
+  invoke('prepare_destructive_operation', { ...input });
 
 // ==================== Universal Algorithm Types ====================
 
@@ -130,11 +159,11 @@ export interface FrpResetModeInfo {
 export const frpDetect = (deviceSerial: string): Promise<FrpDetectionResult> =>
   invoke('frp_detect', { deviceSerial });
 
-export const frpRunMethod = (deviceSerial: string, methodId: string): Promise<BypassResult> =>
-  invoke('frp_run_method', { deviceSerial, methodId });
+export const frpRunMethod = (deviceSerial: string, methodId: string, permitToken: string): Promise<BypassResult> =>
+  invoke('frp_run_method', { deviceSerial, methodId, permitToken });
 
-export const frpAutoBypass = (deviceSerial: string): Promise<BypassResult> =>
-  invoke('frp_auto_bypass', { deviceSerial });
+export const frpAutoBypass = (deviceSerial: string, permitToken: string): Promise<BypassResult> =>
+  invoke('frp_auto_bypass', { deviceSerial, permitToken });
 
 export const frpGetDeviceDatabase = (): Promise<SamsungModel[]> =>
   invoke('frp_get_device_database');
@@ -266,12 +295,14 @@ export const frpGetQ3ByBrand = (brand: string): Promise<TecnoModel[]> =>
 export interface ResetExecutionResult {
   reset_mode: FrpResetModeInfo;
   success: boolean;
+  operation_accepted: boolean;
   steps: BypassStepResult[];
   message: string;
   device_state_after: string;
   requires_reboot: boolean;
   frp_removed_percent: number;
   data_wiped: boolean;
+  verification_status: string;
 }
 
 export interface KnoxRemovalResult {
@@ -280,6 +311,7 @@ export interface KnoxRemovalResult {
   message: string;
   knox_disabled: boolean;
   knox_packages_disabled: string[];
+  verification_status: string;
 }
 
 export interface HandshakeVerification {
@@ -297,12 +329,13 @@ export const frpVerifyHandshake = (deviceSerial: string): Promise<HandshakeVerif
 
 // Runs the ADB provisioning ladder (flag clear + optional data wipe). Honest scope:
 // this is not a block-level FRP partition erase; reboot + re-check afterwards.
-export const frpExecuteResetMode = (deviceSerial: string, resetModeId: string): Promise<ResetExecutionResult> =>
-  invoke('frp_execute_reset_mode', { deviceSerial, resetModeId });
+export const frpExecuteResetMode = (deviceSerial: string, resetModeId: string, permitToken: string): Promise<ResetExecutionResult> =>
+  invoke('frp_execute_reset_mode', { deviceSerial, resetModeId, permitToken });
 
-// Disables Knox packages via ADB (pm disable-user). Does not reset the Knox Warranty bit or KG fuse.
-export const frpRemoveKnox = (deviceSerial: string): Promise<KnoxRemovalResult> =>
-  invoke('frp_remove_knox', { deviceSerial });
+// Disables selected Knox container packages for user 0. Knox Guard / finance-lock
+// packages and fuse-level states are deliberately outside this operation.
+export const frpRemoveKnox = (deviceSerial: string, permitToken: string): Promise<KnoxRemovalResult> =>
+  invoke('frp_remove_knox', { deviceSerial, permitToken });
 
 // ==================== Adaptive Engine — Partition Survey ====================
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -11,6 +11,7 @@ import {
   frpVerifyHandshake,
   frpGetChipsetAlgorithms,
   frpGetAlgorithmPhases,
+  prepareDestructiveOperation,
   type FrpDetectionResult,
   type DeviceProfile,
   type HandshakeVerification,
@@ -27,6 +28,10 @@ import {
   Download, Cpu, ClipboardList, Braces, ShieldCheck, Activity,
 } from "lucide-react"
 import { createLogger } from "@/lib/logger"
+import {
+  OperationSafetyGate,
+  isOperationPreflightReady,
+} from "@/components/OperationSafetyGate"
 
 const logger = createLogger("DeveloperLab")
 
@@ -98,6 +103,14 @@ export function DeveloperLab({ selectedDevice }: DeveloperLabProps) {
   const [running, setRunning] = useState(false)
   const [progress, setProgress] = useState(0) // deterministic 0-100
   const [progressLabel, setProgressLabel] = useState("")
+  const [ownershipConfirmed, setOwnershipConfirmed] = useState(false)
+  const [backupConfirmed, setBackupConfirmed] = useState(false)
+  const [typedAuthorization, setTypedAuthorization] = useState("")
+  const safetyReady = isOperationPreflightReady(selectedDevice.serial_no, {
+    ownershipConfirmed,
+    backupConfirmed,
+    typedAuthorization,
+  })
 
   // --- runbook state ---
   const [chipset, setChipset] = useState<ChipsetFamily | null>(null)
@@ -106,6 +119,12 @@ export function DeveloperLab({ selectedDevice }: DeveloperLabProps) {
   const [phases, setPhases] = useState<AlgorithmPhase[]>([])
   const [checkedPhases, setCheckedPhases] = useState<Set<number>>(new Set())
   const [loadingRunbook, setLoadingRunbook] = useState(false)
+
+  useEffect(() => {
+    setOwnershipConfirmed(false)
+    setBackupConfirmed(false)
+    setTypedAuthorization("")
+  }, [selectedDevice.serial_no])
 
   const assessment = useMemo(
     () => (profile ? assessDevice(profile, before) : null),
@@ -124,6 +143,10 @@ export function DeveloperLab({ selectedDevice }: DeveloperLabProps) {
   // ------------------------- ENGINE -------------------------
 
   const runEngine = async () => {
+    if (!safetyReady) {
+      log("warn", "Safety pre-flight incomplete; no mutating command was sent.")
+      return
+    }
     setRunning(true)
     setVerdict(null)
     setAfter(null)
@@ -177,8 +200,17 @@ export function DeveloperLab({ selectedDevice }: DeveloperLabProps) {
         log("cmd", `RUN ${step.id} — ${step.label}`)
         let ran = false
         try {
-          const res = await frpRunMethod(selectedDevice.serial_no, step.id)
-          ran = res.success
+          const permit = await prepareDestructiveOperation({
+            deviceSerial: selectedDevice.serial_no,
+            expectedModel: selectedDevice.model,
+            operation: `frp_method:${step.id}`,
+            ownershipConfirmed,
+            backupConfirmed,
+            typedConfirmation: typedAuthorization,
+          })
+          const res = await frpRunMethod(selectedDevice.serial_no, step.id, permit.token)
+          ran = res.verification_status !== "active_after_operation"
+            && res.verification_status !== "no_verified_change"
           for (const s of res.steps.slice(0, 4)) {
             log(s.success ? "ok" : "fail", `  ${s.command}${s.output ? ` → ${s.output.slice(0, 60)}` : ""}${s.error ? ` (error: ${s.error.slice(0, 60)})` : ""}`)
           }
@@ -199,10 +231,10 @@ export function DeveloperLab({ selectedDevice }: DeveloperLabProps) {
           if (flippedInactive) {
             log("verify", `VERIFY ✓ FRP state flipped → Inactive after ${step.id}`)
             finalVerdict = {
-              status: "removed_verified",
-              confidence: 92,
+              status: "flags_set_unverified",
+              confidence: 60,
               winningMethod: step.id,
-              summary: `${step.label} changed the device FRP state to Inactive (measured, not assumed). True 100% certainty requires the manual reboot check below.`,
+              summary: `${step.label} changed the current-boot reading to Inactive. This is not final success: reboot, reconnect and perform a fresh scan before closing the service record.`,
             }
           } else if (flagsFlipped) {
             log("verify", `VERIFY ~ provisioning flags flipped after ${step.id} (provisioned=1, setupComplete=1)`)
@@ -210,7 +242,7 @@ export function DeveloperLab({ selectedDevice }: DeveloperLabProps) {
               status: "flags_set_unverified",
               confidence: 70,
               winningMethod: step.id,
-              summary: `${step.label} set provisioning flags (70%-class per research: bypass likely holds until next factory reset). Reboot and re-verify to confirm.`,
+              summary: `${step.label} changed provisioning flags, but final FRP state is not verified. Reboot, reconnect and run a fresh scan.`,
             }
           } else {
             log("verify", `VERIFY ✗ no state change after ${step.id} — escalating`)
@@ -347,8 +379,8 @@ export function DeveloperLab({ selectedDevice }: DeveloperLabProps) {
               <div className="flex items-start gap-2">
                 <AlertTriangle className="h-4 w-4 text-purple-400 mt-0.5 shrink-0" />
                 <div className="text-[11px] text-purple-300/80 leading-4">
-                  <strong>Developer feature.</strong> The engine executes real ADB write operations against the connected device and measures the outcome after every step.
-                  It never touches existing FRP Removal flows. Use only on devices you own and have backed up.
+                  <strong>Authorized service feature.</strong> The engine executes ADB write operations only after Rust verifies a serial/model-bound one-use permit, then measures current-boot state after every step.
+                  Current-boot readings are never labelled final success; reboot and a fresh scan remain mandatory.
                   In browser preview mode all device calls return mock data, so the full pipeline can be exercised safely.
                 </div>
               </div>
@@ -367,8 +399,20 @@ export function DeveloperLab({ selectedDevice }: DeveloperLabProps) {
               </CardDescription>
             </CardHeader>
             <CardContent className="p-3 space-y-3">
+              <div className="rounded border border-amber-500/30 bg-amber-500/5 p-2 text-[11px]">
+                <OperationSafetyGate
+                  compact
+                  deviceSerial={selectedDevice.serial_no}
+                  ownershipConfirmed={ownershipConfirmed}
+                  backupConfirmed={backupConfirmed}
+                  typedAuthorization={typedAuthorization}
+                  onOwnershipChange={setOwnershipConfirmed}
+                  onBackupChange={setBackupConfirmed}
+                  onTypedAuthorizationChange={setTypedAuthorization}
+                />
+              </div>
               <div className="flex gap-2 items-center">
-                <Button size="sm" className="h-8 text-xs gap-2" onClick={runEngine} disabled={running}>
+                <Button size="sm" className="h-8 text-xs gap-2" onClick={runEngine} disabled={running || !safetyReady}>
                   {running ? <RefreshCw className="h-3 w-3 animate-spin" /> : <Play className="h-3 w-3" />}
                   {running ? "Engine running..." : "Run Engine"}
                 </Button>
@@ -390,7 +434,7 @@ export function DeveloperLab({ selectedDevice }: DeveloperLabProps) {
                     {verdict.status === "removed_verified" ? <CheckCircle2 className="h-4 w-4 text-green-400" />
                       : verdict.status === "flags_set_unverified" ? <AlertTriangle className="h-4 w-4 text-yellow-400" />
                       : <XCircle className="h-4 w-4 text-red-400" />}
-                    Verdict: {verdict.status.replace(/_/g, " ")} — confidence {verdict.confidence}%
+                    Verdict: {verdict.status.replace(/_/g, " ")}
                     {verdict.winningMethod && <Badge variant="outline" className="text-[9px]">{verdict.winningMethod}</Badge>}
                   </div>
                   <p className="text-[11px]">{verdict.summary}</p>
@@ -466,7 +510,7 @@ export function DeveloperLab({ selectedDevice }: DeveloperLabProps) {
                 Phase Runbook — chipset hardware paths (EDL · Brom · Odin · SPD)
               </CardTitle>
               <CardDescription className="text-[11px]">
-                Driven by the real algorithm.rs phase weights. These phases execute on-device/in external tooling today — check each off as it completes; the bar is the truthful Σ-weights, 100% = all phases done + verified.
+                Operator checklist driven by algorithm.rs phase weights. The app does not execute EDL/Brom/Odin/SPD here. A full bar means every checklist item was acknowledged, not that FRP removal succeeded.
               </CardDescription>
             </CardHeader>
             <CardContent className="p-3 space-y-3">

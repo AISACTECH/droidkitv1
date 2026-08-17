@@ -271,71 +271,17 @@ const verifiedAudit = {
 };
 log(`7/7 verified audit: Paralock ${verifiedAudit.verified_yes.droidkit}/${auditChecks.length} · Dr.Fone ${verifiedAudit.verified_yes.drfone} · 4uKey ${verifiedAudit.verified_yes.fourkey} · UnlockGo ${verifiedAudit.verified_yes.unlockgo} · iMobie ${verifiedAudit.verified_yes.imobie}`);
 
-// ---------------------------------------------------------------- scoring rubric (transparent)
-// Only verifiable criteria are scored. Device-bench success rates (Tier C) are EXCLUDED
-// until measured per the published protocol — see BENCHMARK_2026.md §5.
-const WEIGHTS = {
-  transparency_auditability: 20,
-  cost_of_ownership_3yr: 20,
-  feature_depth_verifiable: 20,
-  coverage_quality: 15,
-  platform_reach: 10,
-  privacy_posture: 10,
-  reproducibility_build_health: 5,
+// ---------------------------------------------------------------- ranking policy
+// This harness is an engineering inventory only. It may compare documented
+// product facts, but it must never convert openness, price, source strings or a
+// synthetic workload into an FRP-success leaderboard. The default `npm run
+// benchmark` owns production ranking and accepts physical post-reboot evidence.
+const rankingPolicy = {
+  benchmark_type: 'engineering_inventory_only',
+  ranking: null,
+  reason: 'No physical, matched-device, post-reboot competitor outcomes were executed by this harness.',
+  production_benchmark: 'scripts/benchmark-observed.mts',
 };
-
-const scores = {
-  'Paralock (Isaac Real)': {
-    basis: 'measured in this repo',
-    transparency_auditability: 10,   // MIT, full source, evidence dossiers, audit script, CI
-    cost_of_ownership_3yr: 10,       // $0 forever vs ≥$119.85 3-yr subscriptions
-    feature_depth_verifiable: 9,     // 15 methods, 4 reset modes, verification loop, runbook, JSON export, reality check, Knox/KG
-    coverage_quality: 8.5,           // 268 named models w/ per-model methods + patch ceilings; fewer brands than Dr.Fone claims
-    platform_reach: 10,              // Win + macOS (Intel/ARM) + Linux + browser demo
-    privacy_posture: 8,              // 0 telemetry SDKs, minimal capabilities; -2: connect-src carries an https://* wildcard (Paralock network lanes); script/style/img stay 'self'
-    reproducibility_build_health: (tscErrors.length === 0 && buildOk) ? 10 : 0,
-  },
-  'Dr.Fone – Screen Unlock': {
-    basis: 'desk audit (closed source)',
-    transparency_auditability: 2, cost_of_ownership_3yr: 6, feature_depth_verifiable: 8.5,
-    coverage_quality: 8, platform_reach: 7, privacy_posture: 5, reproducibility_build_health: 1,
-  },
-  'Tenorshare 4uKey': {
-    basis: 'desk audit (closed source)',
-    transparency_auditability: 2, cost_of_ownership_3yr: 6.5, feature_depth_verifiable: 6,
-    coverage_quality: 6, platform_reach: 7, privacy_posture: 5, reproducibility_build_health: 1,
-  },
-  'iToolab UnlockGo': {
-    basis: 'desk audit (closed source)',
-    transparency_auditability: 2, cost_of_ownership_3yr: 6, feature_depth_verifiable: 6.5,
-    coverage_quality: 6.5, platform_reach: 7, privacy_posture: 5, reproducibility_build_health: 1,
-  },
-  'iMobie DroidKit': {
-    basis: 'desk audit (closed source)',
-    transparency_auditability: 2, cost_of_ownership_3yr: 5.5, feature_depth_verifiable: 7,
-    coverage_quality: 7, platform_reach: 7, privacy_posture: 5, reproducibility_build_health: 1,
-  },
-};
-const totals = Object.fromEntries(
-  Object.entries(scores).map(([tool, s]) => [
-    tool,
-    +(Object.entries(WEIGHTS).reduce((sum, [k, w]) => sum + (s[k] || 0) * w, 0) / 100).toFixed(2),
-  ])
-);
-
-// Sensitivity — computed break-even: if every closed tool became fully auditable
-// (transparency score raised to 10), could any of them overtake Paralock on these
-// verifiable criteria? Answers honestly whether the lead is structural or thin.
-const droidkitKey = 'Paralock (Isaac Real)';
-const breakeven = Object.fromEntries(
-  Object.entries(scores)
-    .filter(([tool]) => tool !== droidkitKey)
-    .map(([tool, s]) => {
-      const fullyAuditable = { ...s, transparency_auditability: 10 };
-      const t = +(Object.entries(WEIGHTS).reduce((sum, [k, w]) => sum + (fullyAuditable[k] || 0) * w, 0) / 100).toFixed(2);
-      return [tool, { total_if_fully_auditable: t, overtakes_droidkit: t >= totals[droidkitKey] }];
-    })
-);
 
 // ---------------------------------------------------------------- report
 const report = {
@@ -352,10 +298,10 @@ const report = {
   },
   competitors,
   verified_audit: verifiedAudit,
-  rubric: { weights: WEIGHTS, note: 'Verifiable criteria only. Device-bench success rates excluded until measured per protocol.', scores, totals, sensitivity_breakeven_if_fully_auditable: breakeven },
+  ranking_policy: rankingPolicy,
 };
 
 writeFileSync(path.join(ROOT, 'benchmark-report.json'), JSON.stringify(report, null, 2));
 log(`\n✅ benchmark-report.json written in ${report.meta.wall_seconds}s\n`);
-console.log('=== VERIFIABLE TOTALS (weights in report) ===');
-Object.entries(totals).sort((a, b) => b[1] - a[1]).forEach(([t, s], i) => console.log(`  ${i + 1}. ${t}: ${s}/10`));
+console.log('=== ENGINEERING INVENTORY ONLY ===');
+console.log('No FRP-success ranking emitted. Run `npm run benchmark` for the physical post-reboot evidence gate.');

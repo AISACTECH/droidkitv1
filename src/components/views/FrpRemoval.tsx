@@ -25,6 +25,7 @@ import {
   frpVerifyHandshake,
   frpExecuteResetMode,
   frpRemoveKnox,
+  prepareDestructiveOperation,
   type FrpDetectionResult,
   type SamsungModel,
   type BypassResult,
@@ -49,6 +50,10 @@ import { ModelBrowser } from "./FrpRemoval/ModelBrowser"
 import { DeviceStatusPanel } from "./FrpRemoval/DeviceStatusPanel"
 import { RealityCheckPanel } from "./FrpRemoval/RealityCheck"
 import { createLogger } from "@/lib/logger"
+import {
+  OperationSafetyGate,
+  isOperationPreflightReady,
+} from "@/components/OperationSafetyGate"
 
 const logger = createLogger("FrpEnhanced")
 
@@ -119,6 +124,29 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
   // acknowledges the risks. Read-only diagnostics (scan, handshake, reality
   // check) remain one-click.
   const [safetyAcknowledged, setSafetyAcknowledged] = useState(false)
+  const [backupAcknowledged, setBackupAcknowledged] = useState(false)
+  const [typedAuthorization, setTypedAuthorization] = useState("")
+  const safetyReady = isOperationPreflightReady(selectedDevice.serial_no, {
+    ownershipConfirmed: safetyAcknowledged,
+    backupConfirmed: backupAcknowledged,
+    typedAuthorization,
+  })
+
+  useEffect(() => {
+    // A permit must never carry across a selected-device change.
+    setSafetyAcknowledged(false)
+    setBackupAcknowledged(false)
+    setTypedAuthorization("")
+  }, [selectedDevice.serial_no])
+
+  const issuePermit = async (operation: string) => prepareDestructiveOperation({
+    deviceSerial: selectedDevice.serial_no,
+    expectedModel: selectedDevice.model,
+    operation,
+    ownershipConfirmed: safetyAcknowledged,
+    backupConfirmed: backupAcknowledged,
+    typedConfirmation: typedAuthorization,
+  })
 
   const chipsetColors: Record<string, string> = {
     Exynos: "bg-blue-500/20 text-blue-400 border-blue-500/30",
@@ -212,8 +240,8 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
   }
 
   const handleRunMethod = async (methodId: string) => {
-    if (!safetyAcknowledged) {
-      logger.warn("Method run blocked: safety acknowledgement not confirmed")
+    if (!safetyReady) {
+      logger.warn("Method run blocked: backend safety pre-flight is incomplete")
       return
     }
     setIsRunning(true)
@@ -221,9 +249,10 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
     setProgress(15)
     let interval: number | undefined
     try {
-      // Simulate progress for UX (real progress from steps later)
-      interval = window.setInterval(() => setProgress(p => Math.min(p + Math.random() * 15, 90)), 500)
-      const result = await frpRunMethod(selectedDevice.serial_no, methodId)
+      // Progress is UI-only; final status comes exclusively from backend verification.
+      interval = window.setInterval(() => setProgress(p => Math.min(p + 10, 85)), 500)
+      const permit = await issuePermit(`frp_method:${methodId}`)
+      const result = await frpRunMethod(selectedDevice.serial_no, methodId, permit.token)
       setBypassResult(result)
       setProgress(result.success ? 100 : 70)
       logger.info("FRP method run", { methodId, success: result.success })
@@ -268,8 +297,8 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
 
   // 2. Execute Reset Mode — guidance-first: refuses until the safety gate is acknowledged
   const handleExecuteReset = async (modeId: string) => {
-    if (!safetyAcknowledged) {
-      logger.warn("Reset blocked: safety acknowledgement not confirmed")
+    if (!safetyReady) {
+      logger.warn("Reset blocked: backend safety pre-flight is incomplete")
       return
     }
     setIsRunningReset(true)
@@ -277,22 +306,25 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
     setProgress(10)
     let interval: number | undefined
     try {
-      interval = window.setInterval(() => setProgress(p => Math.min(p + Math.random() * 10, 85)), 600)
-      const result = await frpExecuteResetMode(selectedDevice.serial_no, modeId)
+      interval = window.setInterval(() => setProgress(p => Math.min(p + 10, 80)), 600)
+      const permit = await issuePermit(`frp_reset:${modeId}`)
+      const result = await frpExecuteResetMode(selectedDevice.serial_no, modeId, permit.token)
       setResetResult(result as any)
-      setProgress(result.success ? 100 : 60)
-      logger.info("Reset executed", { modeId, success: result.success, percent: (result as any).frp_removed_percent })
+      setProgress(result.operation_accepted ? 90 : 60)
+      logger.info("Reset request finished", { modeId, accepted: result.operation_accepted, verification: result.verification_status })
     } catch (e: any) {
       logger.error("Reset failed", e)
       setResetResult({
         reset_mode: resetModes.find(m => m.id === modeId) as any,
         success: false,
+        operation_accepted: false,
         steps: [],
         message: `Reset failed: ${e}`,
-        device_state_after: "Failed",
+        device_state_after: "No verified state change",
         requires_reboot: false,
         frp_removed_percent: 0,
-        data_wiped: false
+        data_wiped: false,
+        verification_status: "failed"
       } as any)
     } finally {
       if (interval) clearInterval(interval)
@@ -303,8 +335,8 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
 
   // 3. Knox Removal — guidance-first: refuses until the safety gate is acknowledged
   const handleRemoveKnox = async () => {
-    if (!safetyAcknowledged) {
-      logger.warn("Knox removal blocked: safety acknowledgement not confirmed")
+    if (!safetyReady) {
+      logger.warn("Knox package operation blocked: backend safety pre-flight is incomplete")
       return
     }
     setIsRemovingKnox(true)
@@ -312,8 +344,9 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
     setProgress(15)
     let interval: number | undefined
     try {
-      interval = window.setInterval(() => setProgress(p => Math.min(p + Math.random() * 12, 80)), 500)
-      const result = await frpRemoveKnox(selectedDevice.serial_no)
+      interval = window.setInterval(() => setProgress(p => Math.min(p + 10, 80)), 500)
+      const permit = await issuePermit("knox_remove")
+      const result = await frpRemoveKnox(selectedDevice.serial_no, permit.token)
       setKnoxResult(result as any)
       setProgress(result.success ? 100 : 70)
       logger.info("Knox removal", { success: result.success, packages: (result as any).knox_packages_disabled?.length })
@@ -661,7 +694,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                     </div>
                   ) : (
                     <div className="text-[11px] text-muted-foreground">
-                      Click <strong>Verify Handshake</strong> to confirm phone has USB Debugging + Developer Options enabled and authorized RSA handshake with app. Required before reset 100% / 70%.
+                      Click <strong>Verify Handshake</strong> to confirm the selected phone has an authorized ADB connection. Required before any mutating package, provisioning or reset request.
                     </div>
                   )}
                 </CardContent>
@@ -725,22 +758,15 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                         <li>• <strong>Don't spam the phone.</strong> Test-mode dials and USB replugs are budgeted — recent Samsung firmware reacts to abnormal setup behaviour. If a probe fails, stop and read the runbook instead of retrying.</li>
                         <li>• <strong>Reboot + re-check.</strong> After any reset, reboot and re-run detection — that observation is the only honest confirmation.</li>
                       </ul>
-                      <label className="flex items-start gap-2 cursor-pointer select-none pt-1">
-                        <input
-                          type="checkbox"
-                          checked={safetyAcknowledged}
-                          onChange={(e) => setSafetyAcknowledged(e.target.checked)}
-                          className="mt-0.5 h-3.5 w-3.5 accent-amber-500"
-                        />
-                        <span className={safetyAcknowledged ? "text-foreground" : "text-muted-foreground"}>
-                          I own this device and understand the risks: data loss, possible re-lock on patched devices, and soft-brick risk on flashing.
-                        </span>
-                      </label>
-                      {!safetyAcknowledged && (
-                        <div className="text-[10px] text-amber-300/80 bg-amber-500/10 border border-amber-500/20 rounded p-1.5">
-                          Reset and Knox actions are disabled until you tick the box above. Scanning and diagnostics stay available.
-                        </div>
-                      )}
+                      <OperationSafetyGate
+                        deviceSerial={selectedDevice.serial_no}
+                        ownershipConfirmed={safetyAcknowledged}
+                        backupConfirmed={backupAcknowledged}
+                        typedAuthorization={typedAuthorization}
+                        onOwnershipChange={setSafetyAcknowledged}
+                        onBackupChange={setBackupAcknowledged}
+                        onTypedAuthorizationChange={setTypedAuthorization}
+                      />
                     </CardContent>
                   </Card>
 
@@ -761,15 +787,15 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                         >
                           <div className="flex items-center justify-between mb-1">
                             <span className="text-xs font-medium">{mode.label}</span>
-                            <Badge variant="outline" className={mode.frp_removal_percent === 100 ? "bg-green-500/20 text-green-400 border-green-500/30 text-[10px]" : "bg-yellow-500/20 text-yellow-400 border-yellow-500/30 text-[10px]"}>
-                              {mode.frp_removal_percent === 100 ? "Full wipe" : "Temporary"}
+                            <Badge variant="outline" className={mode.wipes_data ? "bg-red-500/20 text-red-300 border-red-500/30 text-[10px]" : "bg-blue-500/20 text-blue-300 border-blue-500/30 text-[10px]"}>
+                              {mode.wipes_data ? "Wipe requested" : "No wipe"}
                             </Badge>
                           </div>
                           <p className="text-[11px] text-muted-foreground">{mode.description}</p>
                           <div className="flex gap-1 mt-1">
                             {mode.wipes_data ? <Badge variant="outline" className="text-[9px] bg-red-500/10 text-red-400">Data Wiped</Badge> : <Badge variant="outline" className="text-[9px] bg-green-500/10 text-green-400">Data Kept</Badge>}
                             {mode.erases_frp_partition && <Badge variant="outline" className="text-[9px] bg-blue-500/10 text-blue-400">Flags cleared (not partition)</Badge>}
-                            {mode.id === "factory_reset_frp100" && <Badge className="bg-orange-500/20 text-orange-300 border border-orange-500/30 text-[9px]">FULL WIPE — DATA LOST</Badge>}
+                            {mode.wipes_data && <Badge className="bg-orange-500/20 text-orange-300 border border-orange-500/30 text-[9px]">WIPE REQUEST — DATA LOSS IF ACCEPTED</Badge>}
                           </div>
                         </button>
                       ))}
@@ -789,9 +815,13 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                     </CardHeader>
                     <CardContent className="p-3 space-y-3">
                       <div className="flex gap-2">
-                        <Button size="sm" className="h-8 text-xs flex-1 gap-2" onClick={() => handleExecuteReset(selectedResetMode)} disabled={isRunningReset || !handshake?.handshake_ok || !safetyAcknowledged}>
+                        <Button size="sm" className="h-8 text-xs flex-1 gap-2" onClick={() => handleExecuteReset(selectedResetMode)} disabled={isRunningReset || !handshake?.handshake_ok || !safetyReady}>
                           {isRunningReset ? <RefreshCw className="h-3 w-3 animate-spin" /> : <Zap className="h-3 w-3" />}
-                          {isRunningReset ? "Running Reset..." : `Run ${selectedResetMode.includes("100") ? "Reset (Full Wipe)" : "Reset (Temporary)"}`}
+                          {isRunningReset
+                            ? "Running authorized operation..."
+                            : resetModes.find(mode => mode.id === selectedResetMode)?.wipes_data
+                              ? "Request Factory Reset (data loss)"
+                              : "Apply Provisioning Flags (no wipe)"}
                         </Button>
                         <Button size="sm" variant="outline" className="h-8 text-xs" onClick={handleVerifyHandshake} disabled={isVerifyingHandshake}>
                           Check Handshake
@@ -802,24 +832,24 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                           ⚠️ Handshake not confirmed. Please Verify Handshake first: Enable Developer Options (tap Build Number 7 times) → Enable USB Debugging → Allow RSA.
                         </div>
                       )}
-                      {!safetyAcknowledged && (
+                      {!safetyReady && (
                         <div className="text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/20 rounded p-2">
-                          🔒 Safety Pre-Flight not acknowledged — tick the box in the card above to enable Reset and Knox actions.
+                          🔒 Complete both attestations and type the serial-bound authorization phrase above.
                         </div>
                       )}
                       {resetResult && (
-                        <div className={`p-2 rounded border text-xs ${resetResult.success ? "bg-green-500/10 border-green-500/30" : "bg-orange-500/10 border-orange-500/30"}`}>
+                        <div className={`p-2 rounded border text-xs ${resetResult.operation_accepted ? "bg-blue-500/10 border-blue-500/30" : "bg-orange-500/10 border-orange-500/30"}`}>
                           <div className="flex items-center gap-2 font-semibold">
-                            {resetResult.success ? <CheckCircle2 className="h-4 w-4 text-green-400" /> : <AlertTriangle className="h-4 w-4 text-yellow-400" />}
+                            {resetResult.operation_accepted ? <Info className="h-4 w-4 text-blue-400" /> : <AlertTriangle className="h-4 w-4 text-yellow-400" />}
                             {resetResult.message}
                           </div>
                           <div className="mt-2 text-[11px] p-2 bg-muted/50 rounded">
                             <strong>Device State After:</strong> {resetResult.device_state_after}
                           </div>
                           <div className="grid grid-cols-3 gap-2 mt-2 text-[10px]">
-                            <div>Mode: <Badge variant="outline" className="text-[9px]">{resetResult.frp_removed_percent === 100 ? "Full wipe" : "Temporary"}</Badge></div>
-                            <div>Data Wiped: <Badge variant={resetResult.data_wiped ? "destructive" : "outline"} className="text-[9px]">{resetResult.data_wiped ? "Yes" : "No"}</Badge></div>
-                            <div>Reboot: <Badge variant="outline" className="text-[9px]">{resetResult.requires_reboot ? "Required" : "No"}</Badge></div>
+                            <div>Scope: <Badge variant="outline" className="text-[9px]">ADB flags only</Badge></div>
+                            <div>Wipe request: <Badge variant={resetResult.data_wiped ? "destructive" : "outline"} className="text-[9px]">{resetResult.data_wiped ? "Accepted" : "No/failed"}</Badge></div>
+                            <div>Final status: <Badge variant="outline" className="text-[9px]">Pending reboot scan</Badge></div>
                           </div>
                           <div className="mt-2 space-y-1">
                             {resetResult.steps.slice(0, 5).map((s, i) => (
@@ -862,7 +892,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                             <Button size="sm" variant={idx === 0 ? "default" : "outline"} className="h-6 text-[11px] px-2" onClick={() => {
                               const map: Record<string, string> = { samsung_test_mode: "emergency_dialer_bypass", adb_provisioning: "device_provisioning" }
                               handleRunMethod(map[algo.id] || "device_provisioning")
-                            }} disabled={isRunning || !safetyAcknowledged}>
+                            }} disabled={isRunning || !safetyReady}>
                               <Play className="h-3 w-3 mr-1" />{idx === 0 ? "Run Safe" : "Run"}
                             </Button>
                           </div>
@@ -908,7 +938,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                     ].map(m => {
                       const Icon = m.icon
                       return (
-                        <button key={m.id} onClick={() => handleRunMethod(m.id)} disabled={isRunning || !safetyAcknowledged} className="text-left p-2.5 rounded-lg border border-border/50 hover:bg-muted/50 transition-colors disabled:opacity-50">
+                        <button key={m.id} onClick={() => handleRunMethod(m.id)} disabled={isRunning || !safetyReady} className="text-left p-2.5 rounded-lg border border-border/50 hover:bg-muted/50 transition-colors disabled:opacity-50">
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-medium flex items-center gap-1"><Icon className="h-3.5 w-3.5" />{m.label}</span>
                             <Badge variant="outline" className="text-[9px]">{m.risk}</Badge>
@@ -965,16 +995,15 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                     <CardContent className="p-3 space-y-3">
                       <div className="text-[11px] p-2 rounded bg-muted/50 border">
                         <strong>What it does:</strong><br/>
-                        • Disables com.samsung.knox.* + com.sec.knox.* packages<br/>
-                        • Disables KG client packages (finance-lock companion apps — not the KG fuse)<br/>
-                        • Clears Knox setup wizard data<br/>
-                        • Sets knox_enabled 0 + deletes global knox_enabled<br/>
-                        • Alliance Shield APK fallback for Exynos if ADB blocked
+                        • Requests user-0 disable for an explicit Knox container-package allow-list<br/>
+                        • Reads Android's disabled-package list and reports only verified matches<br/>
+                        • Does not clear package data or write invented global Knox flags<br/>
+                        • Refuses Knox Guard and finance-lock packages; those require the owner/lender route
                       </div>
                       <div className="flex gap-2">
-                        <Button size="sm" className="h-8 text-xs flex-1 gap-2 bg-purple-600 hover:bg-purple-700" onClick={handleRemoveKnox} disabled={isRemovingKnox || !handshake?.handshake_ok || !safetyAcknowledged}>
+                        <Button size="sm" className="h-8 text-xs flex-1 gap-2 bg-purple-600 hover:bg-purple-700" onClick={handleRemoveKnox} disabled={isRemovingKnox || !handshake?.handshake_ok || !safetyReady}>
                           {isRemovingKnox ? <RefreshCw className="h-3 w-3 animate-spin" /> : <ShieldAlert className="h-3 w-3" />}
-                          {isRemovingKnox ? "Removing Knox..." : "Run Knox Removal"}
+                          {isRemovingKnox ? "Verifying package state..." : "Disable Selected Knox Packages"}
                         </Button>
                         <Button size="sm" variant="outline" className="h-8 text-xs" onClick={handleVerifyHandshake}>
                           Verify Handshake
@@ -997,7 +1026,7 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
                             </div>
                           )}
                           <div className="mt-2 text-[11px] p-2 bg-muted/50 rounded">
-                            <strong>Knox Disabled:</strong> {knoxResult.knox_disabled ? "Yes (packages)" : "Partial"} — Knox apps disabled via ADB. The Knox Warranty bit and KG fuse state are NOT reset by this.
+                            <strong>Verified scope:</strong> {knoxResult.knox_packages_disabled.length} package(s) disabled for user 0. Knox itself, the Warranty bit and Knox Guard were not reset.
                           </div>
                           <div className="mt-2 space-y-1">
                             {knoxResult.steps.slice(0, 6).map((s, i) => (
@@ -1037,12 +1066,12 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
 
               {/* Bypass result */}
               {bypassResult && (
-                <Card className={bypassResult.success ? "border-green-500/30" : "border-orange-500/30"}>
+                <Card className={bypassResult.verification_status.includes("pending") || bypassResult.verification_status.includes("flags_changed") ? "border-blue-500/30" : "border-orange-500/30"}>
                   <CardHeader className="pb-2 pt-3 px-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        {bypassResult.success ? <CheckCircle2 className="h-4 w-4 text-green-400" /> : <XCircle className="h-4 w-4 text-red-400" />}
-                        <CardTitle className="text-xs">{bypassResult.success ? "Bypass Successful!" : "Result"}</CardTitle>
+                        {bypassResult.reboot_verification_required ? <Info className="h-4 w-4 text-blue-400" /> : <AlertTriangle className="h-4 w-4 text-orange-400" />}
+                        <CardTitle className="text-xs">{bypassResult.reboot_verification_required ? "Operation complete — verification pending" : "No verified removal"}</CardTitle>
                       </div>
                       <Button size="sm" variant="outline" className="h-6 text-[10px]" onClick={() => {
                         const data = { ts: new Date().toISOString(), device: selectedDevice, profile: deviceProfile, result: bypassResult }

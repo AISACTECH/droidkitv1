@@ -1,171 +1,149 @@
-import React from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
+import { useState } from "react"
 import { Badge } from "@/components/ui/badge"
-import { Shield, Terminal, Cpu } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  serviceEnvironmentPreflight,
+  type ServiceEnvironment,
+} from "@/tauri-commands"
+import { AlertTriangle, CheckCircle2, HardDrive, RefreshCw, Shield, Usb, Wrench } from "lucide-react"
+
+function ToolRow({ name, available, detail, version }: {
+  name: string
+  available: boolean
+  detail: string
+  version?: string
+}) {
+  return (
+    <div className="flex items-start justify-between gap-3 rounded border p-2">
+      <div>
+        <div className="font-medium text-sm">{name}</div>
+        <div className="text-xs text-muted-foreground">{version || detail}</div>
+      </div>
+      <Badge variant="outline" className={available ? "text-green-400 border-green-500/30" : "text-amber-400 border-amber-500/30"}>
+        {available ? "Available" : "Missing"}
+      </Badge>
+    </div>
+  )
+}
 
 export function AdvancedSettings() {
-  const [disableTracking, setDisableTracking] = React.useState(true)
-  const [autoSlaBypass, setAutoSlaBypass] = React.useState(true)
-  const [experimentalAdb, setExperimentalAdb] = React.useState(false)
-  const [developerMode, setDeveloperMode] = React.useState(false)
-  const [highSpeedBrom, setHighSpeedBrom] = React.useState(true)
-  const [logPayloads, setLogPayloads] = React.useState(false)
+  const [environment, setEnvironment] = useState<ServiceEnvironment | null>(null)
+  const [checking, setChecking] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const runPreflight = async () => {
+    setChecking(true)
+    setError(null)
+    try {
+      setEnvironment(await serviceEnvironmentPreflight())
+    } catch (cause) {
+      setError(String(cause))
+    } finally {
+      setChecking(false)
+    }
+  }
 
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium">Advanced & Experimental Settings</h3>
+        <h3 className="text-lg font-medium">Service Environment & Recovery</h3>
         <p className="text-sm text-muted-foreground">
-          Configure security, tracking prevention, developer overrides, and hardware acceleration for FRP removal.
+          Read-only host checks for Android platform tools, USB driver visibility and the recovery contract required before any device write.
         </p>
       </div>
 
-      {/* Security & Tracking Prevention */}
       <Card className="border-blue-500/20">
         <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-blue-400" />
-              <CardTitle className="text-base">Security & Privacy Protection</CardTitle>
+              <Usb className="h-5 w-5 text-blue-400" />
+              <CardTitle className="text-base">Driver and Platform-Tools Preflight</CardTitle>
             </div>
-            <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30">RECOMMENDED</Badge>
+            {environment && (
+              <Badge variant="outline" className={environment.write_operations_ready ? "text-green-400 border-green-500/30" : "text-amber-400 border-amber-500/30"}>
+                {environment.write_operations_ready ? "Host ready" : "Needs review"}
+              </Badge>
+            )}
           </div>
           <CardDescription>
-            Prevent OEM telemetry and diagnostic tracking before initiating bypass procedures.
+            This check installs nothing and sends no command to a phone. It verifies only host prerequisites.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label htmlFor="disable-tracking" className="text-sm font-medium">
-                Disable OEM Tracking & Telemetry First
-              </Label>
-              <p className="text-xs text-muted-foreground">
-                Automatically disable Samsung/Transsion diagnostic agents and setup wizard analytics before running FRP removal.
-              </p>
-            </div>
-            <Switch
-              id="disable-tracking"
-              checked={disableTracking}
-              onCheckedChange={setDisableTracking}
-            />
-          </div>
+        <CardContent className="space-y-3">
+          <Button size="sm" variant="outline" onClick={runPreflight} disabled={checking} className="gap-2">
+            <RefreshCw className={`h-4 w-4 ${checking ? "animate-spin" : ""}`} />
+            {checking ? "Checking host…" : "Run host preflight"}
+          </Button>
 
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label htmlFor="auto-sla-bypass" className="text-sm font-medium">
-                Automatic MediaTek SLA / Auth Bypass
-              </Label>
-              <p className="text-xs text-muted-foreground">
-                Automatically execute MTK Auth / Preloader SLA exploit before sending Brom Mode DA erase commands.
-              </p>
+          {error && (
+            <div className="rounded border border-red-500/30 bg-red-500/5 p-2 text-xs text-red-300">
+              {error}
             </div>
-            <Switch
-              id="auto-sla-bypass"
-              checked={autoSlaBypass}
-              onCheckedChange={setAutoSlaBypass}
-            />
-          </div>
+          )}
+
+          {environment && (
+            <div className="space-y-2">
+              <div className="text-xs text-muted-foreground">
+                Host: {environment.operating_system} / {environment.architecture}
+              </div>
+              <ToolRow {...environment.adb} />
+              <ToolRow {...environment.fastboot} />
+              <div className="rounded border p-2 text-xs space-y-1">
+                <div className="flex items-center gap-2 font-medium">
+                  {environment.usb_driver.state === "detected" || environment.usb_driver.state === "configured" || environment.usb_driver.state === "usb-enumeration-available"
+                    ? <CheckCircle2 className="h-4 w-4 text-green-400" />
+                    : <AlertTriangle className="h-4 w-4 text-amber-400" />}
+                  USB driver state: {environment.usb_driver.state}
+                </div>
+                <p className="text-muted-foreground">{environment.usb_driver.detail}</p>
+                {environment.usb_driver.detected_markers.length > 0 && (
+                  <div className="font-mono">Markers: {environment.usb_driver.detected_markers.join(", ")}</div>
+                )}
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      {/* Performance & Acceleration */}
-      <Card className="border-green-500/20">
+      <Card className="border-amber-500/20">
         <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Cpu className="h-5 w-5 text-green-400" />
-              <CardTitle className="text-base">Hardware Acceleration & Speed</CardTitle>
-            </div>
-            <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/30">FAST MODE</Badge>
+          <div className="flex items-center gap-2">
+            <HardDrive className="h-5 w-5 text-amber-400" />
+            <CardTitle className="text-base">Recovery Contract</CardTitle>
           </div>
           <CardDescription>
-            Optimize USB transfer speeds and bootloader communication protocol latency.
+            Production writes remain locked until these conditions are attested again for the selected serial in the FRP view.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label htmlFor="high-speed-brom" className="text-sm font-medium">
-                High-Speed Brom/EDL USB Polling
-              </Label>
-              <p className="text-xs text-muted-foreground">
-                Use 500Hz USB endpoint polling for instantaneous handshake detection when device enters Brom or 9008 mode.
-              </p>
-            </div>
-            <Switch
-              id="high-speed-brom"
-              checked={highSpeedBrom}
-              onCheckedChange={setHighSpeedBrom}
-            />
-          </div>
+        <CardContent>
+          <ul className="space-y-2 text-xs text-muted-foreground">
+            {(environment?.recovery_requirements ?? [
+              "Record the exact serial, model, bootloader/binary revision and security patch.",
+              "Capture all readable backups and hashes; archive matching stock firmware.",
+              "Use a stable cable, powered USB port and uninterrupted host power.",
+              "Use signed OEM/Google drivers; never disable driver-signature enforcement.",
+              "Rediscover the exact serial after every reboot or mode switch.",
+            ]).map(requirement => (
+              <li key={requirement} className="flex items-start gap-2">
+                <Shield className="h-3.5 w-3.5 mt-0.5 shrink-0 text-amber-400" />
+                <span>{requirement}</span>
+              </li>
+            ))}
+          </ul>
         </CardContent>
       </Card>
 
-      {/* Experimental & Developer Settings */}
-      <Card className="border-orange-500/20 bg-orange-500/5">
+      <Card className="border-muted">
         <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Terminal className="h-5 w-5 text-orange-400" />
-              <CardTitle className="text-base">Developer & Experimental Overrides</CardTitle>
-            </div>
-            <Badge variant="outline" className="bg-orange-500/10 text-orange-400 border-orange-500/30">ADVANCED</Badge>
+          <div className="flex items-center gap-2">
+            <Wrench className="h-5 w-5" />
+            <CardTitle className="text-base">Capability Boundary</CardTitle>
           </div>
-          <CardDescription>
-            Unlock experimental ADB payloads and verbose debug tracing for advanced security engineers.
-          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label htmlFor="experimental-adb" className="text-sm font-medium">
-                Experimental ADB Provisioning Payloads
-              </Label>
-              <p className="text-xs text-muted-foreground">
-                Enable experimental Android 14+ Content Provider URI injection and secondary user setup bypass tricks.
-              </p>
-            </div>
-            <Switch
-              id="experimental-adb"
-              checked={experimentalAdb}
-              onCheckedChange={setExperimentalAdb}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label htmlFor="developer-mode" className="text-sm font-medium">
-                Developer Mode & Verbose Step Tracing
-              </Label>
-              <p className="text-xs text-muted-foreground">
-                Display raw shell commands, exit codes, and memory address offsets during FRP partition erase.
-              </p>
-            </div>
-            <Switch
-              id="developer-mode"
-              checked={developerMode}
-              onCheckedChange={setDeveloperMode}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label htmlFor="log-payloads" className="text-sm font-medium">
-                Log USB DA Payload Hex Dumps
-              </Label>
-              <p className="text-xs text-muted-foreground">
-                Record raw hex payloads sent to MediaTek Download Agent and Qualcomm Firehose loader for inspection.
-              </p>
-            </div>
-            <Switch
-              id="log-payloads"
-              checked={logPayloads}
-              onCheckedChange={setLogPayloads}
-            />
-          </div>
+        <CardContent className="text-xs text-muted-foreground space-y-2">
+          <p>There are no cosmetic “high-speed Brom”, “automatic SLA bypass” or raw payload logging switches.</p>
+          <p>EDL, Brom, Odin and SPD cards remain operator runbooks until a separately reviewed, tested and recoverable native backend exists. A runbook progress bar is never reported as protocol execution.</p>
         </CardContent>
       </Card>
     </div>

@@ -52,6 +52,9 @@ jobs:
       - name: production build
         run: npm run build
 
+      - name: React/unit tests
+        run: npm run test:unit
+
       - name: regression suite (61+ checks)
         run: node scripts/test-all.js
 
@@ -104,6 +107,10 @@ jobs:
 
       - name: build frontend (dist/ feeds tauri generate_context!)
         run: npm ci && npm run build
+
+      - name: Rust unit tests
+        working-directory: src-tauri
+        run: cargo test --locked
 
       - name: cargo check src-tauri
         working-directory: src-tauri

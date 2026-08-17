@@ -18,6 +18,7 @@ const fast = process.argv.includes("--fast")
 const FAST: [string, string[]][] = [
   ["doctor", ["npm", "run", "doctor"]],
   ["lint (tsc --noEmit)", ["npm", "run", "lint"]],
+  ["test:unit", ["npm", "run", "test:unit"]],
   ["test:bench", ["npm", "run", "test:bench"]],
   ["test:adaptive", ["npm", "run", "test:adaptive"]],
   ["test:research", ["npm", "run", "test:research"]],
@@ -36,8 +37,9 @@ const FULL: [string, string[]][] = [
   ["test:concurrency", ["npm", "run", "test:concurrency"]],
   ["test:matrix", ["npm", "run", "test:matrix"]],
   ["test:brands", ["npm", "run", "test:brands"]],
-  ["benchmark:frp", ["npm", "run", "benchmark:frp"]],
-  ["benchmark:sheet", ["npm", "run", "benchmark:sheet"]],
+  ["benchmark (observed evidence gate)", ["npm", "run", "benchmark"]],
+  ["benchmark:frp (simulation regression)", ["npm", "run", "benchmark:frp"]],
+  ["benchmark:sheet (simulation regression)", ["npm", "run", "benchmark:sheet"]],
   ["audit:prod", ["npm", "run", "audit:prod"]],
 ]
 

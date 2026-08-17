@@ -157,7 +157,9 @@ export function FrpRemoval({ selectedDevice }: FrpRemovalProps) {
   const handleRunMethod = async (methodId: string) => {
     setIsRunning(true)
     setBypassResult(null)
-    try { setBypassResult(await frpRunMethod(selectedDevice.serial_no, methodId)) }
+    // Legacy view is intentionally non-executable: it has no Rust permit flow.
+    // The production FrpRemoval view owns all mutating operations.
+    try { setBypassResult(await frpRunMethod(selectedDevice.serial_no, methodId, "")) }
     catch (e) { console.error("Method failed:", e) }
     finally { setIsRunning(false) }
   }

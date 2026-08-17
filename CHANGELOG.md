@@ -2,7 +2,33 @@
 
 All notable changes to Paralock will be documented here.
 
-## [Unreleased] — Physics-Layer Experimental Lane
+## [Unreleased] — Production hardening
+
+### Added
+- Rust-issued five-minute, one-use operation permits bound to the exact serial, model and mutating action
+- Shared React ownership/backup/typed-serial safety gate with Vitest + Testing Library coverage
+- Read-only host ADB/Fastboot/USB-driver preflight and explicit recovery contract
+- Physical post-reboot evidence benchmark (`npm run benchmark`) that refuses unsupported rankings
+- Live cross-platform CI workflow with frontend, React and Rust test gates
+- Security reporting policy and destructive-operation invariants
+
+### Changed
+- Fastboot commands are serial-scoped; erase accepts only explicit `frp`, `frp_a` or `frp_b` partitions confirmed by the bootloader
+- ADB command results inspect rejection output and provisioning paths perform settings read-back
+- Reset results reserve final success for post-reboot verification; one reset request replaces ambiguous command chains
+- Knox package maintenance verifies Android's disabled-package list and excludes Knox Guard/finance-lock packages
+- Advanced settings now show real host/recovery checks instead of unwired exploit/performance toggles
+- Screen mirroring prevents overlapping frame requests and throttles frame journal writes
+- Legacy simulated comparisons are labelled illustration-only; engineering inventory no longer emits an FRP-success ranking
+
+### Removed
+- Unsafe fastboot fallbacks to `persistent` and `config`
+- Guessed lock-credential clearing, GMS/Knox data clearing and invented Knox global flags from reset flows
+- Cosmetic automatic-SLA, 500 Hz Brom/EDL and raw-payload switches that had no native backend
+
+### Historical changes
+
+The entries below describe earlier experimental/research rounds retained in the repository history.
 
 ### Changed
 - **FRP honesty + safety-first pass (2026-08-15)** — every hard-coded "success rate" claim removed from the FRP surface and replaced with **lab-gated evidence bands** sourced from `docs/ANDROID-15-16-PATCH-RESEARCH.md` §5: Rust `FrpAlgorithm::success_rate()` now returns Exynos DL 70 · Qualcomm EDL 65 · MediaTek Brom 80 · SPD 75 · test-mode 55 · pre-authorized ADB 88 (was 95/97/90/80/70/40); `reset.rs`/`commands.rs` messaging no longer claims "100% removed / brand new / keep data + erase FRP" (the ADB ladder clears flags, it does not erase the encrypted FRP partition); model-DB notes ("100% effective/success rate") rewritten to evidence bands; `FrpResetMode` labels relabelled (Provisioning Bypass / Temporary / Full wipe — no promised %). Frontend: `FrpRemoval.tsx` gains a **Safety Pre-Flight card + consent gate** (Reset/Knox/method actions stay locked until the user acknowledges data-loss, re-lock and soft-brick risks, and the no-spam probe budget); success-rate badges across `LegacyFrpRemoval` / `DeviceStatusPanel` / `DeveloperLab` relabelled "evidence band". `FRP-ALGORITHM-ANALYSIS.md` numbers corrected, "Paralock (iMobie)" naming fixed, Reset-Modes table + "100% = brand new" section rewritten; full audit in `docs/FRP-CLAIMS-FACT-CHECK-2026.md`. Gates re-run green: adaptive 124 · research 37 · core 79 · brands 67 · matrix 10 · lab 150 · bench 37 · lint · build · audit.

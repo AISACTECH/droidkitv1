@@ -7,25 +7,56 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ResetExecutionResult {
     pub reset_mode: FrpResetMode,
+    /// Reserved for a separately observed post-reboot inactive state.
     pub success: bool,
+    /// Whether required writes were accepted and read back before reboot.
+    pub operation_accepted: bool,
     pub steps: Vec<BypassStepResult>,
     pub message: String,
-    pub device_state_after: String, // honest post-run state description (reboot re-check advised)
+    pub device_state_after: String,
     pub requires_reboot: bool,
     pub frp_removed_percent: u8,
     pub data_wiped: bool,
+    pub verification_status: String,
+}
+
+fn output_indicates_failure(output: &str) -> bool {
+    let lower = output.to_ascii_lowercase();
+    [
+        "permission denial",
+        "permission denied",
+        "security exception",
+        "java.lang.securityexception",
+        "unknown command",
+        "unknown package",
+        "not allowed",
+        "error:",
+        "failure [",
+        "exception occurred",
+    ]
+    .iter()
+    .any(|marker| lower.contains(marker))
 }
 
 fn exec(device: &mut Device, cmd: &str) -> BypassStepResult {
     let mut buf: Vec<u8> = Vec::new();
     match device.shell_command(cmd, &mut buf) {
         Ok(_) => {
-            let output = String::from_utf8_lossy(&buf).to_string();
-            BypassStepResult {
-                command: cmd.to_string(),
-                success: true,
-                output: output.trim().to_string(),
-                error: None,
+            let output = String::from_utf8_lossy(&buf).trim().to_string();
+            if output_indicates_failure(&output) {
+                BypassStepResult {
+                    command: cmd.to_string(),
+                    success: false,
+                    error: Some(format!("Device rejected command: {}", output)),
+                    output,
+                }
+            } else {
+                BypassStepResult {
+                    command: cmd.to_string(),
+                    success: true,
+                    output,
+                    error: None,
+                }
             }
         }
         Err(e) => BypassStepResult {
@@ -55,7 +86,10 @@ pub fn execute_reset_mode(device: &mut Device, mode: &FrpResetMode) -> ResetExec
     // === Phase 2: FRP removal — based on percentage ===
     let frp_percent = mode.frp_removal_percent();
     let wipes_data = mode.wipes_data();
-    let erases_partition = mode.erases_frp_partition();
+    // Compatibility names still contain historical 100/70 labels. Neither path
+    // erases a block partition; the 100-class path only attempts extra settings-
+    // level credential/cache cleanup.
+    let full_flag_scope = frp_percent == 100;
 
     if frp_percent >= 70 {
         // Core provisioning bypass — disables setup wizard + sets flags
@@ -74,78 +108,91 @@ pub fn execute_reset_mode(device: &mut Device, mode: &FrpResetMode) -> ResetExec
         steps.push(exec(device, "content insert --uri content://settings/secure --bind name:s:user_setup_complete --bind value:s:1"));
     }
 
-    if erases_partition {
-        // "full" mode — clears the provisioning/credential flags visible over ADB.
+    if full_flag_scope {
+        // Full flag scope — clears provisioning/credential settings visible over ADB.
         // Honest note: these are settings-level commands, NOT a block-level FRP
         // partition erase (that requires a below-OS lane: EDL/Brom/Odin/SPD).
         steps.push(exec(device, "content delete --uri content://settings/secure --where 'name=\"frp_credential_enabled\"'"));
         steps.push(exec(device, "content delete --uri content://settings/global --where 'name=\"frp_credential_enabled\"'"));
         steps.push(exec(device, "settings put global frp_credential_enabled 0"));
         steps.push(exec(device, "settings delete global frp_credential_enabled"));
-        steps.push(exec(device, "locksettings clear --old 1234")); // clear locksettings FRP credential
-        steps.push(exec(device, "pm clear com.google.android.gms")); // clear GMS FRP cache
-        // Knox specific — clear Knox FRP persistence
-        steps.push(exec(device, "pm clear com.samsung.knox.knoxsetupwizardclient"));
-        steps.push(exec(device, "pm clear com.sec.knox.knoxsetupwizardclient"));
+        // Deliberately do not guess a lock credential or clear GMS/Knox data.
+        // Those actions are unrelated destructive side effects, not FRP proof.
     } else {
         // temporary mode — only bypasses flags, does NOT touch the FRP partition
         // (may re-lock on next reset)
         steps.push(exec(device, "settings put global frp_credential_enabled 0"));
     }
 
-    // === Phase 3: Factory Reset if mode wipes data ===
-    if wipes_data {
-        // Multiple fallback reset broadcasts for cross-version compatibility (Android 11-15).
-        // CAUTION: a factory reset re-triggers the very FRP check it is meant to clear —
-        // only the pre-authorized ADB window or a below-OS erase survives that.
-        if frp_percent == 100 {
-            // full wipe path
-            steps.push(exec(device, "am broadcast -a android.intent.action.MASTER_CLEAR")); // classic factory reset broadcast
-            steps.push(exec(device, "am broadcast -a android.intent.action.FACTORY_RESET"));
-            // Alternative for newer Android
-            steps.push(exec(device, "cmd -w reformat_data")); // wipe data command
-            // Fallback: recovery wipe via svc
-            steps.push(exec(device, "svc power reboot recovery\n--wipe_data")); // many devices support this
-        } else {
-            // 70% with wipe — factory reset but FRP partition remains
-            steps.push(exec(device, "am broadcast -a android.intent.action.MASTER_CLEAR"));
-            steps.push(exec(device, "recovery --wipe_data"));
-        }
-    }
+    // Semantic read-back before any reset request. A transport-level success is
+    // not enough; both required settings must read back as 1.
+    let readback_start = steps.len();
+    steps.push(exec(device, "settings get global device_provisioned"));
+    steps.push(exec(device, "settings get secure user_setup_complete"));
+    let flags_confirmed = steps
+        .get(readback_start)
+        .is_some_and(|s| s.success && s.output.trim() == "1")
+        && steps
+            .get(readback_start + 1)
+            .is_some_and(|s| s.success && s.output.trim() == "1");
 
-    // Calculate success
-    let success_count = steps.iter().filter(|s| s.success).count();
-    let overall_success = success_count >= 8; // at least core steps succeeded
-
-    let device_state = if wipes_data && frp_percent == 100 {
-        "Factory reset + provisioning bypass executed. Boots to initial setup. FRP flag state was cleared via ADB, but the encrypted FRP partition was NOT erased — re-lock possible on a fully-patched device. Reboot and re-run detection to confirm.".to_string()
-    } else if wipes_data && frp_percent == 70 {
-        "Factory reset with a temporary provisioning-flag bypass. The FRP partition remains — expect re-lock on the next reset. Reboot and re-verify.".to_string()
-    } else if !wipes_data && frp_percent == 100 {
-        "Provisioning flags cleared (no data wipe). This does NOT remove the FRP partition and cannot keep encrypted data intact while truly erasing FRP — treat as a temporary bypass, not permanent removal.".to_string()
+    // === Phase 3: optional factory-reset request ===
+    // Send one documented broadcast only. Chaining multiple wipe commands after
+    // the first reboot request caused ambiguous partial results and could target
+    // a reconnecting device.
+    let reset_requested = if wipes_data {
+        let result = exec(
+            device,
+            "am broadcast -a android.intent.action.FACTORY_RESET --receiver-foreground",
+        );
+        let accepted = result.success;
+        steps.push(result);
+        accepted
     } else {
-        "Quick provisioning-flag bypass (no data wipe). Temporary — the FRP partition is untouched and may re-lock on the next reset.".to_string()
+        true
     };
 
-    let message = if overall_success {
-        if wipes_data && frp_percent == 100 {
-            format!("✅ {} executed. Factory reset + ADB provisioning bypass applied. Reboot the device and re-run detection to confirm the lock state.", mode.label())
-        } else {
-            format!("✅ {} executed. {} — reboot and re-verify before treating this as resolved.", mode.label(), device_state)
-        }
+    let operation_accepted = flags_confirmed && reset_requested;
+    let verification_status = if operation_accepted {
+        "pending_post_reboot_verification"
+    } else if flags_confirmed {
+        "flags_confirmed_reset_not_accepted"
     } else {
-        format!("⚠️ Partial success ({} / {} steps). Some commands blocked by Knox. Try Content Provider or Emergency Dialer method. {}", success_count, steps.len(), device_state)
+        "required_readback_failed"
+    }
+    .to_string();
+
+    let device_state = if operation_accepted && wipes_data {
+        "Provisioning flags were read back and one factory-reset request was accepted. The encrypted FRP partition was not erased. Final state is unknown until the device reboots, reconnects and a fresh scan reports Inactive.".to_string()
+    } else if operation_accepted {
+        "Provisioning flags were read back. The encrypted FRP partition was not erased; reboot and run a fresh scan before treating the device as resolved.".to_string()
+    } else {
+        "Required writes or reset acknowledgement failed. No FRP removal is claimed.".to_string()
+    };
+
+    let message = if operation_accepted {
+        format!(
+            "{} accepted at command/read-back level. Final success is pending a separate post-reboot scan.",
+            mode.label()
+        )
+    } else {
+        format!(
+            "{} was not fully accepted. Review the failed steps; do not report success.",
+            mode.label()
+        )
     };
 
     ResetExecutionResult {
         reset_mode: mode.clone(),
-        success: overall_success,
+        success: false,
+        operation_accepted,
         steps,
         message,
         device_state_after: device_state,
-        requires_reboot: wipes_data,
+        requires_reboot: true,
         frp_removed_percent: frp_percent,
-        data_wiped: wipes_data,
+        data_wiped: wipes_data && reset_requested,
+        verification_status,
     }
 }
 
@@ -155,11 +202,14 @@ pub fn execute_reset_mode(device: &mut Device, mode: &FrpResetMode) -> ResetExec
 /// hardware/fuse-level. Guarded by the same handshake + consent flow as reset.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct KnoxRemovalResult {
+    /// True only when at least one requested package is confirmed in Android's
+    /// disabled-package list. This never means Knox/KG hardware state was reset.
     pub success: bool,
     pub steps: Vec<BypassStepResult>,
     pub message: String,
     pub knox_disabled: bool,
     pub knox_packages_disabled: Vec<String>,
+    pub verification_status: String,
 }
 
 pub fn execute_knox_removal(device: &mut Device) -> KnoxRemovalResult {
@@ -186,8 +236,7 @@ pub fn execute_knox_removal(device: &mut Device) -> KnoxRemovalResult {
         "com.samsung.knox.securefolder",
         "com.samsung.android.knox.kpecore",
         "com.samsung.android.knox.kpu",
-        "com.sec.android.service.health",
-        "com.samsung.android.bbc.bbcagent", // Knox BBC
+        "com.samsung.android.bbc.bbcagent",
         "com.samsung.android.knox.analytics.uploader",
     ];
 
@@ -200,42 +249,52 @@ pub fn execute_knox_removal(device: &mut Device) -> KnoxRemovalResult {
         steps.push(result);
     }
 
-    // Phase 3: Disable Knox Guard (KG) — finance lock related to Knox
-    let kg_packages = vec![
-        "com.samsung.android.kgclient",
-        "com.samsung.android.knoxguard",
-        "com.samsung.android.kgclient",
-        "com.mygalaxy", // KG companion
-    ];
-    for pkg in &kg_packages {
-        let result = exec(device, &format!("pm disable-user --user 0 {}", pkg));
-        if result.success {
-            disabled_packages.push(pkg.to_string());
-        }
-        steps.push(result);
-    }
+    // Knox Guard / finance-lock packages are intentionally excluded. They are a
+    // separate owner/lender-controlled system, not a fallback extension of Knox
+    // container maintenance.
 
-    // Phase 4: Clear Knox data
-    steps.push(exec(device, "pm clear com.samsung.knox.knoxsetupwizardclient || true"));
-    steps.push(exec(device, "pm clear com.sec.knox.knoxsetupwizardclient || true"));
-    steps.push(exec(device, "settings put global knox_enabled 0"));
-    steps.push(exec(device, "settings delete global knox_enabled"));
-
-    // Phase 5: Alliance Shield method fallback info (if ADB disable fails, suggest APK)
-    steps.push(exec(device, "pm list packages | grep -i knox || echo No knox packages remaining"));
-
-    let success = disabled_packages.len() >= 3;
-    let message = if success {
-        format!("✅ Knox Removal SUCCESS: Disabled {} Knox packages. Knox security, KG (Knox Guard), Secure Folder, Knox attestation disabled. Device now boots without Knox verification. Alliance Shield method available as fallback for Exynos.", disabled_packages.len())
+    // Semantic verification: trust Android's disabled-package list, not command
+    // transport status. Do not clear package data or write invented global flags.
+    let verification = exec(device, "pm list packages -d");
+    let disabled_output = if verification.success {
+        verification.output.clone()
     } else {
-        format!("⚠️ Partial Knox removal ({} packages). Some packages protected by system. Try Alliance Shield APK method for Exynos devices: adb install alliance_shield.apk", disabled_packages.len())
+        String::new()
+    };
+    steps.push(verification);
+    disabled_packages = knox_packages
+        .iter()
+        .filter(|pkg| {
+            let package_name = **pkg;
+            disabled_output
+                .lines()
+                .any(|line| line.trim() == format!("package:{}", package_name))
+        })
+        .map(|pkg| (*pkg).to_string())
+        .collect();
+
+    let success = !disabled_packages.is_empty();
+    let message = if success {
+        format!(
+            "Verified {} Knox-related package(s) disabled for Android user 0. Knox Warranty and Knox Guard states were not changed; reboot and confirm required enterprise functions still work.",
+            disabled_packages.len()
+        )
+    } else {
+        "No requested Knox package could be verified as disabled. No Knox/KG state change is claimed."
+            .to_string()
     };
 
     KnoxRemovalResult {
         success,
         steps,
         message,
-        knox_disabled: success,
+        knox_disabled: false,
         knox_packages_disabled: disabled_packages,
+        verification_status: if success {
+            "packages_verified_disabled_user0"
+        } else {
+            "no_verified_package_change"
+        }
+        .to_string(),
     }
 }

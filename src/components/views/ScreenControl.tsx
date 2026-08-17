@@ -37,6 +37,9 @@ export function ScreenControl({ selectedDevice }: ScreenControlProps) {
   // the action-follow-up setTimeout(captureFrame, …) timers were not — they
   // could fire IPC at a disconnected device after the view closed.
   const mountedRef = useRef(true)
+  const mirrorActiveRef = useRef(false)
+  const captureInFlightRef = useRef(false)
+  const frameCounterRef = useRef(0)
   const pendingTimers = useRef<number[]>([])
   useEffect(() => {
     mountedRef.current = true
@@ -46,23 +49,34 @@ export function ScreenControl({ selectedDevice }: ScreenControlProps) {
       pending.forEach(t => window.clearTimeout(t))
     }
   }, [])
+  useEffect(() => {
+    mirrorActiveRef.current = mirrorActive
+  }, [mirrorActive])
 
   const pushLog = (msg: string) => setLog(prev => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 100))
 
   // Screen mirroring loop
   const captureFrame = useCallback(async () => {
-    if (!mirrorActive || !mountedRef.current) return
+    if (!mirrorActiveRef.current || !mountedRef.current || captureInFlightRef.current) return
+    captureInFlightRef.current = true
     setIsCapturing(true)
     try {
       const result = await captureScreenFrame(selectedDevice.serial_no)
+      if (!mountedRef.current) return
       setFrame(`data:image/png;base64,${result.base64_png}`)
       setFrameInfo({ w: result.width, h: result.height, ts: result.timestamp })
-      pushLog(`Frame captured ${result.width}x${result.height}`)
+      frameCounterRef.current += 1
+      // Keep the journal useful without writing a localStorage log entry for
+      // every PNG frame. Failures are still logged immediately.
+      if (frameCounterRef.current === 1 || frameCounterRef.current % 10 === 0) {
+        pushLog(`Frame ${frameCounterRef.current} captured ${result.width}x${result.height}`)
+      }
     } catch (e: any) {
-      pushLog(`Capture failed: ${e}`)
+      if (mountedRef.current) pushLog(`Capture failed: ${e}`)
       logger.error("Capture failed", e)
     } finally {
-      setIsCapturing(false)
+      captureInFlightRef.current = false
+      if (mountedRef.current) setIsCapturing(false)
     }
   }, [selectedDevice.serial_no, mirrorActive])
 
@@ -87,15 +101,22 @@ export function ScreenControl({ selectedDevice }: ScreenControlProps) {
     try {
       const session = await startMirrorSession(selectedDevice.serial_no, refreshInterval)
       pushLog(session.message)
+      mirrorActiveRef.current = true
+      frameCounterRef.current = 0
       setMirrorActive(true)
     } catch (e: any) {
+      mirrorActiveRef.current = false
       pushLog(`Start mirror failed: ${e}`)
-      setMirrorActive(true) // still try
+      logger.error("Mirror session start failed", e)
     }
   }
 
   const handleStopMirror = () => {
+    mirrorActiveRef.current = false
     setMirrorActive(false)
+    pendingTimers.current.forEach(timer => window.clearTimeout(timer))
+    pendingTimers.current = []
+    frameCounterRef.current = 0
     pushLog("Reflection window stopped")
   }
 

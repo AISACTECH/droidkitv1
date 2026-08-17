@@ -1,5 +1,6 @@
 use crate::adb_commands::device::Device;
 use crate::frp::database::FrpMethod;
+use crate::frp::detector::{FrpDetectionResult, FrpState};
 use serde::{Deserialize, Serialize};
 
 /// Result of a single FRP bypass step
@@ -15,11 +16,65 @@ pub struct BypassStepResult {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct BypassResult {
     pub method: FrpMethod,
+    /// Final success is reserved for a separately observed, post-reboot inactive
+    /// state. An accepted shell command is never enough.
     pub success: bool,
     pub steps: Vec<BypassStepResult>,
     pub message: String,
     pub requires_manual_action: bool,
     pub manual_action_instructions: Option<String>,
+    pub verification_status: String,
+    pub observed_frp_state: Option<FrpState>,
+    pub reboot_verification_required: bool,
+}
+
+impl BypassResult {
+    /// Convert command-level output into an honest device-level result. The current
+    /// boot can establish that flags changed or FRP presently reads inactive, but a
+    /// reboot observation is still mandatory before `success` may be claimed.
+    pub fn finalize_with_detection(&mut self, observed: &FrpDetectionResult) {
+        self.observed_frp_state = Some(observed.frp_state.clone());
+        self.success = false;
+
+        if self.requires_manual_action {
+            self.verification_status = "manual_action_required".to_string();
+            self.reboot_verification_required = true;
+            self.message.push_str(
+                " Manual guidance was opened; FRP removal has not been verified.",
+            );
+            return;
+        }
+
+        match observed.frp_state {
+            FrpState::Inactive => {
+                self.verification_status = "current_boot_inactive_pending_reboot".to_string();
+                self.reboot_verification_required = true;
+                self.message.push_str(
+                    " The current boot now reports FRP Inactive. Reboot, reconnect and scan again before marking the operation successful.",
+                );
+            }
+            FrpState::Active => {
+                self.verification_status = "active_after_operation".to_string();
+                self.reboot_verification_required = false;
+                self.message.push_str(" FRP still reports Active; the operation did not resolve it.");
+            }
+            FrpState::Unknown => {
+                let flags_changed = observed.device_provisioned && observed.user_setup_complete;
+                self.verification_status = if flags_changed {
+                    "flags_changed_unverified"
+                } else {
+                    "no_verified_change"
+                }
+                .to_string();
+                self.reboot_verification_required = flags_changed;
+                self.message.push_str(if flags_changed {
+                    " Provisioning flags read back as complete, but FRP state is still unverified. Reboot and scan again."
+                } else {
+                    " No verified FRP state change was observed."
+                });
+            }
+        }
+    }
 }
 
 /// Run a specific FRP bypass method on the device
@@ -43,16 +98,44 @@ pub fn run_bypass_method(device: &mut Device, method: &FrpMethod) -> BypassResul
     }
 }
 
+fn output_indicates_failure(output: &str) -> bool {
+    let lower = output.to_ascii_lowercase();
+    [
+        "permission denial",
+        "permission denied",
+        "security exception",
+        "java.lang.securityexception",
+        "unknown command",
+        "unknown package",
+        "not allowed",
+        "not found",
+        "error:",
+        "failure [",
+        "exception occurred",
+    ]
+    .iter()
+    .any(|marker| lower.contains(marker))
+}
+
 fn exec(device: &mut Device, cmd: &str) -> BypassStepResult {
     let mut buf: Vec<u8> = Vec::new();
-    match device.shell_command(&cmd, &mut buf) {
+    match device.shell_command(cmd, &mut buf) {
         Ok(_) => {
-            let output = String::from_utf8_lossy(&buf).to_string();
-            BypassStepResult {
-                command: cmd.to_string(),
-                success: true,
-                output: output.trim().to_string(),
-                error: None,
+            let output = String::from_utf8_lossy(&buf).trim().to_string();
+            if output_indicates_failure(&output) {
+                BypassStepResult {
+                    command: cmd.to_string(),
+                    success: false,
+                    error: Some(format!("Device rejected command: {}", output)),
+                    output,
+                }
+            } else {
+                BypassStepResult {
+                    command: cmd.to_string(),
+                    success: true,
+                    output,
+                    error: None,
+                }
             }
         }
         Err(e) => BypassStepResult {
@@ -82,7 +165,9 @@ fn run_setup_wizard_disable(device: &mut Device) -> BypassResult {
     steps.push(exec(device, "am force-stop com.google.android.setupwizard"));
     steps.push(exec(device, "am force-stop com.samsung.android.app.setupwizard"));
 
-    let all_ok = steps.iter().any(|s| s.success);
+    // At least one known setup-wizard package must accept the state change;
+    // a successful force-stop alone is not evidence of a disabled package.
+    let all_ok = steps.iter().take(3).any(|s| s.success);
 
     BypassResult {
         method: FrpMethod::SetupWizardDisable,
@@ -93,6 +178,9 @@ fn run_setup_wizard_disable(device: &mut Device) -> BypassResult {
         } else {
             "Some commands failed. The setup wizard may not have been fully disabled. Try Device Provisioning method as fallback.".into()
         },
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: false,
         manual_action_instructions: None,
     }
@@ -118,7 +206,15 @@ fn run_device_provisioning(device: &mut Device) -> BypassResult {
     // Mark setup wizard as completed
     steps.push(exec(device, "settings put secure setup_wizard_completed 1"));
 
-    let all_ok = steps.iter().any(|s| s.success);
+    // Semantic read-back: transport-level `Ok` is not enough.
+    steps.push(exec(device, "settings get global device_provisioned"));
+    steps.push(exec(device, "settings get secure user_setup_complete"));
+    let all_ok = steps
+        .get(5)
+        .is_some_and(|s| s.success && s.output.trim() == "1")
+        && steps
+            .get(6)
+            .is_some_and(|s| s.success && s.output.trim() == "1");
 
     BypassResult {
         method: FrpMethod::DeviceProvisioning,
@@ -129,6 +225,9 @@ fn run_device_provisioning(device: &mut Device) -> BypassResult {
         } else {
             "Some flags could not be set. Knox may be blocking settings changes. Try Content Provider method.".into()
         },
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: false,
         manual_action_instructions: Some("Reboot the device after running this method for changes to take effect.".into()),
     }
@@ -149,7 +248,14 @@ fn run_content_provider_bypass(device: &mut Device) -> BypassResult {
     steps.push(exec(device, "content delete --uri content://settings/secure --where 'name=\"user_setup_complete\"'"));
     steps.push(exec(device, "content insert --uri content://settings/secure --bind name:s:user_setup_complete --bind value:s:1"));
 
-    let all_ok = steps.iter().any(|s| s.success);
+    steps.push(exec(device, "settings get global device_provisioned"));
+    steps.push(exec(device, "settings get secure user_setup_complete"));
+    let all_ok = steps
+        .get(6)
+        .is_some_and(|s| s.success && s.output.trim() == "1")
+        && steps
+            .get(7)
+            .is_some_and(|s| s.success && s.output.trim() == "1");
 
     BypassResult {
         method: FrpMethod::ContentProviderBypass,
@@ -160,6 +266,9 @@ fn run_content_provider_bypass(device: &mut Device) -> BypassResult {
         } else {
             "Content provider manipulation failed. Samsung Knox may be blocking this. Try Emergency Dialer method instead.".into()
         },
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: false,
         manual_action_instructions: Some("Reboot the device after running this method.".into()),
     }
@@ -180,7 +289,9 @@ fn run_setup_wizard_uninstall(device: &mut Device) -> BypassResult {
     // Also try Google onboarding
     steps.push(exec(device, "pm uninstall -k --user 0 com.google.android.onboarding"));
 
-    let all_ok = steps.iter().any(|s| s.success);
+    let all_ok = steps
+        .iter()
+        .any(|s| s.success && s.output.to_ascii_lowercase().contains("success"));
 
     BypassResult {
         method: FrpMethod::SetupWizardUninstall,
@@ -191,6 +302,9 @@ fn run_setup_wizard_uninstall(device: &mut Device) -> BypassResult {
         } else {
             "Uninstall failed. Knox may protect these packages. Try Setup Wizard Disable or Content Provider method instead.".into()
         },
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: false,
         manual_action_instructions: Some("Reboot the device. To restore setup wizard later: pm install-existing com.google.android.setupwizard".into()),
     }
@@ -218,6 +332,9 @@ fn run_browser_download_bypass(device: &mut Device) -> BypassResult {
         success: steps.iter().any(|s| s.success),
         steps,
         message: "Browser launched. NOTE (2026 research): browser/APK routes are blocked on Android 14+ / One UI 6+. Viable mainly on Android 12 or older / pre-2023 patches.".into(),
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: true,
         manual_action_instructions: Some(
             "2026 PATCH NOTE: Browser + APK sideload routes are patched on Android 14+ and One UI 6+. Check the Reality Check panel — if your window is CLOSED, use the chipset hardware route instead.\n\
@@ -267,6 +384,9 @@ fn run_account_manager_launch(device: &mut Device) -> BypassResult {
         } else {
             "Could not launch Account Manager directly. Samsung/Knox may block this activity. Try Emergency Dialer or Browser method instead.".into()
         },
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: true,
         manual_action_instructions: Some(
             "1. On the device screen, you should see a Google sign-in page\n\
@@ -300,6 +420,9 @@ fn run_emergency_dialer_bypass(device: &mut Device) -> BypassResult {
         success: steps.iter().any(|s| s.success),
         steps,
         message: "Emergency dialer opened. Follow manual steps below to navigate to settings.".into(),
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: true,
         manual_action_instructions: Some(
             "CLASSIC EMERGENCY DIALER METHOD:\n\
@@ -345,6 +468,9 @@ fn run_talkback_bypass(device: &mut Device) -> BypassResult {
         success: steps.iter().any(|s| s.success),
         steps,
         message: "TalkBack accessibility service enabled. NOTE (2026 research): TalkBack gesture routes mostly fail on Android 14+ / One UI 6+. Viable mainly on Android 12 or older / pre-2023 patches.".into(),
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: true,
         manual_action_instructions: Some(
             "2026 PATCH NOTE: This exploit is patched on Android 14+ and One UI 6+. If the Reality Check panel shows CLOSED, use the chipset hardware route (Brom/EDL/Odin) instead.\n\
@@ -386,6 +512,9 @@ fn run_sim_pin_bypass(device: &mut Device) -> BypassResult {
         success: true,
         steps,
         message: "SIM PIN bypass requires a physical SIM card. Follow manual steps below.".into(),
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: true,
         manual_action_instructions: Some(
             "SIM PIN NOTIFICATION METHOD:\n\
@@ -419,6 +548,9 @@ fn run_combination_firmware(device: &mut Device) -> BypassResult {
         success: false,
         steps,
         message: "Combination firmware method requires Samsung Download Mode and Odin on PC. Cannot be executed via ADB. See instructions below.".into(),
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: true,
         manual_action_instructions: Some(
             "COMBINATION FIRMWARE METHOD (LEGACY — Android 6 to 9 only):\n\
@@ -467,6 +599,9 @@ fn run_alliance_shield_bypass(device: &mut Device) -> BypassResult {
         success: false,
         steps,
         message: "Alliance Shield method requires sideloading the Alliance Shield APK. See instructions below. NOTE: Only works on Exynos Samsung devices.".into(),
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: true,
         manual_action_instructions: Some(
             "ALLIANCE SHIELD METHOD (Exynos only!):\n\
@@ -499,6 +634,9 @@ fn run_hacktm_bypass(device: &mut Device) -> BypassResult {
         success: false,
         steps,
         message: "HacKTM method requires the HacKTM APK to be sideloaded. See instructions below.".into(),
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: true,
         manual_action_instructions: Some(
             "HACKTM METHOD:\n\
@@ -523,6 +661,9 @@ fn run_smart_switch_bypass(device: &mut Device) -> BypassResult {
         success: false,
         steps,
         message: "Smart Switch method requires Samsung Smart Switch on a PC. See instructions below.".into(),
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: true,
         manual_action_instructions: Some(
             "SMART SWITCH METHOD:\n\
@@ -567,6 +708,9 @@ fn run_settings_access(device: &mut Device) -> BypassResult {
         } else {
             "Could not launch Settings directly. Samsung Knox may be blocking. Try Emergency Dialer or Browser method.".into()
         },
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: true,
         manual_action_instructions: Some(
             "1. Settings should now be open on the device\n\
@@ -599,6 +743,9 @@ fn run_quick_shortcut_maker(device: &mut Device) -> BypassResult {
         success: steps.iter().any(|s| s.success),
         steps,
         message: "Browser opened for QuickShortcutMaker download. Follow manual steps below.".into(),
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: true,
         manual_action_instructions: Some(
             "QUICKSHORTCUTMAKER METHOD:\n\
@@ -646,6 +793,9 @@ pub fn run_auto_bypass(device: &mut Device) -> BypassResult {
             } else {
                 format!("{} failed, trying next method... ", method.label())
             },
+            verification_status: "command_result_unverified".to_string(),
+            observed_frp_state: None,
+            reboot_verification_required: true,
             requires_manual_action: !succeeded,
             manual_action_instructions: if !succeeded {
                 Some("Automatic methods failed. Try Emergency Dialer or TalkBack methods manually.".into())
@@ -667,6 +817,9 @@ pub fn run_auto_bypass(device: &mut Device) -> BypassResult {
         success: false,
         steps: all_steps,
         message: "Automatic ADB bypass methods were blocked. This device likely has strong Samsung Knox protection. Try manual methods: Emergency Dialer, TalkBack, or Combination Firmware.".into(),
+        verification_status: "command_result_unverified".to_string(),
+        observed_frp_state: None,
+        reboot_verification_required: true,
         requires_manual_action: true,
         manual_action_instructions: Some(
             "RECOMMENDED MANUAL APPROACH (in order):\n\

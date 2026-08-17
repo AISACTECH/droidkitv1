@@ -533,11 +533,10 @@ impl FrpResetMode {
         )
     }
 
+    /// The ADB reset modes never erase a block-level FRP partition.
+    /// Kept as a compatibility field for the frontend; always false by contract.
     pub fn erases_frp_partition(&self) -> bool {
-        matches!(
-            self,
-            FrpResetMode::FactoryResetRemoveFrp100 | FrpResetMode::RemoveFrp100NoWipe
-        )
+        false
     }
 }
 
