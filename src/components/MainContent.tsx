@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { FileExplorer } from "@/components/views/FileExplorer"
 import { AppManager } from "@/components/views/AppManager"
 import { LogcatViewer } from "@/components/views/LogcatViewer"
@@ -24,7 +25,7 @@ interface MainContentProps {
   onViewChange: (view: string) => void
 }
 
-export function MainContent({
+export const MainContent = memo(function MainContent({
   selectedDevice,
   activeView,
   devices,
@@ -127,4 +128,4 @@ export function MainContent({
       {renderView()}
     </main>
   )
-}
+})

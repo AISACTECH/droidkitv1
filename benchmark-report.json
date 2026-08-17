@@ -2,25 +2,25 @@
   "meta": {
     "tool": "Paralock",
     "version": "1.1.0",
-    "commit": "5298644",
-    "date": "2026-08-14T10:34:22.689Z",
+    "commit": "36bf23d",
+    "date": "2026-08-17T09:19:55.557Z",
     "node": "v22.22.3",
     "harness": "scripts/benchmark-top4.js",
-    "wall_seconds": 25.7
+    "wall_seconds": 28.2
   },
   "measured": {
     "typecheck": {
       "errors": 0,
-      "seconds": 9.45,
+      "seconds": 9.47,
       "first_errors": []
     },
     "build": {
       "ok": true,
-      "seconds": 13.39,
+      "seconds": 15.35,
       "modules_transformed": 2072,
       "dist_files": 20,
       "dist_raw_mb": 1.6,
-      "dist_gzip_kb_text": 314
+      "dist_gzip_kb_text": 315
     },
     "frp_coverage": {
       "models_total": 268,
@@ -65,16 +65,14 @@
     },
     "privacy_security": {
       "telemetry_sdk_hits": [],
-      "csp_external_origins": [
-        "https://*"
-      ],
+      "csp_external_origins": [],
       "capability_permissions": 16
     },
     "simulation": {
       "agents": 40000,
-      "seconds": 2.76,
-      "avg_errors_per_dev": "17.02",
-      "avg_errors_per_user": "1.89"
+      "seconds": 3.26,
+      "avg_errors_per_dev": "16.96",
+      "avg_errors_per_user": "1.90"
     },
     "platform_ci": {
       "linux": true,

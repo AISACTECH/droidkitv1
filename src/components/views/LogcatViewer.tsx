@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, memo } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select"
 import { type DeviceInfo } from "@/tauri-commands"
 import { useDeviceLogs } from "@/hooks/useDeviceDataQueries"
+import { useDebouncedValue } from "@/hooks/useDebouncedValue"
 import { 
   Terminal, 
   Search,
@@ -27,8 +28,36 @@ interface LogcatViewerProps {
   selectedDevice?: DeviceInfo
 }
 
-export function LogcatViewer({ selectedDevice }: LogcatViewerProps) {
+/** One parsed display row — parsing happens once per log batch, not per render. */
+interface LogRow {
+  key: string
+  level: { label: string; variant: "outline" | "secondary" | "default" | "destructive" } | null
+  text: string
+}
+
+const getLogLevel = (line: string): LogRow["level"] => {
+  const match = line.match(/\s([VDIWEF])\//)
+  if (!match) return null
+
+  const level = match[1]
+  switch (level) {
+    case 'V': return { label: 'VERBOSE', variant: 'outline' as const }
+    case 'D': return { label: 'DEBUG', variant: 'secondary' as const }
+    case 'I': return { label: 'INFO', variant: 'default' as const }
+    case 'W': return { label: 'WARN', variant: 'outline' as const }
+    case 'E': return { label: 'ERROR', variant: 'destructive' as const }
+    case 'F': return { label: 'FATAL', variant: 'destructive' as const }
+    default: return null
+  }
+}
+
+const formatLogLine = (line: string): string => {
+  return line.replace(/^(\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d{3})/, '$1')
+}
+
+export const LogcatViewer = memo(function LogcatViewer({ selectedDevice }: LogcatViewerProps) {
   const [searchTerm, setSearchTerm] = useState("")
+  const debouncedSearch = useDebouncedValue(searchTerm, 200)
   const [lineCount, setLineCount] = useState(100)
   const [isAutoRefresh, setIsAutoRefresh] = useState(true)
   const [logLevel, setLogLevel] = useState<string>("all")
@@ -41,39 +70,26 @@ export function LogcatViewer({ selectedDevice }: LogcatViewerProps) {
     refetch
   } = useDeviceLogs(selectedDevice, lineCount, isAutoRefresh, logLevel === "all" ? undefined : logLevel)
 
-  // Parse and filter logs
-  const filteredLogs = useMemo(() => {
+  // Parse + filter logs (debounced search, memoized parsing)
+  const displayRows = useMemo<LogRow[]>(() => {
     if (!logs) return []
-    
+
     const logLines = logs.split('\n').filter(line => line.trim())
-    
-    if (!searchTerm) return logLines
-    
-    return logLines.filter(line => 
-      line.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  }, [logs, searchTerm])
+    const filtered = debouncedSearch
+      ? logLines.filter(line =>
+          line.toLowerCase().includes(debouncedSearch.toLowerCase())
+        )
+      : logLines
 
-  const getLogLevel = (line: string) => {
-    const match = line.match(/\s([VDIWEF])\//)
-    if (!match) return null
-    
-    const level = match[1]
-    switch (level) {
-      case 'V': return { label: 'VERBOSE', variant: 'outline' as const }
-      case 'D': return { label: 'DEBUG', variant: 'secondary' as const }
-      case 'I': return { label: 'INFO', variant: 'default' as const }
-      case 'W': return { label: 'WARN', variant: 'outline' as const }
-      case 'E': return { label: 'ERROR', variant: 'destructive' as const }
-      case 'F': return { label: 'FATAL', variant: 'destructive' as const }
-      default: return null
-    }
-  }
+    return filtered.map((line, index) => ({
+      key: `${index}:${line.length}:${line.slice(0, 32)}`,
+      level: getLogLevel(line),
+      text: formatLogLine(line),
+    }))
+  }, [logs, debouncedSearch])
 
-  const formatLogLine = (line: string) => {
-    // Basic log formatting - this could be enhanced further
-    return line.replace(/^(\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d{3})/, '$1')
-  }
+  const rawLineCount = useMemo(() => (logs ? logs.split('\n').length : 0), [logs])
+
 
   const downloadLogs = () => {
     if (!logs) return
@@ -187,8 +203,8 @@ export function LogcatViewer({ selectedDevice }: LogcatViewerProps) {
           <div className="flex-shrink-0 p-3 border-b bg-muted/50">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">
-                {filteredLogs.length} lines
-                {searchTerm && ` (filtered from ${logs.split('\n').length})`}
+                {displayRows.length} lines
+                {searchTerm && ` (filtered from ${rawLineCount})`}
               </span>
               {isAutoRefresh && (
                 <Badge variant="outline" className="text-xs">
@@ -199,7 +215,7 @@ export function LogcatViewer({ selectedDevice }: LogcatViewerProps) {
           </div>
           
           <div className="flex-1 overflow-y-auto p-3 font-mono text-xs">
-            {isLoading && filteredLogs.length === 0 ? (
+            {isLoading && displayRows.length === 0 ? (
               <div className="flex items-center justify-center h-full">
                 <RefreshCw className="h-6 w-6 animate-spin mr-2" />
                 Loading logs...
@@ -212,34 +228,31 @@ export function LogcatViewer({ selectedDevice }: LogcatViewerProps) {
                   {error instanceof Error ? error.message : "Unknown error"}
                 </p>
               </div>
-            ) : filteredLogs.length === 0 ? (
+            ) : displayRows.length === 0 ? (
               <div className="flex items-center justify-center h-full text-muted-foreground">
                 <Terminal className="h-8 w-8 mx-auto mb-2 opacity-50" />
                 <p>{searchTerm ? "No matching log entries" : "No log entries"}</p>
               </div>
             ) : (
               <div className="space-y-0">
-                {filteredLogs.map((line, index) => {
-                  const logLevel = getLogLevel(line)
-                  return (
-                    <div
-                      key={index}
-                      className="flex items-start gap-2 py-0.5 hover:bg-muted/50 group"
-                    >
-                      <span className="text-muted-foreground text-xs min-w-[3ch] opacity-50 group-hover:opacity-100">
-                        {index + 1}
-                      </span>
-                      {logLevel && (
-                        <Badge variant={logLevel.variant} className="text-xs px-1 py-0 h-auto">
-                          {logLevel.label[0]}
-                        </Badge>
-                      )}
-                      <span className="flex-1 leading-relaxed break-all">
-                        {formatLogLine(line)}
-                      </span>
-                    </div>
-                  )
-                })}
+                {displayRows.map((row, index) => (
+                  <div
+                    key={row.key}
+                    className="flex items-start gap-2 py-0.5 hover:bg-muted/50 group"
+                  >
+                    <span className="text-muted-foreground text-xs min-w-[3ch] opacity-50 group-hover:opacity-100">
+                      {index + 1}
+                    </span>
+                    {row.level && (
+                      <Badge variant={row.level.variant} className="text-xs px-1 py-0 h-auto">
+                        {row.level.label[0]}
+                      </Badge>
+                    )}
+                    <span className="flex-1 leading-relaxed break-all">
+                      {row.text}
+                    </span>
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -247,4 +260,4 @@ export function LogcatViewer({ selectedDevice }: LogcatViewerProps) {
       </div>
     </div>
   )
-}
+})

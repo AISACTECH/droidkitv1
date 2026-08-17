@@ -122,3 +122,95 @@
 html, body {
   overscroll-behavior: none;
 }
+
+/* =====================================================================
+   UX refinement layer — visual polish only, no behavior/layout changes
+   ---------------------------------------------------------------------
+   Scrollbars, selection, focus rings, micro-interactions and motion
+   preferences. Everything here degrades gracefully and never changes
+   component structure, spacing or logic.
+   ===================================================================== */
+
+/* ---- refined scrollbars (thin, theme-matched) ---- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklch, var(--foreground) 15%, transparent);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklch, var(--foreground) 30%, transparent);
+  background-clip: content-box;
+  border: 2px solid transparent;
+}
+
+/* ---- selection ---- */
+::selection {
+  background: color-mix(in oklch, var(--primary) 18%, transparent);
+  color: inherit;
+}
+
+/* ---- consistent keyboard focus ---- */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ---- micro-interactions: interactive elements respond, nothing moves ---- */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  a:not(:disabled),
+  [data-slot="select-trigger"]:not([data-disabled]),
+  [data-slot="input"],
+  [data-slot="textarea"] {
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease,
+      opacity 150ms ease,
+      box-shadow 150ms ease,
+      transform 100ms ease;
+  }
+  button:not(:disabled):active:not([data-state="open"]),
+  [role="button"]:not(:disabled):active {
+    transform: scale(0.98);
+  }
+  /* subtle hover lift for cards, flat until interaction */
+  [data-slot="card"] {
+    transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  }
+  [data-slot="card"]:hover {
+    border-color: color-mix(in oklch, var(--border) 60%, var(--ring) 40%);
+  }
+}
+
+/* ---- honor reduced-motion preferences ---- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---- typography rendering ---- */
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}

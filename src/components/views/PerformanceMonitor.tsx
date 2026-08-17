@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, memo } from "react"
 import { DeviceInfo, executeShellCommand } from "@/tauri-commands"
 import { usePageVisible } from "@/hooks/usePageVisible"
+import { parallelAll } from "@/lib/concurrency"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
@@ -24,7 +25,7 @@ interface PerfStats {
   lastUpdated: string
 }
 
-export function PerformanceMonitor({ selectedDevice }: PerformanceMonitorProps) {
+export const PerformanceMonitor = memo(function PerformanceMonitor({ selectedDevice }: PerformanceMonitorProps) {
   const [stats, setStats] = useState<PerfStats | null>(null)
   const [loading, setLoading] = useState(false)
   const [autoRefresh, setAutoRefresh] = useState(true)
@@ -33,12 +34,21 @@ export function PerformanceMonitor({ selectedDevice }: PerformanceMonitorProps) 
   const fetchStats = async () => {
     setLoading(true)
     try {
-      // CPU + memory via dumpsys + cat /proc/stat approximation
-      const memInfo = await executeShellCommand(selectedDevice.serial_no, "cat /proc/meminfo | head -n 5").catch(() => "")
-      const cpuInfo = await executeShellCommand(selectedDevice.serial_no, "dumpsys cpuinfo | head -n 20").catch(() => "")
-      const battery = await executeShellCommand(selectedDevice.serial_no, "dumpsys battery | grep -E 'level|temperature|voltage|status'").catch(() => "")
-      const uptime = await executeShellCommand(selectedDevice.serial_no, "uptime").catch(() => "")
-      const top = await executeShellCommand(selectedDevice.serial_no, "top -n 1 -b | head -n 15").catch(() => "")
+      // CPU + memory via dumpsys + cat /proc/stat approximation.
+      // The five ADB reads are independent — run them CONCURRENTLY with
+      // bounded parallelism (order preserved, identical results to the
+      // sequential version, per-read errors isolated via .catch).
+      const serial = selectedDevice.serial_no
+      const [memInfo, cpuInfo, battery, uptime, top] = await parallelAll(
+        [
+          () => executeShellCommand(serial, "cat /proc/meminfo | head -n 5").catch(() => ""),
+          () => executeShellCommand(serial, "dumpsys cpuinfo | head -n 20").catch(() => ""),
+          () => executeShellCommand(serial, "dumpsys battery | grep -E 'level|temperature|voltage|status'").catch(() => ""),
+          () => executeShellCommand(serial, "uptime").catch(() => ""),
+          () => executeShellCommand(serial, "top -n 1 -b | head -n 15").catch(() => ""),
+        ],
+        5,
+      )
 
       // Parse meminfo
       let total = "Unknown", available = "Unknown", usedPercent = 0
@@ -212,4 +222,4 @@ export function PerformanceMonitor({ selectedDevice }: PerformanceMonitorProps) 
       )}
     </div>
   )
-}
+})

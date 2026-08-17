@@ -24,7 +24,7 @@ import {
   HelpCircle,
   LifeBuoy
 } from "lucide-react"
-import { useState } from "react"
+import { useState, memo } from "react"
 
 interface DeviceListProps {
   connectedDevices: DeviceInfo[]
@@ -206,7 +206,7 @@ function UnifiedDeviceItem({ device, selectedDevice, onDeviceSelect, onDevicePai
   )
 }
 
-export function DeviceList({
+export const DeviceList = memo(function DeviceList({
   connectedDevices,
   selectedDevice,
   onDeviceSelect,
@@ -486,4 +486,4 @@ export function DeviceList({
       )}
     </div>
   )
-}
+})

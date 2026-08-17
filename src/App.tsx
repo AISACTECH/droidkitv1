@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, Suspense } from "react"
+import { useState, useEffect, useRef, Suspense, useCallback } from "react"
 import { AppSidebar } from "@/components/AppSidebar"
 import { MainContent } from "@/components/MainContent"
 import { StatusBar } from "@/components/StatusBar"
@@ -33,18 +33,21 @@ function App() {
   const selectedDeviceRef = useRef(selectedDevice)
   selectedDeviceRef.current = selectedDevice
 
-  const refreshDevices = async () => {
+  const refreshDevices = useCallback(async () => {
     logger.info("Manual refresh triggered")
     await refetch()
-  }
+  }, [refetch])
 
-  const handleWirelessDeviceConnected = (device: DeviceInfo) => {
+  const handleWirelessDeviceConnected = useCallback((device: DeviceInfo) => {
     logger.info("Wireless device connected", { serial: device.serial_no, model: device.model })
     addDevice(device)
-    if (!selectedDevice) {
-      setSelectedDevice(device)
-    }
-  }
+    setSelectedDevice((current) => current ?? device)
+  }, [addDevice])
+
+  // Stable callback so memoized children (Sidebar/StatusBar) skip re-renders
+  const toggleSidebar = useCallback(() => {
+    setSidebarOpen((open) => !open)
+  }, [])
 
   // Auto-select first device if none selected and devices are available
   useEffect(() => {
@@ -105,7 +108,7 @@ function App() {
           <StatusBar 
             selectedDevice={selectedDevice} 
             isLoading={isLoading}
-            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+            onToggleSidebar={toggleSidebar}
           />
         </div>
       </ThemeProvider>

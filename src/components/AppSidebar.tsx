@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { Button } from "@/components/ui/button"
 import { 
   Sidebar,
@@ -56,7 +57,7 @@ const navigationItems = [
   { id: 'shell', label: 'Shell', icon: Terminal }
 ]
 
-export function AppSidebar({ 
+export const AppSidebar = memo(function AppSidebar({ 
   onRefreshDevices,
   onWirelessDeviceConnected,
   isLoading = false,
@@ -135,4 +136,4 @@ export function AppSidebar({
       </SidebarFooter>
     </Sidebar>
   )
-}
+})

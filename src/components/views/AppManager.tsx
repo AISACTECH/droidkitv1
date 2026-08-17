@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { type DeviceInfo } from "@/tauri-commands"
 import { useDeviceApps, useRefreshDeviceApps } from "@/hooks/useDeviceDataQueries"
+import { useDebouncedValue } from "@/hooks/useDebouncedValue"
 import {
   Package,
   Search,
@@ -89,6 +90,7 @@ interface AppManagerProps {
 
 export function AppManager({ selectedDevice }: AppManagerProps) {
   const [searchTerm, setSearchTerm] = useState("")
+  const debouncedSearch = useDebouncedValue(searchTerm, 200)
 
   // Use TanStack Query for app operations
   const {
@@ -99,13 +101,13 @@ export function AppManager({ selectedDevice }: AppManagerProps) {
 
   const refreshApps = useRefreshDeviceApps(selectedDevice)
 
-  // Filter apps using useMemo for performance
+  // Filter apps using useMemo for performance (debounced input)
   const filteredApps = useMemo(() => {
-    if (!searchTerm) return apps
+    if (!debouncedSearch) return apps
     return apps.filter(app =>
-      app.toLowerCase().includes(searchTerm.toLowerCase())
+      app.toLowerCase().includes(debouncedSearch.toLowerCase())
     )
-  }, [apps, searchTerm])
+  }, [apps, debouncedSearch])
 
   return (
     <div className="h-full flex flex-col">

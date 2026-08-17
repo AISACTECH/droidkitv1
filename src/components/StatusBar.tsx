@@ -15,7 +15,7 @@ import {
   Battery,
   Layers
 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, memo } from "react"
 import { BRAND } from "@/lib/brand"
 
 interface StatusBarProps {
@@ -32,7 +32,7 @@ interface Operation {
   status: 'running' | 'completed' | 'error'
 }
 
-export function StatusBar({ selectedDevice, isLoading, onToggleSidebar }: StatusBarProps) {
+export const StatusBar = memo(function StatusBar({ selectedDevice, isLoading, onToggleSidebar }: StatusBarProps) {
   const { data: batteryInfo } = useDeviceBatteryInfo(selectedDevice)
   const [time, setTime] = useState(new Date())
 
@@ -126,4 +126,4 @@ export function StatusBar({ selectedDevice, isLoading, onToggleSidebar }: Status
       </div>
     </div>
   )
-}
+})
